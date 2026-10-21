@@ -1,0 +1,38 @@
+<div class="form-container">
+    <h3>Adicionar expressão de {{ categoriaAtual }}</h3>
+    <p>Conhece alguma gíria sobre esse tema? Colabore com o glossário.</p>
+
+    <form [formGroup]="verbeteForm" (ngSubmit)="onSubmit()">
+        <div class="input-group">
+            <label for="expressao">Gíria ou Expressão:</label>
+            <input
+                type="text"
+                id="expressao"
+                formControlName="expressao"
+                placeholder="Ex: Isso é coisa de..."
+            />
+        </div>
+
+        <div class="input-group">
+            <label for="significado">Significado e Contexto de uso:</label>
+            <textarea
+                id="significado"
+                formControlName="significado"
+                rows="3"
+                placeholder="Explique o que essa expressão quer dizer na prática..."
+            ></textarea>
+        </div>
+
+        <!-- O botão desativa automaticamente se os campos estiverem vazios -->
+         <button type="submit" [disabled]="verbeteForm.invalid" class="btn-enviar">
+            Enviar Contribuição
+         </button>
+    </form>
+
+    <!-- FeedBack visual após o clique -->
+     @if (mensagemSucesso) {
+        <div class="msg-sucesso">
+            <p>Expressão enviada para análise! Obrigado por colaborar.</p>
+        </div>
+     }
+</div>
