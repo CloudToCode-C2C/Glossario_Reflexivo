@@ -1,1 +1,72 @@
-/* You can add global styles to this file, and also import other style files */
+// Nessa sessão vai conter odo Design System do projeto
+// ------------------------------------------------------
+//Tipografia na fonte Inter do google fonts
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+:root {
+    //Cores principais, abarcando a identidade visual do arquivo gerado pela cliente
+   --cor-primaria: #845EC2; //Lilas
+   --cor-secundaria: #FF9671; //Laranja
+   --cor-destaque: #F9F871; //Amarelo
+   --cor-suporte: #00C9A7; //Verde
+
+   // Cores da Estruturas
+   --cor-fundo: #FDFBF9; //off-white
+   --cor-superficie: #FFFFFF; //branco pura
+
+    //Cores dos textos
+    --cor-texto-principal: #2D2D2D; //preto chumbo
+    --cor-texto-secundario: #5A5A5A; //cinza escuro
+    --cor-texto-inverso: #FFFFFF; //Branco
+
+    //Para os arredondamentos e sombra
+    --borda-suave: 16px;
+    --sombra-card: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+/*  A partir daqui cmeça o reset do CSS e Estilo base, para evitar que comece com bordas ou margens
+    genericas do navegador */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    //Aplicacao da fonte e cor de fundo configuradas no root
+    font-family: 'Inter', sans-serif;
+    background-color: var(--cor-fundo);
+    color: var(--cor-texto-principal);
+
+    //prpriedade para rolar o conteúdo por baixo da futura navegação, no modelo mobile-first
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+}
+
+/*  ---------------------------------------------------------------------------- 
+    Parte das classes utilitarias (tipografia)
+    ------------------------------------------------------------------------------ */
+
+.h1-titulo {
+  font-size: 24px;
+  font-weight: 700; // Bold
+  line-height: 1.2;
+}
+
+.h2-subtitulo {
+  font-size: 18px;
+  font-weight: 600; // SemiBold
+  line-height: 1.3;
+}
+
+.texto-corpo {
+  font-size: 16px;
+  font-weight: 400; // Regular
+  line-height: 1.5;
+}
+
+.texto-legenda {
+  font-size: 14px;
+  font-weight: 500; // Medium
+  color: var(--cor-texto-secundario);
+}
