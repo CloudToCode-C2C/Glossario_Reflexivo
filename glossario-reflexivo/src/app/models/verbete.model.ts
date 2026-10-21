@@ -1,5 +1,5 @@
 export interface Verbete {
-    id: string;
+    id: number;
     expressao: string;
     significado: string;
     contexto: string;
