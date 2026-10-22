@@ -1,0 +1,33 @@
+<section class="mural-relatos-container">
+    <div class="form-section">
+        <h3>Mural de Relatos</h3>
+        <p>Compartilhe uma experiência pessoal ou uma reflexão de suas atividades.</p>
+
+        <form [formGroup]="relatoForm" (ngSubmit)="onSubmit()">
+            <textarea
+                formControlName="texto_relato"
+                rows="4"
+                placeholder="Escreva seu relato aqui..."
+            ></textarea>
+
+            <button type="submit" [disabled]="relatoForm.invalid" class="btn-enviar">
+                Enviar Relato
+            </button>
+        </form>
+    </div>
+
+    <div class="feed-section">
+        <h4>Relatos Recentes</h4>
+
+        <div class="lista-baloes">
+            @for (relato of relatosMock; track relato.id) {
+            <div class="balao-relato">
+                <p class="texto">{{ relato.texto_relato }}</p>
+                <span class="data">{{ relato.data_criacao | date:'dd/MM/yyyy HH:mm' }}</span>
+            </div>
+            } @empty {
+                <p class="msg-vazia">Seja o primeiro a deixar um relato.</p>
+            }
+        </div>
+    </div>
+</section>

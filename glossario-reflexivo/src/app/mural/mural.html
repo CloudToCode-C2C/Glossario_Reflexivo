@@ -1,0 +1,11 @@
+<section class="mural-container">
+    <h4>Contribuições sobre: {{ categoriaFiltro }}</h4>
+
+    <div class="lista-cards">
+        @for (verbete of verbetesFiltrados; track verbete.id) {
+            <app-card-giria [dadosGiria]="verbete"></app-card-giria>
+        } @empty {
+            <p class="msg-vazia">Nenhum aluno registrou gírias para esta categoria ainda. Seja o primeiro!</p>
+        }
+    </div>
+</section>
