@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, signal } from '@angular/core';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 
 @Component({
@@ -16,7 +16,7 @@ export class FormularioComponent {
     significado: new FormControl('', [Validators.required]),
   });
 
-  mensagemSucesso = false;
+  readonly mensagemSucesso = signal(false);
 
   onSubmit() {
     if (this.verbeteForm.valid) {
@@ -30,11 +30,11 @@ export class FormularioComponent {
       console.log('Pronto para enviar ao Supabase:', novoVerbete);
 
       this.verbeteForm.reset();
-      this.mensagemSucesso = true;
+      this.mensagemSucesso.set(true);
 
       // Sumindo com a mensagem de sucesso após 3.5 segundos
       setTimeout(() => {
-        this.mensagemSucesso = false;
+        this.mensagemSucesso.set(false);
       }, 3500);
     } else {
       this.verbeteForm.markAllAsTouched(); // Funciona para mostrar os erros de validação se o formulário não for válido.

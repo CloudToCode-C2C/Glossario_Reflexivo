@@ -1,0 +1,99 @@
+.mural-relatos-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 1rem;
+
+    .form-section {
+        background-color: var(--cor-fundo);
+        padding: 1.5rem;
+        border-radius: 8px;
+        box-shadow: var(--sombra-card);
+        margin-bottom: 2rem;
+
+        h3 {
+            margin-top: 0; 
+            color: var(--cor-texto-principal);
+        }
+
+        p {
+            color: var(--cor-texto-secundario);
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid var(--cor-texto-secundario);
+            border-radius: 4px;
+            font-family: inherit;
+            resize: vertical;
+            margin-bottom: 1rem;
+            box-sizing: border-box;
+
+            &:focus {
+                outline: none;
+                border-color: var(--cor-texto-principal);
+            }
+        }
+
+        .btn-enviar {
+            background-color: var(--cor-destaque);
+            color: var(--cor-texto-principal);
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+
+            &:disabled {
+                background-color: var(--cor-suporte);
+                cursor: not-allowed;
+            }
+            &:hover:not(:disabled) {
+                background-color: var(--cor-suporte);
+            }
+        }
+    }
+    .feed-section {
+        h4 {
+            color: var(--color-primary);
+            border-bottom: 2px solid var(--color-primary);
+            padding-bottom: 0.5rem;
+        }
+
+        .lista-baloes {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+            margin-top: 1.5rem;
+        }
+
+        .balao-relato {
+            background-color: var(--color-background);
+            padding: 1rem;
+            border-radius: 12px 12px 12px 0;
+            position: relative;
+            
+            .texto {
+                margin: 0 0 0.8rem 0;
+                color: var(--color-text);
+                line-height: 1.5;
+            }
+
+            .data {
+                font-size: 0.8rem;
+                color: var(--color-muted);
+                display: block;
+                text-align: right;
+            }
+        }
+
+        .msg-vazia {
+            text-align: center;
+            color: var(--color-muted);
+            font-style: italic;
+        }
+    }
+}
