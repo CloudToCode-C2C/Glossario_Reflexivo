@@ -14,6 +14,9 @@ export const routes: Routes = [
   {
     path: 'glossario',
     component: FormularioComponent,
+    data: {
+      categoriaAtual: 'Capacitismo',
+    },
   },
   {
     path: 'mural',
