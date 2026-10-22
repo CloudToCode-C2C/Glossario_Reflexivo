@@ -1,0 +1,60 @@
+/* A CASCA DO COMPONENTE (O Segredo do Angular) */
+:host {
+  display: block; // O Angular exige isso para o componente ter tamanho
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 9999;
+}
+
+/* O CORPO DA BARRA */
+.nav-container {
+  display: flex;
+  flex-direction: row; // Os botões ficam um ao lado do outro
+  justify-content: space-around; // Espalha os botões igualmente
+  align-items: center; // Centraliza verticalmente
+  
+  height: 80px;
+  background-color: var(--cor-superficie); // Puxa o branco do styles.scss
+  box-shadow: 0px -4px 16px rgba(0, 0, 0, 0.08); // Sombra visível
+  
+  // Bordas arredondadas e orgânicas como você queria
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+  padding: 0 16px;
+}
+
+/* O FORMATO DE CADA BOTÃO */
+.nav-item {
+  display: flex;
+  flex-direction: column; // Ícone em cima, texto embaixo
+  align-items: center;
+  justify-content: center;
+  text-decoration: none; // Tira o risco azul feio
+  
+  color: var(--cor-texto-secundario); // Inativo: Cinza Escuro
+  height: 100%; // Ocupa toda a altura da barra para ser fácil de clicar
+  gap: 4px; // Espaço entre ícone e texto
+  transition: color 0.3s ease; // Efeito suave
+}
+
+/* CONFIGURAÇÃO DOS ÍCONES E TEXTO */
+.material-icons {
+  font-size: 26px;
+}
+
+.nav-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* O ESTADO ATIVO (Quando a pessoa clica na página) */
+.nav-item.ativo {
+  color: var(--cor-primaria); // Fica Roxo/Lilás
+  
+  .nav-label {
+    font-weight: 700; // O texto fica gordinho para destacar
+  }
+}
