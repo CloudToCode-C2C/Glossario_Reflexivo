@@ -1,9 +1,7 @@
-<main style="padding: 2rem; max-width: 600px; margin: auto;">
-  <h1>Teste do Componente Formulário</h1>
-
-  <app-formulario categoriaAtual="Etarismo"></app-formulario>
-
+<main style="padding-bottom: 80px;">
+  <!-- O RouterOutlet é a vitrine que vai trocar as telas quando clicarmos nos botões -->
+  <router-outlet></router-outlet>
 </main>
 
-
-<router-outlet />
+<!-- A tag mágica que desenha o seu menu na tela -->
+<app-bottom-nav></app-bottom-nav>
