@@ -1,43 +1,56 @@
-import { Component, Input, signal } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
+import { SupabaseService } from '../supabase.service';
 
 @Component({
   selector: 'app-formulario',
   standalone: true,
   imports: [ReactiveFormsModule],
   templateUrl: './formulario.html',
-  styleUrls: ['./formulario.scss'],
+  styleUrls: ['./formulario.scss']
 })
 export class FormularioComponent {
   @Input() categoriaAtual!: string;
+  mensagemSucesso = false;
+  estaAEnviar = false;
 
-  verbeteForm = new FormGroup({
+  constructor(private supabaseService: SupabaseService) {}
+
+  verbeteForm =new FormGroup({
     expressao: new FormControl('', [Validators.required]),
-    significado: new FormControl('', [Validators.required]),
+    significado: new FormControl('', [Validators.required])
   });
 
-  readonly mensagemSucesso = signal(false);
+  async onSubmit() {
+    if (!this.categoriaAtual) {
+      console.error("Erro de Integração: O componente pai não enviou a categoria atual.");
+      alert("Erro interno: Categoria da expressão não definida.");
+      return;
+    }
 
-  onSubmit() {
     if (this.verbeteForm.valid) {
+      this.estaAEnviar = true;
       const novoVerbete = {
-        ...this.verbeteForm.value,
-        categoria: this.categoriaAtual,
-        status_aprovado: false, // Vou fazer uma moderação simples aqui
-        data_criacao: new Date(),
+        expressao: this.verbeteForm.value.expressao,
+        significado: this.verbeteForm.value.significado,
+        contexto: this.categoriaAtual,
+        status_aprovado: false
       };
 
-      console.log('Pronto para enviar ao Supabase:', novoVerbete);
+    try {
+      await this.supabaseService.inserirVerbete(novoVerbete);
 
       this.verbeteForm.reset();
-      this.mensagemSucesso.set(true);
-
-      // Sumindo com a mensagem de sucesso após 3.5 segundos
-      setTimeout(() => {
-        this.mensagemSucesso.set(false);
-      }, 3500);
+      this.mensagemSucesso = true;
+      setTimeout(() => this.mensagemSucesso = false, 3500);
+    } catch (error) {
+      console.error('Erro ao enviar para a base de dados: ', error);
+      alert("Ocorreu um erro ao enviar. Tente novamente.");
+    } finally {
+      this.estaAEnviar = false;
+    }
     } else {
-      this.verbeteForm.markAllAsTouched(); // Funciona para mostrar os erros de validação se o formulário não for válido.
+      this.verbeteForm.markAllAsTouched();
     }
   }
 }

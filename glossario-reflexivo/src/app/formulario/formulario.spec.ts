@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { vi } from 'vitest';
 import { FormularioComponent } from './formulario';
+import { SupabaseService } from '../supabase.service';
 
 describe('FormularioComponent', () => {
   let component: FormularioComponent;
@@ -9,6 +10,14 @@ describe('FormularioComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [FormularioComponent],
+      providers: [
+        {
+          provide: SupabaseService,
+          useValue: {
+            inserirVerbete: vi.fn().mockResolvedValue([]),
+          },
+        },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(FormularioComponent);
@@ -20,23 +29,25 @@ describe('FormularioComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should hide the success message after 3.5 seconds', () => {
+  it('should hide the success message after 3.5 seconds', async () => {
     vi.useFakeTimers();
+    component.categoriaAtual = 'Etarismo';
 
     component.verbeteForm.setValue({
       expressao: 'Expressão de teste',
       significado: 'Significado de teste',
     });
 
-    component.onSubmit();
+    const submitPromise = component.onSubmit();
+    await submitPromise;
 
-    expect(component.mensagemSucesso()).toBe(true);
+    expect(component.mensagemSucesso).toBe(true);
 
     vi.advanceTimersByTime(3499);
-    expect(component.mensagemSucesso()).toBe(true);
+    expect(component.mensagemSucesso).toBe(true);
 
     vi.advanceTimersByTime(1);
-    expect(component.mensagemSucesso()).toBe(false);
+    expect(component.mensagemSucesso).toBe(false);
 
     vi.useRealTimers();
   });

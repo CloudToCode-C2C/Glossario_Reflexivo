@@ -24,13 +24,13 @@
         </div>
 
         <!-- O botão desativa automaticamente se os campos estiverem vazios -->
-         <button type="submit" [disabled]="verbeteForm.invalid" class="btn-enviar">
-            Enviar Contribuição
+         <button type="submit" [disabled]="verbeteForm.invalid || estaAEnviar" class="btn-enviar">
+            {{ estaAEnviar ? 'A enviar...' : 'Enviar Contribuição'}}
          </button>
     </form>
 
     <!-- FeedBack visual após o clique -->
-     @if (mensagemSucesso()) {
+     @if (mensagemSucesso) {
         <div class="msg-sucesso">
             <p>Expressão enviada para análise! Obrigado por colaborar.</p>
         </div>
