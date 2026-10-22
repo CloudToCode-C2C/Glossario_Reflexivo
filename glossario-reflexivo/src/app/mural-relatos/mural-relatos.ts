@@ -23,13 +23,13 @@ export class MuralRelatosComponent {
   relatosMock: Relato[] = [
     {
       id: 1,
-      texto_relato: 'Uma vez zombaram do meu sotaque quando cheguei na escola nova. Foi muito ruim, mas a professora explicou sobre variação linguística e ajudou muito.',
-      data_criacao: new Date('2026-10-18T10:30:00')
+      texto_relato: 'Achei muito importante aprender sobre o capacitismo. Nunca tinha percebido como o uso de algumas palavras machuca outras pessoas.',
+      data_criacao: new Date('2026-10-20T14:20:00')
     },
     {
       id: 2,
-      texto_relato: 'Achei muito importante aprender sobre o capacitismo. Nunca tinha percebido como o uso de algumas palavras machuca outras pessoas.',
-      data_criacao: new Date('2026-10-20T14:20:00')
+      texto_relato: 'Uma vez zombaram do meu sotaque quando cheguei na escola nova. Foi muito ruim, mas a professora explicou sobre variação linguística e ajudou muito.',
+      data_criacao: new Date('2026-10-18T10:30:00')
     }
   ];
 
