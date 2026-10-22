@@ -1,13 +1,16 @@
 import { Routes } from '@angular/router';
+import { Home } from './home/home';
 import { FormularioComponent } from './formulario/formulario';
 import { MuralRelatosComponent } from './mural-relatos/mural-relatos';
 
 export const routes: Routes = [
+  //Rotta inicial
   {
     path: '',
-    redirectTo: 'glossario',
+    component: Home,
     pathMatch: 'full',
   },
+
   {
     path: 'glossario',
     component: FormularioComponent,
@@ -16,4 +19,10 @@ export const routes: Routes = [
     path: 'mural',
     component: MuralRelatosComponent,
   },
+
+  //Rota de segurança
+  {
+    path: '**',
+    redirectTo: ''
+  }
 ];

@@ -1,0 +1,113 @@
+// Aqui vai ficar o container principal 
+.home-moderna {
+    display: flex;
+    flex-direction: column;
+    padding: 32px 24px 100px 24px;
+    background-color: var(--cor-fundo); // Fundo off-white do Design System
+    min-height: 100vh;
+}
+
+.header-apresentacao {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; // Alinhamento à esquerda
+    margin-top: 16px;
+    margin-bottom: 40px;
+
+    .pill-badge {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        background-color: #F0E8F9; // Um lilás clarinho translúcido
+        color: var(--cor-primaria);
+        padding: 8px 16px;
+        border-radius: 100px;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 24px;
+
+        .material-icons {
+            font-size: 18px;
+        }
+    }
+
+    .titulo-principal {
+        font-size: 40px;
+        line-height: 1.1;
+        font-weight: 800; 
+        color: var(--cor-texto-principal);
+        margin-bottom: 12px;
+        letter-spacing: -1px; // Junta as letras levemente 
+    }
+
+    .subtitulo-app {
+        font-size: 16px;
+        line-height: 1.5;
+        color: var(--cor-texto-secundario);
+    }
+
+}
+
+// Area de conteudos
+.area-leitura {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+// Cartao base de leitura 
+.card-glass {
+    background-color: var(--cor-superficie); // Branco puro
+    border-radius: 28px; // Cantos extremamente arredondados 
+    padding: 32px 28px; 
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04); // Sombra bem invisível, só levanta o card
+    border: 1px solid rgba(0, 0, 0, 0.02); // Uma linha branca/cinza quase invisível
+    transition: transform 0.3s ease; // Prepara uma animação suave
+
+    // O topo do Card com o Ícone e Título
+    .card-header {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 20px;
+
+        // O círculo que segura o ícone
+        .icone-circulo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            color: var(--cor-texto-inverso); // Branco
+
+            .material-icons {
+                font-size: 24px;
+            }
+        }
+
+        // Cores individuais de cada bolinha de ícone
+        .cor-primaria { background-color: var(--cor-primaria); }
+        .cor-verde { background-color: var(--cor-suporte); }
+        .cor-laranja { background-color: var(--cor-secundaria); }
+
+        .h2-suave {
+            font-size: 19px;
+            font-weight: 700;
+            color: var(--cor-texto-principal);
+        }
+    }
+
+    // O texto de leitura
+    .texto-fluido {
+        font-size: 15px;
+        line-height: 1.8; // Entrelinha gigante para a leitura ficar descansada
+        color: var(--cor-texto-secundario);
+        
+        // Formatação para as palavras em negrito dentro do texto
+        .destaque {
+            color: var(--cor-primaria);
+            font-weight: 700;
+        }
+    }
+}
