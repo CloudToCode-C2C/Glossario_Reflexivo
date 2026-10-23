@@ -30,4 +30,22 @@ export class SupabaseService {
         if (error) throw error;
         return data;
     }
+
+    async loginComGoogle() {
+        const { data, error } = await this.supabase.auth.signInWithOAuth({
+            provider: 'google',
+            options: { redirectTo: window.location.origin }
+        });
+        if (error) throw error;
+    }
+
+    async fazerLogout() {
+        const { error } = await this.supabase.auth.signOut();
+        if (error) throw error;
+    }
+
+    async obterUsuarioAtual() {
+        const { data: { user } } = await this.supabase.auth.getUser();
+        return user;
+    }
 }

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { SupabaseService } from '../supabase.service';
 
@@ -9,17 +9,36 @@ import { SupabaseService } from '../supabase.service';
   templateUrl: './formulario.html',
   styleUrls: ['./formulario.scss']
 })
-export class FormularioComponent {
+export class FormularioComponent implements OnInit {
   @Input() categoriaAtual!: string;
   mensagemSucesso = false;
   estaAEnviar = false;
+  usuario: any = null;
 
-  constructor(private supabaseService: SupabaseService) {}
+  constructor(
+    private supabaseService: SupabaseService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   verbeteForm =new FormGroup({
     expressao: new FormControl('', [Validators.required]),
     significado: new FormControl('', [Validators.required])
   });
+
+  async ngOnInit() {
+    this.usuario = await this.supabaseService.obterUsuarioAtual();
+    this.cdr.detectChanges();
+  }
+
+  async fazerLogin() {
+    await this.supabaseService.loginComGoogle();
+  }
+
+  async fazerLogout() {
+    await this.supabaseService.fazerLogout();
+    this.usuario = null;
+    this.cdr.detectChanges();
+  }
 
   async onSubmit() {
     if (!this.categoriaAtual) {
@@ -28,13 +47,15 @@ export class FormularioComponent {
       return;
     }
 
-    if (this.verbeteForm.valid) {
+    if (this.verbeteForm.valid && this.usuario) {
       this.estaAEnviar = true;
+
       const novoVerbete = {
         expressao: this.verbeteForm.value.expressao,
         significado: this.verbeteForm.value.significado,
         contexto: this.categoriaAtual,
-        status_aprovado: false
+        status_aprovado: false,
+        autor_email: this.usuario.email
       };
 
     try {
@@ -48,6 +69,7 @@ export class FormularioComponent {
       alert("Ocorreu um erro ao enviar. Tente novamente.");
     } finally {
       this.estaAEnviar = false;
+      this.cdr.detectChanges();
     }
     } else {
       this.verbeteForm.markAllAsTouched();
