@@ -20,4 +20,14 @@ export class SupabaseService {
         if (error) throw error;
         return data;
     }
+
+    async buscarVerbetes() {
+        const { data, error } = await this.supabase
+            .from("verbetes_colaborativos")
+            .select("*")
+            .order("data_criacao", { ascending: false });
+        
+        if (error) throw error;
+        return data;
+    }
 }

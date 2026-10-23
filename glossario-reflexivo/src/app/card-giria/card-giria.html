@@ -1,0 +1,14 @@
+<article class="card">
+  <header class="card-header">
+    <h3 class="expressao">"{{ dadosGiria.expressao }}"</h3>
+    <span class="badge">{{ dadosGiria.contexto }}</span>
+  </header>
+  
+  <div class="card-body">
+    <p class="significado"><strong>Significado:</strong> {{ dadosGiria.significado }}</p>
+  </div>
+
+  <footer class="card-footer">
+    <span class="data">{{ dadosGiria.data_criacao | date:'dd/MM/yyyy' }}</span>
+  </footer>
+</article>
