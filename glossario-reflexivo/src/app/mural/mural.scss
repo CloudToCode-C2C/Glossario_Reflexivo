@@ -1,0 +1,25 @@
+.mural-container {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 2px dashed var(--cor-texto-secundario);
+
+    h4 {
+        color: var(--cor-texto-principal);
+        margin-bottom: 1rem;
+    }
+
+    .lista-cards {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .msg-vazia {
+        color: var(--cor-texto-secundario);
+        font-style: italic;
+        background-color: var(--cor-superficie);
+        padding: 1rem;
+        border-radius: var(--borda-suave);
+        text-align: center;
+    }
+}
