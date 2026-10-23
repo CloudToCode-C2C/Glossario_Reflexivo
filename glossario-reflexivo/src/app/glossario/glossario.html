@@ -1,0 +1,26 @@
+<section class="pagina-glossario">
+  
+  <header class="cabecalho-glossario">
+    <div class="pill-badge">
+      <span class="material-icons">library_books</span>
+      <span>Base de Dados</span>
+    </div>
+    <h1 class="titulo-pagina">Glossário Oficial</h1>
+    <p class="subtitulo-pagina">Explore as expressões mapeadas no material didático e compreenda o contexto histórico e social por trás de cada uma delas.</p>
+  </header>
+
+  <!-- O Container Flexível que vai organizar os cards -->
+  <div class="grid-de-cards">
+    
+   
+    <!-- Para cada 'item' dentro da minha 'listaDePalavras'... -->
+    @for (item of listaDePalavras; track item.expressao) {
+      
+      <!-- ...desenhe o card e envie TODOS os dados do 'item' na variável [dadosGiria] -->
+      <app-card-giria [dadosGiria]="item"></app-card-giria>
+      
+    }
+
+  </div>
+
+</section>
