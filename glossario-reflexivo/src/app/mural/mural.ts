@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit, computed, input, signal } from '@angular/core';
 import { CardGiriaComponent } from '../card-giria/card-giria';
 import { SupabaseService } from '../supabase.service';
 
@@ -18,10 +18,19 @@ export interface Verbete {
   styleUrls: ['./mural.scss'],
 })
 export class MuralComponent implements OnInit {
-  @Input() categoriaFiltro!: string;
+  readonly categoriaFiltro = input('');
 
-  verbetes: Verbete[] = [];
-  carregando = true;
+  readonly verbetes = signal<Verbete[]>([]);
+  readonly carregando = signal(true);
+  readonly verbetesFiltrados = computed(() => {
+    const categoriaFiltro = this.categoriaFiltro();
+    const verbetes = this.verbetes();
+
+    if (!categoriaFiltro) return verbetes;
+    return verbetes.filter(
+      verbete => verbete.contexto === categoriaFiltro
+    );
+  });
   
   constructor(private supabaseService: SupabaseService) {}
 
@@ -30,21 +39,19 @@ export class MuralComponent implements OnInit {
   }
 
   async carregarDados() {
+    console.log('1. Iniciando requisição ao Supabase...');
+    this.carregando.set(true);
+    
     try {
-      this.carregando = true;
       const data = await this.supabaseService.buscarVerbetes();
-      this.verbetes = data as Verbete[];
+      console.log('2. Dados recebidos do Supabase:', data); // Se travar antes daqui, o problema é na rede/serviço
+      
+      this.verbetes.set((data ?? []) as Verbete[]);
     } catch (error) {
-      console.error("Erro ao buscar dados do Supabase: ", error);
+      console.error('3. Erro capturado no catch:', error);
     } finally {
-      this.carregando = false;
+      console.log('4. Executando o bloco finally. Desligando o spinner.');
+      this.carregando.set(false);
     }
-  }
-
-  get verbetesFiltrados(): Verbete[] {
-    if (!this.categoriaFiltro) return this.verbetes;
-    return this.verbetes.filter(
-      verbete => verbete.contexto === this.categoriaFiltro
-    );
   }
 }
