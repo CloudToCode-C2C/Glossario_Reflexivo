@@ -12,6 +12,13 @@ export class SupabaseService {
         this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
     }
 
+    escutarMudancasAuth(callback: (event: string, session: any) => void) {
+        return this.supabase.auth.onAuthStateChange((event, session) => {
+            callback(event, session);
+        });
+    }
+        
+
     async inserirVerbete(verbete: any) {
         const { data, error } = await this.supabase
             .from('verbetes_colaborativos')
@@ -32,10 +39,10 @@ export class SupabaseService {
     }
 
     async loginComGoogle() {
-        const { data, error } = await this.supabase.auth.signInWithOAuth({
+        const { error } = await this.supabase.auth.signInWithOAuth({
             provider: 'google',
             options: { redirectTo: window.location.origin }
-        });
+        })
         if (error) throw error;
     }
 
@@ -44,8 +51,18 @@ export class SupabaseService {
         if (error) throw error;
     }
 
-    async obterUsuarioAtual() {
-        const { data: { user } } = await this.supabase.auth.getUser();
-        return user;
+    async obterSessao() {
+        const {data: { session }, error } = await this.supabase.auth.getSession();
+        if (error) {
+            console.error("Erro ao verificar sessão:", error);
+            return null;
+        }
+        return session;
     }
+
+    async obterUsuarioAtual() {
+        const session = await this.obterSessao();
+        return session?.user ?? null;
+    }
+
 }

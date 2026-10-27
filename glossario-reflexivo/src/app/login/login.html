@@ -1,0 +1,16 @@
+<main class="login-wrapper">
+  <section class="login-card">
+    <h1>Glossário Reflexivo</h1>
+    <p class="subtitulo">
+      Ambiente acadêmico colaborativo. Identifique-se com sua conta Google para acessar os conteúdos e registrar contribuições.
+    </p>
+
+    <button (click)="entrarComGoogle()" [disabled]="carregando" class="btn-google">
+      {{ carregando ? 'Redirecionando para o Google...' : 'Entrar com o Google' }}
+    </button>
+
+    @if (erroLogin) {
+      <p class="msg-erro">Não foi possível conectar ao Google. Tente novamente.</p>
+    }
+  </section>
+</main>

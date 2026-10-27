@@ -1,38 +1,25 @@
 <div class="form-container">
-    <h3>Adicionar expressão de {{ categoriaAtual }}</h3>
-    <p>Conhece alguma gíria sobre esse tema? Colabore com o glossário.</p>
+  <h3>Adicionar expressão de {{ categoriaAtual }}</h3>
 
-    @if (usuario) {
-        <div class="usuario-logado">
-            <p>Conectado como <strong>{{ usuario.email }}</strong></p>
-            <a href="javascript:void(0)" (click)="fazerLogout()" class="link-sair">Sair</a>
-        </div>
+  <form [formGroup]="verbeteForm" (ngSubmit)="onSubmit()">
+    <div class="input-group">
+      <label for="expressao">Gíria ou Expressão:</label>
+      <input type="text" id="expressao" formControlName="expressao">
+    </div>
 
-        <form [formGroup]="verbeteForm" (ngSubmit)="onSubmit()">
-            <div class="input-group">
-                <label for="expressao">Gíria ou Expressão:</label>
-                <input type="text" id="expressao" formControlName="expressao" >
-            </div>
+    <div class="input-group">
+      <label for="significado">Significado e Contexto de uso:</label>
+      <textarea id="significado" formControlName="significado" rows="3"></textarea>
+    </div>
 
-            <div class="input-group">
-                <label for="significado">Significado e Contexto de uso:</label>
-                <textarea type="text" id="significado" formControlName="significado"></textarea>
-            </div>
+    <button type="submit" [disabled]="verbeteForm.invalid || estaAEnviar" class="btn-enviar">
+      {{ estaAEnviar ? 'Enviando...' : 'Enviar Contribuição' }}
+    </button>
+  </form>
 
-            <button type="submit" [disabled]="verbeteForm.invalid || estaAEnviar" class="btn-enviar">
-                {{ estaAEnviar ? 'Enviando...' : 'Enviar Contribuição' }}
-            </button>
-        </form>
-
-        @if (mensagemSucesso) {
-            <div class="msg-sucesso">
-                <p>Obrigado por contribuir! Sua expressão será avaliada.</p>
-            </div>
-        }
-    } @else {
-        <div class="area-login">
-            <p>Você precisa se identificar para colaborar com o glossário.</p>
-            <button (click)="fazerLogin()" class="btn-google">Entrar com Google</button>
-        </div>
-    }
+  @if (mensagemSucesso) {
+    <div class="msg-sucesso">
+      <p>Expressão enviada com sucesso!</p>
+    </div>
+  }
 </div>

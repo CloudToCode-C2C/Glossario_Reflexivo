@@ -20,23 +20,13 @@ export class FormularioComponent implements OnInit {
     private cdr: ChangeDetectorRef
   ) {}
 
-  verbeteForm =new FormGroup({
+  verbeteForm = new FormGroup({
     expressao: new FormControl('', [Validators.required]),
     significado: new FormControl('', [Validators.required])
   });
 
   async ngOnInit() {
     this.usuario = await this.supabaseService.obterUsuarioAtual();
-    this.cdr.detectChanges();
-  }
-
-  async fazerLogin() {
-    await this.supabaseService.loginComGoogle();
-  }
-
-  async fazerLogout() {
-    await this.supabaseService.fazerLogout();
-    this.usuario = null;
     this.cdr.detectChanges();
   }
 

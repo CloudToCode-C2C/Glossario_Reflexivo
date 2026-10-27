@@ -1,16 +1,26 @@
-<main style=
-"
-  padding-bottom: 80px;
-  max-width: 600px;
-  margin: 2rem auto;">
-  <!-- O RouterOutlet é a vitrine que vai trocar as telas quando clicarmos nos botões -->
+@if (usuarioLogado) {
+  <header style="max-width: 600px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: #fff; border-bottom: 1px solid #eaeaea;">
+    <span style="font-size: 0.8rem; color: #555;">
+      Conectado: <strong>{{ usuarioLogado.email }}</strong>
+    </span>
+    <button (click)="sair()" style="background: none; border: 1px solid #dc2626; color: #dc2626; padding: 0.25rem 0.6rem; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">
+      Sair
+    </button>
+  </header>
+}
+
+<main style="padding-bottom: 80px; max-width: 600px; margin: 2rem auto;">
+  <!-- O RouterOutlet troca entre a tela de Login e as páginas protegidas -->
   <router-outlet></router-outlet>
 
-  <!--<app-formulario categoriaAtual="Etarismo"></app-formulario>
-  <app-mural categoriaFiltro="Etarismo"></app-mural> 
-  
-  Opcional: injetar os relatos aqui embaixo também 
-  <app-mural-relatos></app-mural-relatos></main> -->
+  <!--  @if (usuarioLogado) {
+    <app-formulario categoriaAtual="Etarismo"></app-formulario>
+    <app-mural categoriaAtual="Etarismo"></app-mural>
 
-<!-- A tag mágica que desenha o seu menu na tela -->
-<app-bottom-nav></app-bottom-nav>
+  }-->
+</main>
+
+<!-- O menu inferior só existe se o aluno estiver autenticado -->
+@if (usuarioLogado) {
+  <app-bottom-nav></app-bottom-nav>
+}
