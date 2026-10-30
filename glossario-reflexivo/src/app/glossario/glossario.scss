@@ -3,8 +3,8 @@
   display: flex;
   flex-direction: column;
   padding: 32px 24px 100px 24px; 
-  background-color: var(--cor-fundo);
-  min-height: 100vh;
+ // background-color: var(--cor-fundo);
+  // min-height: 100vh;
 }
 
 // Cabeçalho de acordo com a Home
@@ -23,7 +23,7 @@
     padding: 8px 16px;
     border-radius: 100px;
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 700;
     margin-bottom: 24px;
     
     .material-icons {
@@ -51,5 +51,68 @@
 .grid-de-cards {
   display: flex;
   flex-direction: column;
-  gap: 24px; // Espaço de 24px entre um card e outro 
+  gap: 20px; // Espaço de 24px entre um card e outro 
+}
+
+.barra-busca-container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-top: 24px;
+  background-color: var(--cor-superficie); // O fundo semi-transparente do tema
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 100px; // Formato de pílula arredondada
+  padding: 12px 20px;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+
+  // Brilho ao focar no campo
+  &:focus-within {
+    border-color: rgba(132, 94, 194, 0.5); // Borda roxa
+    box-shadow: 0 0 20px rgba(132, 94, 194, 0.2);
+  }
+
+  .icone-busca {
+    color: var(--cor-texto-secundario);
+    font-size: 24px;
+    margin-right: 12px;
+  }
+
+  .input-busca {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--cor-texto-principal);
+    font-size: 16px;
+    font-family: 'Inter', sans-serif; // Segue o padrão do site
+    outline: none; // Tira aquela borda feia azul padrão do navegador
+
+    &::placeholder {
+      color: var(--cor-texto-secundario);
+      opacity: 0.7;
+    }
+  }
+}
+
+/* --- ESTILO PARA QUANDO A BUSCA FALHA --- */
+.sem-resultados {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--cor-texto-secundario);
+  
+  .material-icons {
+    font-size: 48px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+  }
+
+  p {
+    font-size: 16px;
+    line-height: 1.5;
+  }
 }

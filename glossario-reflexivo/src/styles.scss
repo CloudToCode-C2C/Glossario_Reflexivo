@@ -3,26 +3,26 @@
 //Tipografia na fonte Inter do google fonts
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 :root {
-    //Cores principais, abarcando a identidade visual do arquivo gerado pela cliente
-   --cor-primaria: #845EC2; //Lilas
-   --cor-secundaria: #FF9671; //Laranja
-   --cor-destaque: #F9F871; //Amarelo
-   --cor-suporte: #00C9A7; //Verde
+  // --- IDENTIDADE(Cores de Ação) ---
+  --cor-primaria: #845EC2;      // Lilás vibrante (Botões e Destaques)
+  --cor-secundaria: #FF9671;    // Laranja suave
+  --cor-suporte: #00C9A7;       // Verde moderno
+ 
+  // Reduz drasticamente o estresse ocular comparado ao branco brilhante do celular.
+  --cor-fundo: #F6F3E9;         
+  
+  // O Card ganha um tom sutilmente mais claro, mas não branco puro!
+  --cor-superficie: #FCFBFA;    
+  
+  // --- CORES DE TEXTO 
+  --cor-texto-principal: #3A322C; 
+  --cor-texto-secundario: #685E55; 
+  --cor-texto-inverso: #FFFFFF;
 
-   // Cores da Estruturas
-   --cor-fundo: #FDFBF9; //off-white
-   --cor-superficie: #FFFFFF; //branco pura
-
-    //Cores dos textos
-    --cor-texto-principal: #2D2D2D; //preto chumbo
-    --cor-texto-secundario: #5A5A5A; //cinza escuro
-    --cor-texto-inverso: #FFFFFF; //Branco
-
-    //Para os arredondamentos e sombra
-    --borda-suave: 16px;
-    --sombra-card: 0 4px 12px rgba(0,0,0,0.05);
+  // Bordas e Sombras (Leveza)
+  --borda-suave: 24px;          
+  --sombra-card: 0 4px 20px rgba(58, 50, 44, 0.05); // Sombra marrom clarinha, mais orgânica
 }
-
 /*  A partir daqui cmeça o reset do CSS e Estilo base, para evitar que comece com bordas ou margens
     genericas do navegador */
 
@@ -35,7 +35,7 @@
 body {
     //Aplicacao da fonte e cor de fundo configuradas no root
     font-family: 'Inter', sans-serif;
-    background-color: var(--cor-fundo);
+    background-color: var(--cor-fundo) !important;
     color: var(--cor-texto-principal);
 
     //prpriedade para rolar o conteúdo por baixo da futura navegação, no modelo mobile-first
