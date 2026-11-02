@@ -6,21 +6,34 @@
       <span>Base de Dados</span>
     </div>
     <h1 class="titulo-pagina">Glossário Oficial</h1>
-    <p class="subtitulo-pagina">Explore as expressões mapeadas no material didático e compreenda o contexto histórico e social por trás de cada uma delas.</p>
+    <p class="subtitulo-pagina">Explore as expressões mapeadas no material didático e compreenda o contexto histórico.</p>
+    
+    <!-- 1. A NOVA BARRA DE BUSCA -->
+    <div class="barra-busca-container">
+      <span class="material-icons icone-busca">search</span>
+      <!-- O (keyup) chama a função no TS a cada digitação! -->
+      <input 
+        type="text" 
+        class="input-busca" 
+        placeholder="Buscar por gíria ou tipo (ex: Racismo)..."
+        (keyup)="filtrarPalavras($event)"
+      />
+    </div>
   </header>
 
-  <!-- O Container Flexível que vai organizar os cards -->
   <div class="grid-de-cards">
-    
-   
-    <!-- Para cada 'item' dentro da minha 'listaDePalavras'... -->
-    @for (item of listaDePalavras; track item.expressao) {
-      
-      <!-- ...desenhe o card e envie TODOS os dados do 'item' na variável [dadosGiria] -->
+    <!-- 2. O LAÇO AGORA OLHA PARA A LISTA FILTRADA -->
+    @for (item of listaFiltrada; track item.expressao) {
       <app-card-giria [dadosGiria]="item"></app-card-giria>
-      
     }
 
+    <!-- 3. MENSAGEM SE A BUSCA NÃO ENCONTRAR NADA -->
+    @if (listaFiltrada.length === 0) {
+      <div class="sem-resultados">
+        <span class="material-icons">sentiment_dissatisfied</span>
+        <p>Nenhuma expressão encontrada para "{{ termoBusca }}".</p>
+      </div>
+    }
   </div>
 
 </section>

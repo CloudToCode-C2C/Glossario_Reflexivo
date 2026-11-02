@@ -1,0 +1,6 @@
+/* Garante que o componente principal seja "invisível" para mostrar o fundo rústico do body */
+:host {
+  display: block;
+  min-height: 100vh;
+  background-color: transparent !important;
+}
