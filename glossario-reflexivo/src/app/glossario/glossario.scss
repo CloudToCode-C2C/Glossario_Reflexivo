@@ -184,6 +184,102 @@
   background: rgba(132, 94, 194, 0.08);
 }
 
+.chat-container {
+  display: flex;
+  width: min(100%, 900px);
+  flex-direction: column;
+  gap: 16px;
+  align-self: center;
+  margin: 0 auto 28px;
+  padding: 20px 16px;
+  border: 1px solid rgba(58, 50, 44, 0.06);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 100% 0, rgba(0, 201, 167, 0.08), transparent 35%),
+    #f8f6f1;
+}
+
+.chat-message {
+  display: flex;
+  max-width: 90%;
+  align-items: flex-end;
+  gap: 8px;
+
+  &.left {
+    align-self: flex-start;
+
+    .avatar {
+      background: #9f3f46;
+    }
+  }
+
+  &.right {
+    align-self: flex-end;
+
+    .avatar {
+      background: #008f78;
+    }
+  }
+}
+
+.avatar {
+  display: flex;
+  width: 32px;
+  height: 32px;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 32px;
+  border-radius: 50%;
+  color: var(--cor-texto-inverso);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.bubble {
+  max-width: calc(100% - 40px);
+  padding: 12px 14px;
+  border-radius: 16px;
+  box-shadow: 0 2px 6px rgba(58, 50, 44, 0.06);
+
+  p {
+    margin: 0;
+    color: var(--cor-texto-principal);
+    font-size: 14px;
+    line-height: 1.55;
+    overflow-wrap: anywhere;
+  }
+}
+
+.bubble-label {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--cor-texto-secundario);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.bubble.incorrect {
+  border: 1px solid rgba(159, 63, 70, 0.28);
+  border-bottom-left-radius: 4px;
+  background: #fff8f7;
+
+  .bubble-label {
+    color: #9f3f46;
+  }
+}
+
+.bubble.correct {
+  border: 1px solid rgba(0, 143, 120, 0.24);
+  border-bottom-right-radius: 4px;
+  background: #effbf6;
+
+  .bubble-label {
+    color: #008f78;
+  }
+}
+
 .area-interativa {
   display: flex;
   flex-direction: column;
@@ -211,6 +307,7 @@
   }
 
   .teoria-categoria,
+  .chat-container,
   .area-interativa {
     width: min(100%, 900px);
     align-self: center;

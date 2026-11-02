@@ -44,6 +44,24 @@
       </section>
     </article>
 
+    <section class="chat-container" aria-label="Exemplo de reformulação">
+      <div class="chat-message left">
+        <div class="avatar" aria-hidden="true">A</div>
+        <div class="bubble incorrect">
+          <span class="bubble-label">Fala A</span>
+          <p>«{{ categoria.exemplos[0] }}»</p>
+        </div>
+      </div>
+
+      <div class="chat-message right">
+        <div class="bubble correct">
+          <span class="bubble-label">Fala B</span>
+          <p>{{ categoria.reformulacao }}</p>
+        </div>
+        <div class="avatar" aria-hidden="true">B</div>
+      </div>
+    </section>
+
     <div class="area-interativa">
       <app-formulario [categoriaAtual]="categoria.id"></app-formulario>
       <app-mural [categoriaFiltro]="categoria.id"></app-mural>
