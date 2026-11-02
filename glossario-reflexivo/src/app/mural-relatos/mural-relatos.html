@@ -36,7 +36,12 @@
                     rows="5"
                     placeholder="Escreva seu relato aqui..."
                 ></textarea>
-
+                
+                @if (mensagemSucesso) {
+                    <div class="msg-sucesso">
+                    <p>Relato enviado com sucesso!</p>
+                    </div>
+                }
                 <button type="submit" [disabled]="relatoForm.invalid" class="btn-enviar">
                     <span class="material-icons" aria-hidden="true">send</span>
                     <span>Enviar relato</span>

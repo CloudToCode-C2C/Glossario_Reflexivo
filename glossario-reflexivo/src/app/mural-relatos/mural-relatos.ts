@@ -23,6 +23,7 @@ export class MuralRelatosComponent implements OnInit {
   estaAEnviar = false;
   estaCarregando = true;
   erroAoCarregar = false;
+  mensagemSucesso = false;
 
   relatoForm = new FormGroup({
     texto: new FormControl('', [Validators.required, Validators.minLength(10)])
@@ -74,7 +75,8 @@ export class MuralRelatosComponent implements OnInit {
     try {
       await this.supabaseService.inserirRelato(novoRelato);
       this.relatoForm.reset();
-      alert("Relato enviado para aprovação! Obrigado por compartilhar sua experiência.");
+      this.mensagemSucesso = true;
+      setTimeout(() => this.mensagemSucesso = false, 3500);
     } catch (error) {
       console.error("Erro ao enviar relato:", error);
       alert("Ocorreu um erro ao enviar o relato. Por favor, tente novamente mais tarde.");

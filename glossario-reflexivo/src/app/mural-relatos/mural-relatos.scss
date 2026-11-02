@@ -140,6 +140,16 @@ form {
             box-shadow: 0 0 0 3px rgba(132, 94, 194, 0.14);
         }
     }
+
+    .msg-sucesso {
+        margin-top: 1rem;
+        padding: 0.8rem;
+        background-color: var(--cor-suporte);
+        color: var(--cor-texto-principal);
+        border-radius: 4px;
+        text-align: center;
+        font-weight: bold;
+    }
 }
 
 .btn-enviar {
