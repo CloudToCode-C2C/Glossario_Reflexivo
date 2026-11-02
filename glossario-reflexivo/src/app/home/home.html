@@ -103,6 +103,14 @@
                         <span class="numero-questao">{{ questao.numero }}</span>
                         <p>{{ questao.texto }}</p>
                         <span class="material-icons icone-reflexao">lightbulb</span>
+                        <a
+                            class="link-sala"
+                            [routerLink]="['/reflexao', questao.numero]"
+                            (click)="$event.stopPropagation()"
+                        >
+                            Entrar na sala
+                            <span class="material-icons" aria-hidden="true">arrow_forward</span>
+                        </a>
                     </article>
                 }
             </div>

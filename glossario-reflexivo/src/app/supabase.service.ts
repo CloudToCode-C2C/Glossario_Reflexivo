@@ -86,4 +86,29 @@ export class SupabaseService {
 
         if (error) throw error;
     }
+
+    async buscarRespostasReflexao(perguntaId: number) {
+        const { data, error } = await this.supabase
+            .from('respostas_reflexao')
+            .select('*')
+            .eq('pergunta_id', perguntaId)
+            .order('created_at', { ascending: true });
+
+        if (error) throw error;
+        return data || [];
+    }
+
+    async inserirRespostaReflexao(resposta: {
+        pergunta_id: number;
+        texto: string;
+        autor_email: string;
+        status_aprovado: boolean;
+    }) {
+        const { data, error } = await this.supabase
+            .from('respostas_reflexao')
+            .insert([resposta]);
+
+        if (error) throw error;
+        return data;
+    }
 }

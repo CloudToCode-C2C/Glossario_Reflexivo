@@ -1,4 +1,5 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 interface QuestaoReflexiva {
   numero: number;
@@ -6,7 +7,7 @@ interface QuestaoReflexiva {
 }
 
 @Component({
-  imports: [],
+  imports: [RouterLink],
   selector: 'app-home',
   styleUrl: './home.scss',
   templateUrl: './home.html',

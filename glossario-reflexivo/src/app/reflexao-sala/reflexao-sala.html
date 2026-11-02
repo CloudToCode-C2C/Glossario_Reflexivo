@@ -1,0 +1,90 @@
+<section class="sala-reflexao" aria-labelledby="titulo-sala">
+  <header class="cabecalho-sala">
+    <div class="barra-superior">
+      <a class="botao-voltar" routerLink="/" aria-label="Voltar para o início">
+        <span class="material-icons" aria-hidden="true">arrow_back</span>
+      </a>
+      <div class="identidade-sala">
+        <span class="rotulo-sala">Sala de debate</span>
+        <h1 id="titulo-sala">Reflexão</h1>
+      </div>
+      @if (perguntaAtual) {
+        <span class="numero-sala" aria-label="Pergunta {{ perguntaAtual.id }}">
+          {{ perguntaAtual.id }}/5
+        </span>
+      }
+    </div>
+
+    @if (perguntaAtual) {
+      <p class="pergunta-atual">{{ perguntaAtual.texto }}</p>
+    } @else {
+      <p class="pergunta-atual erro-pergunta">
+        Esta pergunta não existe. Volte para o início e escolha uma das questões.
+      </p>
+    }
+  </header>
+
+  <div
+    #feedRespostas
+    class="feed-respostas"
+    role="log"
+    aria-live="polite"
+    aria-label="Respostas da sala"
+  >
+    @if (carregando) {
+      <p class="estado-feed">Carregando respostas...</p>
+    } @else if (erroAoCarregar) {
+      <p class="estado-feed estado-erro">
+        Não foi possível carregar as respostas. Tente novamente mais tarde.
+      </p>
+    } @else if (perguntaAtual && respostas.length === 0) {
+      <div class="estado-vazio">
+        <span class="material-icons" aria-hidden="true">forum</span>
+        <p>Esta sala ainda está começando.</p>
+        <span>Seja a primeira pessoa a compartilhar uma reflexão.</span>
+      </div>
+    } @else {
+      @for (resposta of respostas; track resposta.id) {
+        <article class="balao-resposta">
+          <p>{{ resposta.texto }}</p>
+          @if (resposta.created_at) {
+            <time [attr.datetime]="resposta.created_at">
+              {{ resposta.created_at | date: 'dd/MM/yyyy HH:mm' }}
+            </time>
+          }
+        </article>
+      }
+    }
+  </div>
+
+  <footer class="rodape-resposta">
+    @if (mensagemSucesso) {
+      <p class="mensagem mensagem-sucesso" role="status">{{ mensagemSucesso }}</p>
+    }
+    @if (mensagemErro) {
+      <p class="mensagem mensagem-erro" role="alert">{{ mensagemErro }}</p>
+    }
+
+    <form class="formulario-resposta" [formGroup]="respostaForm" (ngSubmit)="enviarResposta()">
+      <label class="sr-only" for="resposta-texto">Escreva sua resposta</label>
+      <textarea
+        id="resposta-texto"
+        formControlName="texto"
+        rows="1"
+        enterkeyhint="send"
+        placeholder="Compartilhe sua reflexão..."
+        [attr.aria-invalid]="respostaForm.controls.texto.invalid && respostaForm.controls.texto.touched"
+      ></textarea>
+      <button
+        type="submit"
+        class="botao-enviar"
+        [disabled]="respostaForm.invalid || enviando || !perguntaAtual"
+        aria-label="Enviar resposta"
+      >
+        <span class="material-icons" aria-hidden="true">
+          {{ enviando ? 'hourglass_top' : 'send' }}
+        </span>
+      </button>
+    </form>
+  </footer>
+</section>

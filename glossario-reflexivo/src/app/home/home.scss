@@ -241,6 +241,32 @@
     font-size: 28px;
 }
 
+.link-sala {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 18px;
+    color: var(--cor-primaria);
+    font-size: 13px;
+    font-weight: 800;
+    text-decoration: none;
+
+    .material-icons {
+        font-size: 17px;
+    }
+
+    &:hover,
+    &:focus-visible {
+        text-decoration: underline;
+    }
+
+    &:focus-visible {
+        outline: 3px solid rgba(132, 94, 194, 0.3);
+        outline-offset: 3px;
+        border-radius: 4px;
+    }
+}
+
 .indicadores-questoes {
     display: flex;
     justify-content: center;

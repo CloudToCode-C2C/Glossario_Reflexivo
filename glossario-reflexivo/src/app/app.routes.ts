@@ -6,6 +6,7 @@ import { GlossarioComponent } from './glossario/glossario';
 import { FormularioComponent } from './formulario/formulario';
 import { MuralRelatosComponent } from './mural-relatos/mural-relatos';
 import { SobreComponent } from './sobre/sobre';
+import { ReflexaoSalaComponent } from './reflexao-sala/reflexao-sala';
 
 export const routes: Routes = [
   {
@@ -47,6 +48,10 @@ export const routes: Routes = [
       {
         path: 'sobre',
         component: SobreComponent,
+      },
+      {
+        path: 'reflexao/:id',
+        component: ReflexaoSalaComponent,
       },
     ]
   },
