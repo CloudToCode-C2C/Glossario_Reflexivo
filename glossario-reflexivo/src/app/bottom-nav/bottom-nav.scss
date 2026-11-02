@@ -15,7 +15,7 @@
   justify-content: space-around; // Espalha os botões igualmente
   align-items: center; // Centraliza verticalmente
   
-  height: 80px;
+  min-height: 80px;
   background-color: var(--cor-superficie); // Puxa o branco do styles.scss
   box-shadow: 0px -4px 16px rgba(0, 0, 0, 0.08); // Sombra visível
   
@@ -37,6 +37,8 @@
   height: 100%; // Ocupa toda a altura da barra para ser fácil de clicar
   gap: 4px; // Espaço entre ícone e texto
   transition: color 0.3s ease; // Efeito suave
+  flex: 1;
+  max-width: 120px;
 }
 
 /* CONFIGURAÇÃO DOS ÍCONES E TEXTO */
