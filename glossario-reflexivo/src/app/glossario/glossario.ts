@@ -189,4 +189,15 @@ export class GlossarioComponent {
     Sexistas: 'female',
     Sociais: 'people'
   };
+
+  readonly coresCategorias: Record<string, string> = {
+    Etarismo: 'var(--cat-etarismo)',
+    Capacitismo: 'var(--cat-capacitismo)',
+    Transfobia: 'var(--cat-transfobia)',
+    'Preconceito Linguistico': 'var(--cat-linguistico)',
+    Raciais: 'var(--cat-raciais)',
+    Regionais: 'var(--cat-regionais)',
+    Sexistas: 'var(--cat-sexistas)',
+    Sociais: 'var(--cat-sociais)'
+  };
 }

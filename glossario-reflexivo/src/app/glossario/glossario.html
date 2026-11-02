@@ -5,7 +5,10 @@
       Voltar para categorias
     </a>
 
-    <header class="cabecalho-glossario cabecalho-detalhe">
+    <header
+      class="cabecalho-glossario cabecalho-detalhe"
+      [style.--cor-tema]="coresCategorias[categoria.id]"
+    >
       <div class="pill-badge">
         <span class="material-icons" aria-hidden="true">{{ icones[categoria.id] }}</span>
         <span>Categoria selecionada</span>
@@ -83,6 +86,7 @@
         <a
           class="categoria-card"
           [routerLink]="['/glossario', categoria.id]"
+          [style.--cor-tema]="coresCategorias[categoria.id]"
           [attr.aria-label]="'Abrir categoria ' + categoria.titulo"
         >
           <span class="material-icons categoria-icone" aria-hidden="true">{{ icones[categoria.id] }}</span>
