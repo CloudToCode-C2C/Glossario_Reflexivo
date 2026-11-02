@@ -1,16 +1,29 @@
 <main class="login-wrapper">
   <section class="login-card">
-    <h1>Glossário Reflexivo</h1>
+    <div class="marca-login" aria-hidden="true">
+      <span class="material-icons">menu_book</span>
+    </div>
+    <div class="pill-badge">
+      <span class="material-icons" aria-hidden="true">school</span>
+      <span>Projeto Educacional</span>
+    </div>
+    <h1>Glossário <em>Reflexivo</em></h1>
     <p class="subtitulo">
-      Ambiente acadêmico colaborativo. Identifique-se com sua conta Google para acessar os conteúdos e registrar contribuições.
+      Um espaço para aprender sobre variação linguística, refletir sobre preconceitos e construir
+      formas mais respeitosas de comunicação.
     </p>
 
     <button (click)="entrarComGoogle()" [disabled]="carregando" class="btn-google">
+      <span class="google-mark" aria-hidden="true">G</span>
       {{ carregando ? 'Redirecionando para o Google...' : 'Entrar com o Google' }}
     </button>
 
     @if (erroLogin) {
-      <p class="msg-erro">Não foi possível conectar ao Google. Tente novamente.</p>
+      <p class="msg-erro" role="alert">
+        Não foi possível conectar ao Google. Tente novamente.
+      </p>
     }
+
+    <p class="texto-rodape">Entre para acessar os conteúdos e participar da comunidade.</p>
   </section>
 </main>
