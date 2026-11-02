@@ -20,4 +20,14 @@ export class SobreComponent {
     citacaoMarcuschi: 'Nessa perspectiva, Marcuschi (2008) compreende a variação linguística como parte constitutiva da linguagem, valorizando a diversidade dos usos linguísticos e contribuindo para o combate ao preconceito linguístico.',
     mensagemFinal: 'Assim, este glossário busca promover a reflexão sobre as diferentes formas de expressão, incentivando o respeito às variedades linguísticas e o reconhecimento da língua como uma prática social dinâmica. Afinal, falar diferente não significa falar errado!'
   };
+
+  referencias = [
+    "BAGNO, Marcos. Nada na língua é por acaso: por uma pedagogia da variação linguística. São Paulo: Parábola Editorial, 2007.",
+    "BAGNO, Marcos. Preconceito linguístico: o que é, como se faz. São Paulo: Parábola Editorial, 1999.",
+    "BORTONI-RICARDO, Stella Maris. Educação em língua materna: a sociolinguística na sala de aula. São Paulo: Parábola Editorial, 2004.",
+    "BRASIL. Ministério da Educação. Base Nacional Comum Curricular. Brasília, DF: MEC, 2018.",
+    "BRASIL. Ministério da Educação. Parâmetros Curriculares Nacionais: introdução aos parâmetros curriculares nacionais. Brasília: MEC/SEF, 1997.",
+    "MARCUSCHI, Luiz Antônio. Produção textual: análise de gêneros e compreensão. São Paulo: Parábola Editorial, 2008.",
+    "MINAYO, Maria Cecília de Souza (org.). Pesquisa social: teoria, método e criatividade. 18. ed. Petrópolis: Vozes, 2001."
+  ]
 }

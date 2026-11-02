@@ -44,5 +44,14 @@
         <p>{{ fundamentacaoTeorica.mensagemFinal }}</p>
       </div>
     </section>
+
+    <section class="referencias-container">
+      <h2>Referências</h2>
+      <ul class="referencias-lista">
+        @for (referencia of referencias; track referencia) {
+          <li>{{ referencia }}</li>
+        }
+      </ul>
+    </section>
   </article>
 </section>
