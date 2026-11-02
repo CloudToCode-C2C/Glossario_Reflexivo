@@ -6,6 +6,7 @@ interface QuestaoReflexiva {
   texto: string;
 }
 
+// Controla o dashboard inicial e a interação do carrossel de perguntas.
 @Component({
   imports: [RouterLink],
   selector: 'app-home',
@@ -13,6 +14,7 @@ interface QuestaoReflexiva {
   templateUrl: './home.html',
 })
 export class Home implements OnInit, OnDestroy {
+  // Perguntas compartilhadas entre os slides da Home e as salas de debate.
   readonly questoesReflexivas: QuestaoReflexiva[] = [
     {
       numero: 1,
@@ -47,6 +49,7 @@ export class Home implements OnInit, OnDestroy {
   private intervaloCarrossel?: ReturnType<typeof setInterval>;
   private inicioToque = 0;
 
+  // Inicia e encerra o autoplay junto com o ciclo de vida do componente.
   ngOnInit(): void {
     this.iniciarCarrossel();
   }
@@ -55,6 +58,7 @@ export class Home implements OnInit, OnDestroy {
     this.pararIntervalo();
   }
 
+  // Um clique fixa o slide escolhido e interrompe a troca automática.
   selecionarQuestao(indice: number): void {
     this.indiceQuestaoAtiva = indice;
     this.pararCarrossel();
@@ -71,6 +75,7 @@ export class Home implements OnInit, OnDestroy {
       this.questoesReflexivas.length;
   }
 
+  // Registra o ponto inicial do gesto de arrastar no dispositivo móvel.
   iniciarToque(event: TouchEvent): void {
     this.inicioToque = event.changedTouches[0]?.clientX ?? 0;
   }
@@ -90,6 +95,7 @@ export class Home implements OnInit, OnDestroy {
     this.pararCarrossel();
   }
 
+  // Permite navegar com o teclado quando o carrossel está focado.
   @HostListener('window:keydown', ['$event'])
   controlarComTeclado(event: KeyboardEvent): void {
     if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
@@ -103,12 +109,14 @@ export class Home implements OnInit, OnDestroy {
     this.pararCarrossel();
   }
 
+  // Avança os slides em intervalos regulares até que o usuário interaja.
   private iniciarCarrossel(): void {
     this.intervaloCarrossel = setInterval(() => {
       this.proximaQuestao();
     }, 5000);
   }
 
+  // Centraliza a interrupção do autoplay e a atualização do estado visual.
   private pararCarrossel(): void {
     this.carrosselEmExecucao = false;
     this.pararIntervalo();

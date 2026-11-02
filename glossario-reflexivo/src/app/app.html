@@ -10,17 +10,11 @@
 }
 
 <main style="padding-bottom: 80px; max-width: 600px; margin: 2rem auto;">
-  <!-- O RouterOutlet troca entre a tela de Login e as páginas protegidas -->
+  <!-- O outlet injeta a tela pública ou a página protegida correspondente à rota atual. -->
   <router-outlet></router-outlet>
-
-  <!--  @if (usuarioLogado) {
-    <app-formulario categoriaAtual="Etarismo"></app-formulario>
-    <app-mural categoriaAtual="Etarismo"></app-mural>
-
-  }-->
 </main>
 
-<!-- O menu inferior só existe se o aluno estiver autenticado -->
+<!-- A navegação inferior só é exposta depois que a sessão autenticada foi confirmada. -->
 @if (usuarioLogado) {
   <app-bottom-nav></app-bottom-nav>
 }

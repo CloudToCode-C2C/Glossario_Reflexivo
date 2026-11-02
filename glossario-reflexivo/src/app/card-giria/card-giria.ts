@@ -9,6 +9,7 @@ export interface DadosGiria {
   data_criacao: Date | string;
 }
 
+// Componente de apresentação: recebe um verbete e renderiza seu conteúdo sem lógica de negócio.
 @Component({
   selector: 'app-card-giria',
   standalone: true,

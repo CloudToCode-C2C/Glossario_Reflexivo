@@ -21,11 +21,11 @@ export class App implements OnInit {
   ) {}
 
   async ngOnInit() {
-    // 1. Verifica o estado inicial ao abrir o app
+    // Sincroniza a aplicação com a sessão existente antes de renderizar a navegação.
     this.usuarioLogado = await this.supabaseService.obterUsuarioAtual();
     this.cdr.detectChanges();
 
-    // 2. Escuta login, logout ou expiração de token em tempo real
+    // Mantém a interface atualizada quando o Supabase altera o estado da autenticação.
     this.supabaseService.escutarMudancasAuth((event, session) => {
       this.usuarioLogado = session?.user ?? null;
       this.cdr.detectChanges();

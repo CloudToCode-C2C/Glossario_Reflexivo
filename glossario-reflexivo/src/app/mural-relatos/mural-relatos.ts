@@ -9,6 +9,7 @@ interface Relato {
   created_at: string;
 }
 
+// Fórum de relatos: combina formulário de envio, moderação e feed comunitário.
 @Component({
   selector: 'app-mural-relatos',
   standalone: true,
@@ -32,11 +33,13 @@ export class MuralRelatosComponent implements OnInit {
     private cdr: ChangeDetectorRef
   ) {}
 
+  // Obtém a autoria atual e carrega os relatos aprovados pelo serviço.
   async ngOnInit() {
     this.usuarioAtual = await this.supabaseService.obterUsuarioAtual();
     await this.carregarRelatos();
   }
 
+  // Recarrega o feed e diferencia estado de carregamento de estado de erro.
   async carregarRelatos() {
     this.estaCarregando = true;
     this.erroAoCarregar = false;
@@ -52,6 +55,7 @@ export class MuralRelatosComponent implements OnInit {
     }
   }
 
+  // Envia o relato como pendente, sem inseri-lo diretamente no feed local.
   async onSubmit() {
     if (this.relatoForm.invalid || !this.usuarioAtual?.email) {
       this.relatoForm.markAllAsTouched();

@@ -3,6 +3,7 @@ import { CardGiriaComponent } from '../card-giria/card-giria';
 import { SupabaseService } from '../supabase.service';
 import { DadosGiria } from '../card-giria/card-giria';
 
+// Widget de leitura que busca os verbetes e aplica o filtro recebido da página.
 @Component({
   selector: 'app-mural',
   standalone: true,
@@ -27,10 +28,12 @@ export class MuralComponent implements OnInit {
   
   constructor(private supabaseService: SupabaseService) {}
 
+  // Carrega os dados reais quando o mural entra em cena.
   async ngOnInit() {
     await this.carregarDados();
   }
 
+  // Mantém o spinner sincronizado com a consulta ao Supabase.
   async carregarDados() {
     console.log('1. Iniciando requisição ao Supabase...');
     this.carregando.set(true);

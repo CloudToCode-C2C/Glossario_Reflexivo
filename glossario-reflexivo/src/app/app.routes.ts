@@ -8,6 +8,7 @@ import { MuralRelatosComponent } from './mural-relatos/mural-relatos';
 import { SobreComponent } from './sobre/sobre';
 import { ReflexaoSalaComponent } from './reflexao-sala/reflexao-sala';
 
+// Mantém a tela de login pública e agrupa todas as áreas de conteúdo sob o guard.
 export const routes: Routes = [
   {
     path: 'login',

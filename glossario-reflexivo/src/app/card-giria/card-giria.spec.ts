@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CardGiriaComponent } from './card-giria';
 
+// Confirma que o componente visual de verbete pode ser instanciado isoladamente.
 describe('CardGiriaComponent', () => {
   let component: CardGiriaComponent;
   let fixture: ComponentFixture<CardGiriaComponent>;

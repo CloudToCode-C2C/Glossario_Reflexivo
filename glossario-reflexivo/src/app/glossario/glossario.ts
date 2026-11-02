@@ -14,6 +14,7 @@ export interface CategoriaGlossario {
   reformulacao: string;
 }
 
+// Página que alterna entre a grade de categorias e o detalhe selecionado.
 @Component({
   selector: 'app-glossario',
   standalone: true,
@@ -24,6 +25,7 @@ export interface CategoriaGlossario {
 export class GlossarioComponent {
   private categoriaDaRota = '';
 
+  // Recebe o identificador da rota e resolve a categoria exibida no detalhe.
   @Input()
   set categoria(value: string | undefined) {
     this.categoriaDaRota = value ?? '';
@@ -38,6 +40,7 @@ export class GlossarioComponent {
 
   categoriaSelecionada: CategoriaGlossario | null = null;
 
+  // Conteúdo pedagógico estático que alimenta a grade e a visão detalhada.
   readonly categorias: CategoriaGlossario[] = [
     {
       id: 'Etarismo',
@@ -179,6 +182,7 @@ export class GlossarioComponent {
     }
   ];
 
+  // Ícones e cores permanecem centralizados para manter o template declarativo.
   readonly icones: Record<string, string> = {
     Etarismo: 'elderly',
     Capacitismo: 'accessible',

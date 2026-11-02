@@ -2,6 +2,7 @@ import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { SupabaseService } from '../supabase.service';
 
+// Widget de contribuição que associa o verbete à categoria e ao usuário atual.
 @Component({
   selector: 'app-formulario',
   standalone: true,
@@ -25,11 +26,13 @@ export class FormularioComponent implements OnInit {
     significado: new FormControl('', [Validators.required])
   });
 
+  // Carrega o usuário para preencher a autoria no momento do envio.
   async ngOnInit() {
     this.usuario = await this.supabaseService.obterUsuarioAtual();
     this.cdr.detectChanges();
   }
 
+  // Valida o formulário, envia uma contribuição pendente e atualiza o feedback da tela.
   async onSubmit() {
     if (!this.categoriaAtual) {
       console.error("Erro de Integração: O componente pai não enviou a categoria atual.");

@@ -1,5 +1,6 @@
 <section class="pagina-glossario">
   @if (categoriaSelecionada; as categoria) {
+    <!-- Visão detalhada: teoria, exemplo visual e widgets colaborativos da categoria. -->
     <a class="voltar-categorias" routerLink="/glossario">
       <span class="material-icons" aria-hidden="true">arrow_back</span>
       Voltar para categorias
@@ -17,6 +18,7 @@
     </header>
 
     <article class="teoria-categoria">
+      <!-- Blocos editoriais que explicam a categoria antes da interação. -->
       <section class="bloco-teoria">
         <h2>Definição</h2>
         <p>{{ categoria.definicao }}</p>
@@ -48,6 +50,7 @@
     </article>
 
     <section class="chat-container" aria-label="Exemplo de reformulação">
+      <!-- Contrasta uma expressão inadequada com uma forma educativa de reformulá-la. -->
       <div class="chat-message left">
         <div class="avatar" aria-hidden="true">A</div>
         <div class="bubble incorrect">
@@ -66,10 +69,12 @@
     </section>
 
     <div class="area-interativa">
+      <!-- Formulário e mural compartilham o mesmo identificador de categoria. -->
       <app-formulario [categoriaAtual]="categoria.id"></app-formulario>
       <app-mural [categoriaFiltro]="categoria.id"></app-mural>
     </div>
   } @else {
+    <!-- Visão inicial: grade de acesso às oito categorias do glossário. -->
     <header class="cabecalho-glossario">
       <div class="pill-badge">
         <span class="material-icons" aria-hidden="true">library_books</span>

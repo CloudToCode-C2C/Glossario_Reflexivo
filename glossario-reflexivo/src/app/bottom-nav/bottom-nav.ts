@@ -1,6 +1,7 @@
 import { Component } from "@angular/core";
 import { RouterLink, RouterLinkActive } from "@angular/router";
 
+// Navegação compartilhada pelas páginas autenticadas.
 @Component({
     selector: 'app-bottom-nav',
     standalone: true,

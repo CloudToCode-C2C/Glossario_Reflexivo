@@ -1,4 +1,4 @@
-/* Garante que o componente principal seja "invisível" para mostrar o fundo rústico do body */
+/* Mantém o componente raiz neutro para que cada rota controle sua própria composição. */
 :host {
   display: block;
   min-height: 100vh;

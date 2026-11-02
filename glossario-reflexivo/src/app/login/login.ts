@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { SupabaseService } from '../supabase.service';
 
+// Tela pública responsável apenas por iniciar e validar o fluxo OAuth.
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -19,6 +20,7 @@ export class LoginComponent implements OnInit {
     private cdr: ChangeDetectorRef
   ) {}
 
+  // Redireciona sessões já existentes para o conteúdo protegido.
   async ngOnInit() {
     const session = await this.supabaseService.obterSessao();
     if (session) {
@@ -26,6 +28,7 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  // Inicia o login Google e expõe falhas sem alterar o estado de autenticação.
   async entrarComGoogle() {
     try {
       this.carregando = true;

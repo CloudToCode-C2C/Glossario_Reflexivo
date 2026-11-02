@@ -1,11 +1,8 @@
-// Nessa sessão vai conter odo Design System do projeto
-// ------------------------------------------------------
-//Tipografia na fonte Inter do google fonts
-// Tipografia na fonte Inter do google fonts
+// Tokens globais de identidade, semântica e espaçamento usados por todos os componentes.
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-  // --- IDENTIDADE (Cores de Ação) ---
+  // Cores de ação e estados de interação da interface.
   --cor-primaria: #845EC2;      
   --cor-primaria-hover: #6B4AA3; // Obrigatório para feedback de clique nos botões
   --cor-primaria-light: #E6DDF3; // Fundo translúcido para tags e chips
@@ -15,8 +12,7 @@
 
   --cor-suporte: #00C9A7;       
 
-  // --- CATEGORIAS (Mapeamento Visual) ---
-  // Aplique essas variáveis nos cards e ícones para diferenciar as 8 seções
+  // Cores temáticas usadas para diferenciar as oito categorias do glossário.
   --cat-etarismo: #FF9671;      // Laranja
   --cat-capacitismo: #00C9A7;   // Verde
   --cat-transfobia: #D65DB1;    // Rosa
@@ -26,37 +22,36 @@
   --cat-sexistas: #845EC2;      // Lilás
   --cat-sociais: #008E9B;       // Teal
 
-  // --- SEMÂNTICA (Formulários e Avisos) ---
+  // Cores semânticas para sucesso, erro e alertas de validação.
   --cor-sucesso: #10B981;
   --cor-sucesso-fundo: #D1FAE5;
   --cor-erro: #EF4444;
   --cor-erro-fundo: #FEE2E2;
   --cor-alerta: #F59E0B;
 
-  // --- FUNDOS E SUPERFÍCIES ---
+  // Superfícies e divisórias que formam a hierarquia visual das páginas.
   --cor-fundo: #F6F3E9;         
   --cor-superficie: #FCFBFA;    
   --cor-borda: #E8E2D9;         // Necessário para divisórias (hr) e contorno de inputs vazios
 
-  // --- CORES DE TEXTO ---
+  // Contraste textual para conteúdo principal, secundário e inverso.
   --cor-texto-principal: #3A322C; 
   --cor-texto-secundario: #685E55; 
   --cor-texto-inverso: #FFFFFF;
 
-  // --- ESPAÇAMENTOS (Consistência de Layout) ---
+  // Escala única de espaçamento para evitar medidas arbitrárias.
   --espaco-sm: 8px;
   --espaco-md: 16px;
   --espaco-lg: 24px;
   --espaco-xl: 32px;
 
-  // --- BORDAS E SOMBRAS ---
+  // Raios e elevações compartilhados por cards, botões e superfícies.
   --borda-suave: 16px;          // 24px em tudo gera aspecto de "brinquedo". 16px equilibra modernidade.
   --borda-pill: 9999px;         // Para botões de ação e tags arredondadas
   --sombra-card: 0 4px 20px rgba(58, 50, 44, 0.05); 
   --sombra-flutuante: 0 10px 25px rgba(132, 94, 194, 0.15); // Destaque para o BottomNav ou modais
 }
-/*  A partir daqui cmeça o reset do CSS e Estilo base, para evitar que comece com bordas ou margens
-    genericas do navegador */
+/* Normaliza o modelo de caixa para que os componentes tenham medidas previsíveis. */
 
 * {
     margin: 0;
@@ -65,19 +60,17 @@
 }
 
 body {
-    //Aplicacao da fonte e cor de fundo configuradas no root
+    // Aplica a tipografia e a superfície base definidas nos tokens globais.
     font-family: 'Inter', sans-serif;
     background-color: var(--cor-fundo) !important;
     color: var(--cor-texto-principal);
 
-    //prpriedade para rolar o conteúdo por baixo da futura navegação, no modelo mobile-first
+    // Garante altura mínima para páginas curtas e longas em telas móveis.
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
 }
 
-/*  ---------------------------------------------------------------------------- 
-    Parte das classes utilitarias (tipografia)
-    ------------------------------------------------------------------------------ */
+/* Classes utilitárias de tipografia para textos com hierarquia previsível. */
 
 .h1-titulo {
   font-size: 24px;
