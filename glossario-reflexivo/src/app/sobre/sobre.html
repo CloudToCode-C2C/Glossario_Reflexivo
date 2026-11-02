@@ -1,0 +1,48 @@
+<section class="pagina-sobre">
+  <header class="cabecalho-sobre">
+    <div class="pill-badge">
+      <span class="material-icons" aria-hidden="true">menu_book</span>
+      <span>Sobre o projeto</span>
+    </div>
+    <h1>Fundamentação teórica</h1>
+    <p class="subtitulo-sobre">
+      Um convite para compreender a língua como prática social, reconhecer a diversidade dos
+      falares e construir relações mais respeitosas no ambiente escolar.
+    </p>
+  </header>
+
+  <article class="artigo-fundamentacao">
+    <section class="secao-leitura" aria-labelledby="titulo-introducao">
+      <span class="marcador-secao">Ponto de partida</span>
+      <h2 id="titulo-introducao">A língua para além das regras</h2>
+      <p>{{ fundamentacaoTeorica.introducao }}</p>
+    </section>
+
+    <section class="secao-autores" aria-labelledby="titulo-autores">
+      <div class="cabecalho-secao">
+        <span class="marcador-secao">Diálogos que fundamentam</span>
+        <h2 id="titulo-autores">Linguagem, subjetividade e diversidade</h2>
+      </div>
+
+      <blockquote class="citacao-card">
+        <span class="material-icons aspas" aria-hidden="true">format_quote</span>
+        <p>{{ fundamentacaoTeorica.citacaoMinayo }}</p>
+        <cite>Minayo (2001)</cite>
+      </blockquote>
+
+      <blockquote class="citacao-card citacao-card--verde">
+        <span class="material-icons aspas" aria-hidden="true">format_quote</span>
+        <p>{{ fundamentacaoTeorica.citacaoMarcuschi }}</p>
+        <cite>Marcuschi (2008)</cite>
+      </blockquote>
+    </section>
+
+    <section class="mensagem-final" aria-labelledby="titulo-mensagem-final">
+      <span class="material-icons icone-mensagem" aria-hidden="true">lightbulb</span>
+      <div>
+        <h2 id="titulo-mensagem-final">Uma mensagem para levar adiante</h2>
+        <p>{{ fundamentacaoTeorica.mensagemFinal }}</p>
+      </div>
+    </section>
+  </article>
+</section>
