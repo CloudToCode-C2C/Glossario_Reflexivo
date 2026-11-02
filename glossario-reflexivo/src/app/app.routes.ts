@@ -5,10 +5,9 @@ import { authGuard } from './auth-guard';
 import { GlossarioComponent } from './glossario/glossario';
 import { FormularioComponent } from './formulario/formulario';
 import { MuralRelatosComponent } from './mural-relatos/mural-relatos';
-import { MuralComponent } from './mural/mural';
+import { SobreComponent } from './sobre/sobre';
 
 export const routes: Routes = [
-  //Rotta inicial
   {
     path: 'login',
     component: LoginComponent,
@@ -16,14 +15,18 @@ export const routes: Routes = [
   {
     path: '',
     canActivate: [authGuard],
-    children: [ // Aqui vão os componentes filhos que só podem ser acessados se o usuário estiver logado
+    children: [
       {
         path: '',
-      component: Home,
+        component: Home,
       },
       {
         path: 'glossario',
-        component: GlossarioComponent, 
+        component: GlossarioComponent,
+      },
+      {
+        path: 'glossario/:categoria',
+        component: GlossarioComponent,
       },
       {
         path: 'formulario',
@@ -33,14 +36,22 @@ export const routes: Routes = [
         },
       },
       {
-        path: 'mural',
+        path: 'forum',
         component: MuralRelatosComponent,
+      },
+      {
+        path: 'mural',
+        redirectTo: 'forum',
+        pathMatch: 'full',
+      },
+      {
+        path: 'sobre',
+        component: SobreComponent,
       },
     ]
   },
-  //Rota de segurança
   {
     path: '**',
-    redirectTo: ''
+    redirectTo: '',
   }
 ];

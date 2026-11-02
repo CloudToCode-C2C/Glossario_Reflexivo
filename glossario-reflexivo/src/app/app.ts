@@ -2,13 +2,11 @@ import { Component, OnInit, ChangeDetectorRef, signal } from '@angular/core';
 import { RouterOutlet, Router } from '@angular/router';
 import { BottomNavComponent } from './bottom-nav/bottom-nav';
 import { SupabaseService } from './supabase.service';
-import { FormularioComponent } from './formulario/formulario';
-import { MuralComponent } from './mural/mural';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, BottomNavComponent, FormularioComponent, MuralComponent],
+  imports: [RouterOutlet, BottomNavComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })

@@ -1,13 +1,25 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { vi } from 'vitest';
 import { App } from './app';
 import { routes } from './app.routes';
+import { SupabaseService } from './supabase.service';
 
 describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [App],
-      providers: [provideRouter(routes)],
+      providers: [
+        provideRouter(routes),
+        {
+          provide: SupabaseService,
+          useValue: {
+            obterUsuarioAtual: vi.fn().mockResolvedValue({ email: 'aluno@example.com' }),
+            escutarMudancasAuth: vi.fn(),
+            fazerLogout: vi.fn(),
+          },
+        },
+      ],
     })
       .compileComponents();
   });
