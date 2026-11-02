@@ -1,50 +1,82 @@
-import { Component } from '@angular/core';
-import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
+import { SupabaseService } from '../supabase.service';
 
-export interface Relato {
-  id: number;
-  texto_relato: string;
-  data_criacao: Date;
+interface Relato {
+  id: string | number;
+  texto: string;
+  created_at: string;
 }
 
 @Component({
   selector: 'app-mural-relatos',
   standalone: true,
-  imports: [ReactiveFormsModule, DatePipe],
+  imports: [DatePipe, ReactiveFormsModule],
   templateUrl: './mural-relatos.html',
   styleUrls: ['./mural-relatos.scss']
 })
-export class MuralRelatosComponent {
+export class MuralRelatosComponent implements OnInit {
+  relatos: Relato[] = [];
+  usuarioAtual: { email?: string | null } | null = null;
+  estaAEnviar = false;
+  estaCarregando = true;
+  erroAoCarregar = false;
+
   relatoForm = new FormGroup({
-    texto_relato: new FormControl('', [Validators.required, Validators.minLength(10)])
+    texto: new FormControl('', [Validators.required, Validators.minLength(10)])
   });
 
-  relatosMock: Relato[] = [
-    {
-      id: 1,
-      texto_relato: 'Achei muito importante aprender sobre o capacitismo. Nunca tinha percebido como o uso de algumas palavras machuca outras pessoas.',
-      data_criacao: new Date('2026-10-20T14:20:00')
-    },
-    {
-      id: 2,
-      texto_relato: 'Uma vez zombaram do meu sotaque quando cheguei na escola nova. Foi muito ruim, mas a professora explicou sobre variação linguística e ajudou muito.',
-      data_criacao: new Date('2026-10-18T10:30:00')
+  constructor(
+    private supabaseService: SupabaseService,
+    private cdr: ChangeDetectorRef
+  ) {}
+
+  async ngOnInit() {
+    this.usuarioAtual = await this.supabaseService.obterUsuarioAtual();
+    await this.carregarRelatos();
+  }
+
+  async carregarRelatos() {
+    this.estaCarregando = true;
+    this.erroAoCarregar = false;
+
+    try {
+      this.relatos = await this.supabaseService.buscarRelatos();
+    } catch (error) {
+      console.error('Erro ao carregar relatos:', error);
+      this.erroAoCarregar = true;
+    } finally {
+      this.estaCarregando = false;
+      this.cdr.detectChanges();
     }
-  ];
+  }
 
-  onSubmit() {
-    if (this.relatoForm.valid) {
-      const novoRelato: Relato = {
-        id: Date.now(),
-        texto_relato: this.relatoForm.value.texto_relato!,
-        data_criacao: new Date()
-      };
+  async onSubmit() {
+    if (this.relatoForm.invalid || !this.usuarioAtual?.email) {
+      this.relatoForm.markAllAsTouched();
+      return;
+    }
 
-      // Truque para adicionar o novo relato no início do array, mantendo a ordem dos relatos mais recentes no topo.
-      this.relatosMock.unshift(novoRelato);
+    this.estaAEnviar = true;
+    this.cdr.detectChanges();
 
+    const novoRelato = {
+      texto: this.relatoForm.value.texto,
+      autor_email: this.usuarioAtual.email,
+      status_aprovado: false
+    };
+
+    try {
+      await this.supabaseService.inserirRelato(novoRelato);
       this.relatoForm.reset();
+      alert("Relato enviado para aprovação! Obrigado por compartilhar sua experiência.");
+    } catch (error) {
+      console.error("Erro ao enviar relato:", error);
+      alert("Ocorreu um erro ao enviar o relato. Por favor, tente novamente mais tarde.");
+    } finally {
+      this.estaAEnviar = false;
+      this.cdr.detectChanges();
     }
   }
 }

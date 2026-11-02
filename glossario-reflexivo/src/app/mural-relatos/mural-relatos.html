@@ -30,7 +30,7 @@
                 <label for="texto-relato">Seu relato</label>
                 <textarea
                     id="texto-relato"
-                    formControlName="texto_relato"
+                    formControlName="texto"
                     rows="5"
                     placeholder="Escreva seu relato aqui..."
                 ></textarea>
@@ -48,19 +48,26 @@
                     <span class="section-kicker">Comunidade</span>
                     <h2 id="titulo-relatos-recentes">Relatos recentes</h2>
                 </div>
-                <span class="contador-relatos">{{ relatosMock.length }}</span>
+                <span class="contador-relatos">{{ relatos.length }}</span>
             </div>
 
             <div class="lista-relatos">
-                @for (relato of relatosMock; track relato.id) {
+                @if (estaCarregando) {
+                    <p class="msg-vazia" aria-live="polite">Carregando relatos...</p>
+                } @else if (erroAoCarregar) {
+                    <p class="msg-vazia" role="alert">
+                        Não foi possível carregar os relatos. Tente novamente mais tarde.
+                    </p>
+                } @else {
+                @for (relato of relatos; track relato.id) {
                 <article class="card-relato">
                     <div class="icone-relato" aria-hidden="true">
                         <span class="material-icons">format_quote</span>
                     </div>
                     <div class="conteudo-relato">
-                        <p class="texto">{{ relato.texto_relato }}</p>
-                        <time class="data" [attr.datetime]="relato.data_criacao.toISOString()">
-                            {{ relato.data_criacao | date:'dd/MM/yyyy HH:mm' }}
+                        <p class="texto">{{ relato.texto }}</p>
+                        <time class="data" [attr.datetime]="relato.created_at">
+                            {{ relato.created_at | date:'dd/MM/yyyy HH:mm' }}
                         </time>
                     </div>
                 </article>
@@ -69,6 +76,7 @@
                         Ainda não há relatos por aqui. Seja a primeira pessoa a compartilhar uma
                         experiência.
                     </p>
+                }
                 }
             </div>
         </section>

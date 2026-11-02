@@ -65,4 +65,25 @@ export class SupabaseService {
         return session?.user ?? null;
     }
 
+    // Relatos
+    async buscarRelatos() {
+        const { data, error } = await this.supabase
+            .from('relatos')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+        if (error) {
+            console.error("Erro ao buscar relatos:", error);
+            throw error;
+        }
+        return data || [];
+    }
+
+    async inserirRelato(relato: any) {
+        const { error } = await this.supabase
+            .from('relatos')
+            .insert([relato]);
+
+        if (error) throw error;
+    }
 }
