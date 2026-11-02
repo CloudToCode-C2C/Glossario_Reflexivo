@@ -1,6 +1,14 @@
 import { Component, Input } from '@angular/core';
 import { DatePipe } from '@angular/common';
 
+export interface DadosGiria {
+  id?: number | string;
+  expressao: string;
+  significado: string;
+  contexto: string;
+  data_criacao: Date | string;
+}
+
 @Component({
   selector: 'app-card-giria',
   standalone: true,
@@ -9,5 +17,5 @@ import { DatePipe } from '@angular/common';
   styleUrls: ['./card-giria.scss']
 })
 export class CardGiriaComponent {
-  @Input() dadosGiria!: any;
+  @Input() dadosGiria!: DadosGiria;
 }

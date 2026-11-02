@@ -1,14 +1,7 @@
 import { Component, OnInit, computed, input, signal } from '@angular/core';
 import { CardGiriaComponent } from '../card-giria/card-giria';
 import { SupabaseService } from '../supabase.service';
-
-export interface Verbete {
-  id: string;
-  expressao: string;
-  significado: string;
-  contexto: string;
-  data_criacao: Date;
-}
+import { DadosGiria } from '../card-giria/card-giria';
 
 @Component({
   selector: 'app-mural',
@@ -20,7 +13,7 @@ export interface Verbete {
 export class MuralComponent implements OnInit {
   readonly categoriaFiltro = input('');
 
-  readonly verbetes = signal<Verbete[]>([]);
+  readonly verbetes = signal<DadosGiria[]>([]);
   readonly carregando = signal(true);
   readonly verbetesFiltrados = computed(() => {
     const categoriaFiltro = this.categoriaFiltro();
@@ -46,7 +39,7 @@ export class MuralComponent implements OnInit {
       const data = await this.supabaseService.buscarVerbetes();
       console.log('2. Dados recebidos do Supabase:', data); // Se travar antes daqui, o problema é na rede/serviço
       
-      this.verbetes.set((data ?? []) as Verbete[]);
+      this.verbetes.set((data ?? []) as DadosGiria[]);
     } catch (error) {
       console.error('3. Erro capturado no catch:', error);
     } finally {

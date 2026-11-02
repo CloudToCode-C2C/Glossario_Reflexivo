@@ -1,17 +1,18 @@
-// Aqui vai ficar o container principal 
 .home-moderna {
     display: flex;
-    flex-direction: column;
-    padding: 32px 24px 100px 24px;
-    background-color: var(--cor-fundo); // Fundo off-white do Design System
-    min-height: 100vh;
+    width: 100%;
     max-width: 600px;
+    min-height: 100vh;
+    flex-direction: column;
+    margin: 0 auto;
+    padding: 32px 24px 112px;
+    background-color: var(--cor-fundo);
 }
 
 .header-apresentacao {
     display: flex;
     flex-direction: column;
-    align-items: flex-start; // Alinhamento à esquerda
+    align-items: flex-start;
     margin-top: 16px;
     margin-bottom: 40px;
 
@@ -19,13 +20,13 @@
         display: flex;
         align-items: center;
         gap: 6px;
-        background-color: #F0E8F9; // Um lilás clarinho translúcido
-        color: var(--cor-primaria);
+        margin-bottom: 24px;
         padding: 8px 16px;
         border-radius: 100px;
+        background-color: #f0e8f9;
+        color: var(--cor-primaria);
         font-size: 13px;
         font-weight: 600;
-        margin-bottom: 24px;
 
         .material-icons {
             font-size: 18px;
@@ -33,82 +34,247 @@
     }
 
     .titulo-principal {
-        font-size: 40px;
-        line-height: 1.1;
-        font-weight: 800; 
-        color: var(--cor-texto-principal);
         margin-bottom: 12px;
-        letter-spacing: -1px; // Junta as letras levemente 
+        color: var(--cor-texto-principal);
+        font-size: 40px;
+        font-weight: 800;
+        line-height: 1.1;
+        letter-spacing: -1px;
     }
 
     .subtitulo-app {
+        color: var(--cor-texto-secundario);
         font-size: 16px;
         line-height: 1.5;
-        color: var(--cor-texto-secundario);
     }
-
 }
 
-// Area de conteudos
 .area-leitura {
     display: flex;
+    width: 100%;
     flex-direction: column;
+    align-items: center;
     gap: 24px;
 }
 
-// Cartao base de leitura 
 .card-glass {
-    background-color: var(--cor-superficie); // Branco puro
-    border-radius: 28px; // Cantos extremamente arredondados 
-    padding: 32px 28px; 
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04); // Sombra bem invisível, só levanta o card
-    border: 1px solid rgba(0, 0, 0, 0.02); // Uma linha branca/cinza quase invisível
-    transition: transform 0.3s ease; // Prepara uma animação suave
+    width: 100%;
+    padding: 32px 28px;
+    border: 1px solid rgba(0, 0, 0, 0.02);
+    border-radius: 28px;
+    background-color: var(--cor-superficie);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
+    transition: transform 0.3s ease;
 
-    // O topo do Card com o Ícone e Título
     .card-header {
         display: flex;
         align-items: center;
         gap: 16px;
         margin-bottom: 20px;
+    }
 
-        // O círculo que segura o ícone
-        .icone-circulo {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            color: var(--cor-texto-inverso); // Branco
+    .icone-circulo {
+        display: flex;
+        width: 48px;
+        height: 48px;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 48px;
+        border-radius: 50%;
+        color: var(--cor-texto-inverso);
 
-            .material-icons {
-                font-size: 24px;
-            }
-        }
-
-        // Cores individuais de cada bolinha de ícone
-        .cor-primaria { background-color: var(--cor-primaria); }
-        .cor-verde { background-color: var(--cor-suporte); }
-        .cor-laranja { background-color: var(--cor-secundaria); }
-
-        .h2-suave {
-            font-size: 19px;
-            font-weight: 700;
-            color: var(--cor-texto-principal);
+        .material-icons {
+            font-size: 24px;
         }
     }
 
-    // O texto de leitura
+    .cor-primaria {
+        background-color: var(--cor-primaria);
+    }
+
+    .cor-verde {
+        background-color: var(--cor-suporte);
+    }
+
+    .cor-laranja {
+        background-color: var(--cor-secundaria);
+    }
+
+    .h2-suave {
+        color: var(--cor-texto-principal);
+        font-size: 19px;
+        font-weight: 700;
+    }
+
     .texto-fluido {
-        font-size: 15px;
-        line-height: 1.8; // Entrelinha gigante para a leitura ficar descansada
         color: var(--cor-texto-secundario);
-        
-        // Formatação para as palavras em negrito dentro do texto
-        .destaque {
-            color: var(--cor-primaria);
-            font-weight: 700;
-        }
+        font-size: 15px;
+        line-height: 1.8;
+    }
+
+    .destaque {
+        color: var(--cor-primaria);
+        font-weight: 700;
+    }
+}
+
+.questoes-reflexivas {
+    width: 100%;
+    margin: 48px auto 0;
+}
+
+.cabecalho-questoes {
+    margin-bottom: 20px;
+    text-align: center;
+
+    .pill-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 16px;
+        padding: 8px 16px;
+        border-radius: 100px;
+        background-color: rgba(132, 94, 194, 0.1);
+        color: var(--cor-primaria);
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    h2 {
+        margin-bottom: 10px;
+        color: var(--cor-texto-principal);
+        font-size: 26px;
+    }
+
+    p {
+        color: var(--cor-texto-secundario);
+        font-size: 14px;
+        line-height: 1.6;
+    }
+}
+
+.carrossel-viewport {
+    width: 100%;
+    overflow: hidden;
+    padding: 10px 0;
+    outline: none;
+    touch-action: pan-y;
+
+    &:focus-visible {
+        border-radius: 28px;
+        box-shadow: 0 0 0 3px rgba(132, 94, 194, 0.35);
+    }
+}
+
+.carrossel-trilho {
+    display: flex;
+    align-items: center;
+    transition: transform 0.45s ease;
+    will-change: transform;
+}
+
+.questao-slide {
+    display: flex;
+    position: relative;
+    width: 100%;
+    min-height: 230px;
+    flex: 0 0 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 30px 42px;
+    border: 1px solid rgba(132, 94, 194, 0.12);
+    border-radius: 28px;
+    background: linear-gradient(145deg, var(--cor-superficie), #f1eafa);
+    box-shadow: var(--sombra-card);
+    color: var(--cor-texto-principal);
+    cursor: pointer;
+    text-align: center;
+    transform: scale(0.96);
+    transition:
+        transform 0.35s ease,
+        box-shadow 0.35s ease,
+        border-color 0.35s ease;
+    user-select: none;
+
+    &:focus-visible {
+        outline: 3px solid rgba(132, 94, 194, 0.35);
+        outline-offset: -3px;
+    }
+
+    &.ativa {
+        border-color: rgba(132, 94, 194, 0.4);
+        box-shadow: 0 16px 36px rgba(132, 94, 194, 0.16);
+        transform: scale(1);
+    }
+
+    p {
+        max-width: 440px;
+        color: var(--cor-texto-principal);
+        font-family: 'Playfair Display', serif;
+        font-size: 22px;
+        font-weight: 700;
+        line-height: 1.35;
+    }
+}
+
+.numero-questao {
+    display: grid;
+    position: absolute;
+    top: 20px;
+    left: 24px;
+    width: 32px;
+    height: 32px;
+    place-items: center;
+    border-radius: 50%;
+    background-color: var(--cor-primaria);
+    color: var(--cor-texto-inverso);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.icone-reflexao {
+    position: absolute;
+    right: 24px;
+    bottom: 20px;
+    color: var(--cor-secundaria);
+    font-size: 28px;
+}
+
+.indicadores-questoes {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 18px;
+}
+
+.indicador {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: rgba(104, 94, 85, 0.3);
+    transition:
+        width 0.25s ease,
+        background-color 0.25s ease;
+
+    &.ativo {
+        width: 24px;
+        border-radius: 8px;
+        background-color: var(--cor-primaria);
+    }
+}
+
+.contador-questao {
+    margin-top: 10px;
+    color: var(--cor-texto-secundario);
+    font-size: 12px;
+    text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .carrossel-trilho,
+    .questao-slide,
+    .indicador {
+        transition: none;
     }
 }

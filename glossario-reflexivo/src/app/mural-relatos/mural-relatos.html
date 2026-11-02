@@ -1,33 +1,76 @@
-<section class="mural-relatos-container">
-    <div class="form-section">
-        <h3>Mural de Relatos</h3>
-        <p>Compartilhe uma experiência pessoal ou uma reflexão de suas atividades.</p>
-
-        <form [formGroup]="relatoForm" (ngSubmit)="onSubmit()">
-            <textarea
-                formControlName="texto_relato"
-                rows="4"
-                placeholder="Escreva seu relato aqui..."
-            ></textarea>
-
-            <button type="submit" [disabled]="relatoForm.invalid" class="btn-enviar">
-                Enviar Relato
-            </button>
-        </form>
-    </div>
-
-    <div class="feed-section">
-        <h4>Relatos Recentes</h4>
-
-        <div class="lista-baloes">
-            @for (relato of relatosMock; track relato.id) {
-            <div class="balao-relato">
-                <p class="texto">{{ relato.texto_relato }}</p>
-                <span class="data">{{ relato.data_criacao | date:'dd/MM/yyyy HH:mm' }}</span>
-            </div>
-            } @empty {
-                <p class="msg-vazia">Seja o primeiro a deixar um relato.</p>
-            }
+<section class="pagina-forum">
+    <header class="cabecalho-forum">
+        <div class="pill-badge">
+            <span class="material-icons" aria-hidden="true">forum</span>
+            <span>Espaço de escuta</span>
         </div>
+
+        <h1 class="titulo-pagina">Fórum</h1>
+        <p class="subtitulo-pagina">
+            Um espaço seguro para compartilhar experiências e refletir sobre situações vividas
+            no ambiente escolar.
+        </p>
+    </header>
+
+    <div class="conteudo-forum">
+        <section class="form-section" aria-labelledby="titulo-novo-relato">
+            <div class="section-heading">
+                <div class="icone-circulo">
+                    <span class="material-icons" aria-hidden="true">edit_note</span>
+                </div>
+                <div>
+                    <h2 id="titulo-novo-relato">Compartilhe seu relato</h2>
+                    <p>
+                        Escreva uma experiência pessoal ou uma reflexão das suas atividades.
+                    </p>
+                </div>
+            </div>
+
+            <form [formGroup]="relatoForm" (ngSubmit)="onSubmit()">
+                <label for="texto-relato">Seu relato</label>
+                <textarea
+                    id="texto-relato"
+                    formControlName="texto_relato"
+                    rows="5"
+                    placeholder="Escreva seu relato aqui..."
+                ></textarea>
+
+                <button type="submit" [disabled]="relatoForm.invalid" class="btn-enviar">
+                    <span class="material-icons" aria-hidden="true">send</span>
+                    <span>Enviar relato</span>
+                </button>
+            </form>
+        </section>
+
+        <section class="feed-section" aria-labelledby="titulo-relatos-recentes">
+            <div class="feed-heading">
+                <div>
+                    <span class="section-kicker">Comunidade</span>
+                    <h2 id="titulo-relatos-recentes">Relatos recentes</h2>
+                </div>
+                <span class="contador-relatos">{{ relatosMock.length }}</span>
+            </div>
+
+            <div class="lista-relatos">
+                @for (relato of relatosMock; track relato.id) {
+                <article class="card-relato">
+                    <div class="icone-relato" aria-hidden="true">
+                        <span class="material-icons">format_quote</span>
+                    </div>
+                    <div class="conteudo-relato">
+                        <p class="texto">{{ relato.texto_relato }}</p>
+                        <time class="data" [attr.datetime]="relato.data_criacao.toISOString()">
+                            {{ relato.data_criacao | date:'dd/MM/yyyy HH:mm' }}
+                        </time>
+                    </div>
+                </article>
+                } @empty {
+                    <p class="msg-vazia">
+                        Ainda não há relatos por aqui. Seja a primeira pessoa a compartilhar uma
+                        experiência.
+                    </p>
+                }
+            </div>
+        </section>
     </div>
 </section>

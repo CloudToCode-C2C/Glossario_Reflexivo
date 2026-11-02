@@ -61,4 +61,62 @@
         </div>
         
     </article>
+
+    <section class="questoes-reflexivas" aria-labelledby="titulo-questoes">
+        <header class="cabecalho-questoes">
+            <div class="pill-badge">
+                <span class="material-icons">psychology</span>
+                <span>Para pensar</span>
+            </div>
+            <h2 id="titulo-questoes">Questões Reflexivas</h2>
+            <p>
+                Deslize para os lados ou use as setas do teclado. Toque em uma questão para
+                pausar o carrossel e começar sua reflexão.
+            </p>
+        </header>
+
+        <div
+            class="carrossel-viewport"
+            role="region"
+            aria-roledescription="carrossel"
+            aria-label="Questões reflexivas"
+            tabindex="0"
+            (touchstart)="iniciarToque($event)"
+            (touchend)="finalizarToque($event)"
+        >
+            <div
+                class="carrossel-trilho"
+                [style.transform]="'translate3d(-' + (indiceQuestaoAtiva * 100) + '%, 0, 0)'"
+                [attr.aria-live]="carrosselEmExecucao ? 'off' : 'polite'"
+            >
+                @for (questao of questoesReflexivas; track questao.numero; let indice = $index) {
+                    <article
+                        class="questao-slide"
+                        [class.ativa]="indice === indiceQuestaoAtiva"
+                        role="option"
+                        [attr.aria-selected]="indice === indiceQuestaoAtiva"
+                        [attr.aria-label]="'Questão ' + questao.numero"
+                        tabindex="0"
+                        (click)="selecionarQuestao(indice)"
+                        (keydown.enter)="selecionarQuestao(indice)"
+                    >
+                        <span class="numero-questao">{{ questao.numero }}</span>
+                        <p>{{ questao.texto }}</p>
+                        <span class="material-icons icone-reflexao">lightbulb</span>
+                    </article>
+                }
+            </div>
+        </div>
+
+        <div class="indicadores-questoes" aria-hidden="true">
+            @for (questao of questoesReflexivas; track questao.numero; let indice = $index) {
+                <span class="indicador" [class.ativo]="indice === indiceQuestaoAtiva"></span>
+            }
+        </div>
+
+        <p class="contador-questao" aria-live="polite">
+            {{ indiceQuestaoAtiva + 1 }} de {{ questoesReflexivas.length }}
+        </p>
+    </section>
+
 </section>

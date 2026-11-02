@@ -44,8 +44,8 @@ export class FormularioComponent implements OnInit {
         expressao: this.verbeteForm.value.expressao,
         significado: this.verbeteForm.value.significado,
         contexto: this.categoriaAtual,
-        status_aprovado: false,
-        autor_email: this.usuario.email
+        autor_email: this.usuario.email,
+        status_aprovado: false
       };
 
     try {

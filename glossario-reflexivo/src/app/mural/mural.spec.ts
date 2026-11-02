@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Mural } from './mural';
+import { MuralComponent } from './mural';
 
-describe('Mural', () => {
-  let component: Mural;
-  let fixture: ComponentFixture<Mural>;
+describe('MuralComponent', () => {
+  let component: MuralComponent;
+  let fixture: ComponentFixture<MuralComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Mural],
+      imports: [MuralComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(Mural);
+    fixture = TestBed.createComponent(MuralComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

@@ -1,39 +1,81 @@
 <section class="pagina-glossario">
-  
-  <header class="cabecalho-glossario">
-    <div class="pill-badge">
-      <span class="material-icons">library_books</span>
-      <span>Base de Dados</span>
-    </div>
-    <h1 class="titulo-pagina">Glossário Oficial</h1>
-    <p class="subtitulo-pagina">Explore as expressões mapeadas no material didático e compreenda o contexto histórico.</p>
-    
-    <!-- 1. A NOVA BARRA DE BUSCA -->
-    <div class="barra-busca-container">
-      <span class="material-icons icone-busca">search</span>
-      <!-- O (keyup) chama a função no TS a cada digitação! -->
-      <input 
-        type="text" 
-        class="input-busca" 
-        placeholder="Buscar por gíria ou tipo (ex: Racismo)..."
-        (keyup)="filtrarPalavras($event)"
-      />
-    </div>
-  </header>
+  @if (categoriaSelecionada; as categoria) {
+    <a class="voltar-categorias" routerLink="/glossario">
+      <span class="material-icons" aria-hidden="true">arrow_back</span>
+      Voltar para categorias
+    </a>
 
-  <div class="grid-de-cards">
-    <!-- 2. O LAÇO AGORA OLHA PARA A LISTA FILTRADA -->
-    @for (item of listaFiltrada; track item.expressao) {
-      <app-card-giria [dadosGiria]="item"></app-card-giria>
-    }
-
-    <!-- 3. MENSAGEM SE A BUSCA NÃO ENCONTRAR NADA -->
-    @if (listaFiltrada.length === 0) {
-      <div class="sem-resultados">
-        <span class="material-icons">sentiment_dissatisfied</span>
-        <p>Nenhuma expressão encontrada para "{{ termoBusca }}".</p>
+    <header class="cabecalho-glossario cabecalho-detalhe">
+      <div class="pill-badge">
+        <span class="material-icons" aria-hidden="true">{{ icones[categoria.id] }}</span>
+        <span>Categoria selecionada</span>
       </div>
-    }
-  </div>
+      <h1 class="titulo-pagina">{{ categoria.titulo }}</h1>
+    </header>
 
+    <article class="teoria-categoria">
+      <section class="bloco-teoria">
+        <h2>Definição</h2>
+        <p>{{ categoria.definicao }}</p>
+      </section>
+
+      <section class="bloco-teoria">
+        <h2>Exemplos</h2>
+        <ul class="lista-exemplos">
+          @for (exemplo of categoria.exemplos; track exemplo) {
+            <li>{{ exemplo }}</li>
+          }
+        </ul>
+      </section>
+
+      <section class="bloco-teoria">
+        <h2>Contexto</h2>
+        <p>{{ categoria.contexto }}</p>
+      </section>
+
+      <section class="bloco-teoria">
+        <h2>Efeitos</h2>
+        <p>{{ categoria.efeitos }}</p>
+      </section>
+
+      <section class="bloco-teoria bloco-reformulacao">
+        <h2>Reformulação</h2>
+        <p>{{ categoria.reformulacao }}</p>
+      </section>
+    </article>
+
+    <div class="area-interativa">
+      <app-formulario [categoriaAtual]="categoria.id"></app-formulario>
+      <app-mural [categoriaFiltro]="categoria.id"></app-mural>
+    </div>
+  } @else {
+    <header class="cabecalho-glossario">
+      <div class="pill-badge">
+        <span class="material-icons" aria-hidden="true">library_books</span>
+        <span>Aprenda e participe</span>
+      </div>
+      <h1 class="titulo-pagina">Glossário</h1>
+      <p class="subtitulo-pagina">
+        Escolha uma categoria para conhecer a teoria, explorar exemplos e contribuir com a turma.
+      </p>
+    </header>
+
+    <div class="categorias-grid">
+      @for (categoria of categorias; track categoria.id) {
+        <a
+          class="categoria-card"
+          [routerLink]="['/glossario', categoria.id]"
+          [attr.aria-label]="'Abrir categoria ' + categoria.titulo"
+        >
+          <span class="material-icons categoria-icone" aria-hidden="true">{{ icones[categoria.id] }}</span>
+          <span class="categoria-nome">{{ categoria.titulo }}</span>
+          <span class="categoria-descricao">{{ categoria.definicao }}</span>
+          <span class="categoria-acao">
+            Explorar
+            <span class="material-icons" aria-hidden="true">arrow_forward</span>
+          </span>
+        </a>
+      }
+    </div>
+  }
 </section>
