@@ -15,7 +15,7 @@ interface Relato {
   standalone: true,
   imports: [DatePipe, ReactiveFormsModule],
   templateUrl: './mural-relatos.html',
-  styleUrls: ['./mural-relatos.scss']
+  styleUrls: ['./mural-relatos.scss'],
 })
 export class MuralRelatosComponent implements OnInit {
   relatos: Relato[] = [];
@@ -27,19 +27,19 @@ export class MuralRelatosComponent implements OnInit {
   sessaoAluno: any = null;
 
   relatoForm = new FormGroup({
-    texto: new FormControl('', [Validators.required, Validators.minLength(10)])
+    texto: new FormControl('', [Validators.required, Validators.minLength(10)]),
   });
 
   constructor(
     private supabaseService: SupabaseService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
   ) {}
 
   // Obtém a autoria atual e carrega os relatos aprovados pelo serviço.
   async ngOnInit() {
     this.usuarioAtual = await this.supabaseService.obterUsuarioAtual();
     this.sessaoAluno = this.supabaseService.obterSessaoAluno();
-    
+
     // Agora o mural escuta as mudanças no filtro do professor também
     this.supabaseService.filtroProfessor$.subscribe(() => {
       this.carregarRelatos();
@@ -53,7 +53,7 @@ export class MuralRelatosComponent implements OnInit {
     }
 
     if (!this.usuarioAtual && !this.sessaoAluno) {
-      alert("Sessão expirada. Faça login novamente.");
+      alert('Sessão expirada. Faça login novamente.');
       return;
     }
 
@@ -67,17 +67,17 @@ export class MuralRelatosComponent implements OnInit {
       autor_email: this.usuarioAtual?.email || null,
       escola: this.sessaoAluno?.escola || null,
       serie: this.sessaoAluno?.serie || null,
-      turma: this.sessaoAluno?.turma || null
+      turma: this.sessaoAluno?.turma || null,
     };
 
     try {
       await this.supabaseService.inserirRelato(novoRelato);
       this.relatoForm.reset();
       this.mensagemSucesso = true;
-      setTimeout(() => this.mensagemSucesso = false, 3500);
+      setTimeout(() => (this.mensagemSucesso = false), 3500);
     } catch (error) {
-      console.error("Erro ao enviar relato:", error);
-      alert("Ocorreu um erro ao enviar o relato.");
+      console.error('Erro ao enviar relato:', error);
+      alert('Ocorreu um erro ao enviar o relato.');
     } finally {
       this.estaAEnviar = false;
       this.cdr.detectChanges();
@@ -85,7 +85,19 @@ export class MuralRelatosComponent implements OnInit {
   }
 
   async carregarRelatos() {
-    this.relatos = await this.supabaseService.buscarRelatos();
+    this.estaCarregando = true;
+    this.erroAoCarregar = false;
     this.cdr.detectChanges();
+
+    try {
+      this.relatos = await this.supabaseService.buscarRelatos();
+    } catch (error) {
+      console.error('Erro ao carregar relatos:', error);
+      this.erroAoCarregar = true;
+      this.relatos = [];
+    } finally {
+      this.estaCarregando = false;
+      this.cdr.detectChanges();
+    }
   }
 }

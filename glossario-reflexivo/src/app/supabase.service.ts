@@ -25,12 +25,12 @@ export interface SessaoAluno {
 
 export interface FiltroProfessor {
   escola: string; // 'TODAS' ou nome da escola
-  serie: string;  // 'TODAS' ou série específica
-  turma: string;  // 'TODAS' ou letra da turma
+  serie: string; // 'TODAS' ou série específica
+  turma: string; // 'TODAS' ou letra da turma
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SupabaseService {
   private supabase: SupabaseClient;
@@ -43,7 +43,7 @@ export class SupabaseService {
   private filtroProfessorSubject = new BehaviorSubject<FiltroProfessor>({
     escola: 'TODAS',
     serie: 'TODAS',
-    turma: 'TODAS'
+    turma: 'TODAS',
   });
   public filtroProfessor$ = this.filtroProfessorSubject.asObservable();
 
@@ -67,8 +67,23 @@ export class SupabaseService {
     const raw = localStorage.getItem('c2c_sessao_aluno');
     if (!raw) return null;
     try {
-      return JSON.parse(raw) as SessaoAluno;
+      const sessao = JSON.parse(raw) as SessaoAluno;
+      const nomeValido =
+        typeof sessao.nome === 'string' &&
+        sessao.nome.trim().length >= 3 &&
+        sessao.nome.trim().length <= 120;
+      const escolaValida = ESCOLAS_PERMITIDAS.includes(sessao.escola);
+      const serieValida = SERIES_PERMITIDAS.includes(sessao.serie);
+      const turmaValida = TURMAS_PERMITIDAS.includes(sessao.turma);
+
+      // Se o usuário adulterou qualquer valor no DevTools, limpa o LocalStorage e nega acesso
+      if (!nomeValido || !escolaValida || !serieValida || !turmaValida) {
+        localStorage.removeItem('c2c_sessao_aluno');
+        return null;
+      }
+      return sessao;
     } catch {
+      localStorage.removeItem('c2c_sessao_aluno');
       return null;
     }
   }
@@ -88,7 +103,7 @@ export class SupabaseService {
 
     const { data, error } = await this.supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: `${window.location.origin}/login` }
+      options: { redirectTo: `${window.location.origin}/login` },
     });
     if (error) throw error;
     return data;
@@ -107,7 +122,10 @@ export class SupabaseService {
   }
 
   async obterSessao() {
-    const { data: { session }, error } = await this.supabase.auth.getSession();
+    const {
+      data: { session },
+      error,
+    } = await this.supabase.auth.getSession();
     if (error) {
       console.error('Erro ao verificar sessão:', error);
       return null;
@@ -138,17 +156,14 @@ export class SupabaseService {
     const aluno = this.obterSessaoAluno();
     const isProf = !aluno && (await this.verificarProfessorAutorizado());
 
-    let query = isProf
-      ? this.supabase
-          .from('verbetes_colaborativos')
-          .select('*')
-          .order('data_criacao', { ascending: false })
-      : this.supabase
-          .from('verbetes_colaborativos')
-          .select('id,contexto,expressao,significado,escola,status_aprovado,data_criacao').eq('status_aprovado', true)
-          .order('data_criacao', { ascending: false });
+    let query = this.supabase
+      .from('verbetes_colaborativos')
+      .select('id,contexto,expressao,significado,escola,status_aprovado,data_criacao:created_at')
+      .eq('status_aprovado', true)
+      .order('created_at', { ascending: false });
 
     if (aluno) {
+      // Seguro pois aluno.escola foi validado contra ESCOLAS_PERMITIDAS
       query = query.or(`escola.eq."${aluno.escola}",escola.is.null`);
     } else if (isProf) {
       query = this.aplicarFiltroQueryProfessor(query);
@@ -160,9 +175,7 @@ export class SupabaseService {
   }
 
   async inserirVerbete(verbete: any) {
-    const { data, error } = await this.supabase
-      .from('verbetes_colaborativos')
-      .insert([verbete]);
+    const { data, error } = await this.supabase.from('verbetes_colaborativos').insert([verbete]);
     if (error) throw error;
     return data;
   }
@@ -171,15 +184,11 @@ export class SupabaseService {
     const aluno = this.obterSessaoAluno();
     const isProf = !aluno && (await this.verificarProfessorAutorizado());
 
-    let query = isProf
-      ? this.supabase
-          .from('relatos')
-          .select('*')
-          .order('created_at', { ascending: false })
-      : this.supabase
-          .from('relatos')
-          .select('id,texto,escola,status_aprovado,created_at').eq('status_aprovado', true)
-          .order('created_at', { ascending: false });
+    let query = this.supabase
+      .from('relatos')
+      .select('id,texto,escola,status_aprovado,created_at')
+      .eq('status_aprovado', true)
+      .order('created_at', { ascending: false });
 
     if (aluno) {
       query = query.or(`escola.eq."${aluno.escola}",escola.is.null`);
@@ -188,17 +197,12 @@ export class SupabaseService {
     }
 
     const { data, error } = await query;
-    if (error) {
-      console.error('Erro ao buscar relatos:', error);
-      throw error;
-    }
+    if (error) throw error;
     return (data as any[]) || [];
   }
 
   async inserirRelato(relato: any) {
-    const { error } = await this.supabase
-      .from('relatos')
-      .insert([relato]);
+    const { error } = await this.supabase.from('relatos').insert([relato]);
     if (error) throw error;
   }
 
@@ -206,18 +210,12 @@ export class SupabaseService {
     const aluno = this.obterSessaoAluno();
     const isProf = !aluno && (await this.verificarProfessorAutorizado());
 
-    let query = isProf
-      ? this.supabase
-          .from('respostas_reflexao')
-          .select('*')
-          .eq('pergunta_id', perguntaId)
-          .order('created_at', { ascending: true })
-      : this.supabase
-          .from('respostas_reflexao')
-          .select('id,pergunta_id,texto,escola,status_aprovado,created_at')
-          .eq('status_aprovado', true)
-          .eq('pergunta_id', perguntaId)
-          .order('created_at', { ascending: true });
+    let query = this.supabase
+      .from('respostas_reflexao')
+      .select('id,pergunta_id,texto,escola,status_aprovado,created_at')
+      .eq('pergunta_id', perguntaId)
+      .eq('status_aprovado', true)
+      .order('created_at', { ascending: true });
 
     if (aluno) {
       query = query.or(`escola.eq."${aluno.escola}",escola.is.null`);
@@ -231,9 +229,7 @@ export class SupabaseService {
   }
 
   async inserirRespostaReflexao(resposta: any) {
-    const { data, error } = await this.supabase
-      .from('respostas_reflexao')
-      .insert([resposta]);
+    const { data, error } = await this.supabase.from('respostas_reflexao').insert([resposta]);
     if (error) throw error;
     return data;
   }
@@ -252,17 +248,21 @@ export class SupabaseService {
     return query;
   }
 
+  private async exigirProfessorAutorizado(): Promise<void> {
+    const autorizado = await this.verificarProfessorAutorizado();
+    if (!autorizado) {
+      throw new Error('Acesso negado: operação exclusiva para professores autorizados.');
+    }
+  }
+
   async listarRegistrosAdmin(
-    tabela: 'verbetes_colaborativos' | 'relatos' | 'respostas_reflexao'
+    tabela: 'verbetes_colaborativos' | 'relatos' | 'respostas_reflexao',
   ): Promise<any[]> {
-    const colunaOrdem = tabela === 'verbetes_colaborativos' ? 'data_criacao' : 'created_at';
+    await this.exigirProfessorAutorizado();
+    const colunaOrdem = 'created_at';
 
-    let query = this.supabase
-      .from(tabela)
-      .select('*')
-      .order(colunaOrdem, { ascending: false });
+    let query = this.supabase.from(tabela).select('*').order(colunaOrdem, { ascending: false });
 
-    // Aplica o mesmo filtro global do topo (Escola, Série, Turma) na tabela de moderação
     query = this.aplicarFiltroQueryProfessor(query);
 
     const { data, error } = await query;
@@ -273,24 +273,20 @@ export class SupabaseService {
   async atualizarStatusAprovacao(
     tabela: 'verbetes_colaborativos' | 'relatos' | 'respostas_reflexao',
     id: string | number,
-    status_aprovado: boolean
+    status_aprovado: boolean,
   ): Promise<void> {
-    const { error } = await this.supabase
-      .from(tabela)
-      .update({ status_aprovado })
-      .eq('id', id);
+    await this.exigirProfessorAutorizado();
+    const { error } = await this.supabase.from(tabela).update({ status_aprovado }).eq('id', id);
 
     if (error) throw error;
   }
 
   async excluirRegistroAdmin(
     tabela: 'verbetes_colaborativos' | 'relatos' | 'respostas_reflexao',
-    id: string | number
+    id: string | number,
   ): Promise<void> {
-    const { error } = await this.supabase
-      .from(tabela)
-      .delete()
-      .eq('id', id);
+    await this.exigirProfessorAutorizado();
+    const { error } = await this.supabase.from(tabela).delete().eq('id', id);
 
     if (error) throw error;
   }
