@@ -15,6 +15,7 @@ export class FormularioComponent implements OnInit {
   mensagemSucesso = false;
   estaAEnviar = false;
   usuario: any = null;
+  sessaoAluno: any = null;
 
   constructor(
     private supabaseService: SupabaseService,
@@ -28,44 +29,59 @@ export class FormularioComponent implements OnInit {
 
   // Carrega o usuário para preencher a autoria no momento do envio.
   async ngOnInit() {
+    // Tenta pegar o professor logado via OAuth
     this.usuario = await this.supabaseService.obterUsuarioAtual();
+    // Tenta pegar o aluno no LocalStorage
+    this.sessaoAluno = this.supabaseService.obterSessaoAluno();
     this.cdr.detectChanges();
   }
 
-  // Valida o formulário, envia uma contribuição pendente e atualiza o feedback da tela.
+  // Envia o verbete para o Supabase, associando-o à categoria e ao usuário atual.
   async onSubmit() {
     if (!this.categoriaAtual) {
-      console.error("Erro de Integração: O componente pai não enviou a categoria atual.");
       alert("Erro interno: Categoria da expressão não definida.");
       return;
     }
 
-    if (this.verbeteForm.valid && this.usuario) {
-      this.estaAEnviar = true;
+    if (this.verbeteForm.invalid) {
+      this.verbeteForm.markAllAsTouched();
+      return;
+    }
 
-      const novoVerbete = {
-        expressao: this.verbeteForm.value.expressao,
-        significado: this.verbeteForm.value.significado,
-        contexto: this.categoriaAtual,
-        autor_email: this.usuario.email,
-        status_aprovado: false
-      };
+    // Valida se há ALGUMA sessão ativa (Aluno ou Professor)
+    if (!this.usuario && !this.sessaoAluno) {
+      alert("Sessão expirada. Faça login novamente.");
+      return;
+    }
+
+    this.estaAEnviar = true;
+    this.cdr.detectChanges();
+
+    const novoVerbete = {
+      expressao: this.verbeteForm.value.expressao,
+      significado: this.verbeteForm.value.significado,
+      contexto: this.categoriaAtual,
+      status_aprovado: false, // Entra pendente para todos
+      
+      // Se for aluno, grava os metadados. Se for professor, grava o email.
+      autor_nome: this.sessaoAluno?.nome || null,
+      autor_email: this.usuario?.email || null,
+      escola: this.sessaoAluno?.escola || null,
+      serie: this.sessaoAluno?.serie || null,
+      turma: this.sessaoAluno?.turma || null
+    };
 
     try {
       await this.supabaseService.inserirVerbete(novoVerbete);
-
       this.verbeteForm.reset();
       this.mensagemSucesso = true;
       setTimeout(() => this.mensagemSucesso = false, 3500);
     } catch (error) {
-      console.error('Erro ao enviar para a base de dados: ', error);
+      console.error('Erro ao enviar:', error);
       alert("Ocorreu um erro ao enviar. Tente novamente.");
     } finally {
       this.estaAEnviar = false;
       this.cdr.detectChanges();
-    }
-    } else {
-      this.verbeteForm.markAllAsTouched();
     }
   }
 }

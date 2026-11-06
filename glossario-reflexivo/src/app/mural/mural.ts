@@ -1,9 +1,8 @@
-import { Component, OnInit, computed, input, signal } from '@angular/core';
-import { CardGiriaComponent } from '../card-giria/card-giria';
+import { Component, OnDestroy, OnInit, computed, input, signal } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { CardGiriaComponent, DadosGiria } from '../card-giria/card-giria';
 import { SupabaseService } from '../supabase.service';
-import { DadosGiria } from '../card-giria/card-giria';
 
-// Widget de leitura que busca os verbetes e aplica o filtro recebido da página.
 @Component({
   selector: 'app-mural',
   standalone: true,
@@ -11,7 +10,7 @@ import { DadosGiria } from '../card-giria/card-giria';
   templateUrl: './mural.html',
   styleUrls: ['./mural.scss'],
 })
-export class MuralComponent implements OnInit {
+export class MuralComponent implements OnInit, OnDestroy {
   readonly categoriaFiltro = input('');
 
   readonly verbetes = signal<DadosGiria[]>([]);
@@ -21,32 +20,33 @@ export class MuralComponent implements OnInit {
     const verbetes = this.verbetes();
 
     if (!categoriaFiltro) return verbetes;
-    return verbetes.filter(
-      verbete => verbete.contexto === categoriaFiltro
-    );
+    return verbetes.filter(verbete => verbete.contexto === categoriaFiltro);
   });
-  
+
+  private filtroSub?: Subscription;
+
   constructor(private supabaseService: SupabaseService) {}
 
-  // Carrega os dados reais quando o mural entra em cena.
-  async ngOnInit() {
-    await this.carregarDados();
+  ngOnInit(): void {
+    // O BehaviorSubject dispara imediatamente na entrada e sempre que o professor muda o filtro
+    this.filtroSub = this.supabaseService.filtroProfessor$.subscribe(() => {
+      void this.carregarDados();
+    });
   }
 
-  // Mantém o spinner sincronizado com a consulta ao Supabase.
-  async carregarDados() {
-    console.log('1. Iniciando requisição ao Supabase...');
+  ngOnDestroy(): void {
+    this.filtroSub?.unsubscribe();
+  }
+
+  async carregarDados(): Promise<void> {
     this.carregando.set(true);
-    
+
     try {
       const data = await this.supabaseService.buscarVerbetes();
-      console.log('2. Dados recebidos do Supabase:', data); // Se travar antes daqui, o problema é na rede/serviço
-      
       this.verbetes.set((data ?? []) as DadosGiria[]);
     } catch (error) {
-      console.error('3. Erro capturado no catch:', error);
+      console.error('Erro ao carregar verbetes no mural:', error);
     } finally {
-      console.log('4. Executando o bloco finally. Desligando o spinner.');
       this.carregando.set(false);
     }
   }

@@ -92,9 +92,17 @@ export class ReflexaoSalaComponent implements OnInit, OnDestroy {
 
   // Observa a rota para trocar a pergunta sem recriar a página inteira.
   ngOnInit(): void {
+    // 1. Escuta a mudança na rota
     this.rotaSubscription = this.route.paramMap.subscribe(params => {
       const id = Number(params.get('id'));
       void this.selecionarPergunta(id);
+    });
+
+    // 2. Escuta a mudança no filtro do professor para recarregar as respostas
+    this.supabaseService.filtroProfessor$.subscribe(() => {
+      if (this.perguntaAtual) {
+        void this.selecionarPergunta(this.perguntaAtual.id);
+      }
     });
   }
 
@@ -110,7 +118,9 @@ export class ReflexaoSalaComponent implements OnInit, OnDestroy {
     }
 
     const usuario = await this.supabaseService.obterUsuarioAtual();
-    if (!usuario?.email) {
+    const aluno = this.supabaseService.obterSessaoAluno();
+
+    if (!usuario?.email && !aluno) {
       this.mensagemErro = 'Sua sessão expirou. Entre novamente para enviar uma resposta.';
       this.cdr.detectChanges();
       return;
@@ -125,8 +135,12 @@ export class ReflexaoSalaComponent implements OnInit, OnDestroy {
       await this.supabaseService.inserirRespostaReflexao({
         pergunta_id: this.perguntaAtual.id,
         texto: this.respostaForm.getRawValue().texto.trim(),
-        autor_email: usuario.email,
         status_aprovado: false,
+        autor_nome: aluno?.nome || null,
+        autor_email: usuario?.email || null,
+        escola: aluno?.escola || null,
+        serie: aluno?.serie || null,
+        turma: aluno?.turma || null
       });
 
       this.respostaForm.reset();
