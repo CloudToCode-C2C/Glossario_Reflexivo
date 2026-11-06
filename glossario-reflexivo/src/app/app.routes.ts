@@ -1,14 +1,14 @@
 import { Routes } from '@angular/router';
 import { Home } from './home/home';
 import { LoginComponent } from './login/login';
-import { authGuard } from './auth-guard';
+import { adminGuard, authGuard } from './auth-guard';
 import { GlossarioComponent } from './glossario/glossario';
 import { FormularioComponent } from './formulario/formulario';
 import { MuralRelatosComponent } from './mural-relatos/mural-relatos';
 import { SobreComponent } from './sobre/sobre';
 import { ReflexaoSalaComponent } from './reflexao-sala/reflexao-sala';
+import { AdminComponent } from './admin/admin';
 
-// Mantém a tela de login pública e agrupa todas as áreas de conteúdo sob o guard.
 export const routes: Routes = [
   {
     path: 'login',
@@ -20,15 +20,25 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        component: Home,
+        redirectTo: 'glossario',
+        pathMatch: 'full',
       },
       {
         path: 'glossario',
         component: GlossarioComponent,
       },
       {
+        path: 'admin',
+        canActivate: [adminGuard],
+        component: AdminComponent,
+      },
+      {
         path: 'glossario/:categoria',
         component: GlossarioComponent,
+      },
+      {
+        path: 'home',
+        component: Home,
       },
       {
         path: 'formulario',
@@ -58,6 +68,6 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: '',
+    redirectTo: 'glossario',
   }
 ];

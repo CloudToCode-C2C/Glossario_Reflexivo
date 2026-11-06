@@ -1,0 +1,91 @@
+<section class="admin-wrapper">
+  <header class="admin-cabecalho">
+    <a routerLink="/glossario" class="link-voltar">
+      <span class="material-icons" aria-hidden="true">arrow_back</span>
+      Voltar ao Glossário
+    </a>
+    <h1>Moderação Docente</h1>
+    <p>Utilize os seletores no topo do ecrã para filtrar por Escola, Série e Turma.</p>
+  </header>
+
+  <nav class="abas-moderacao" aria-label="Categorias de moderação">
+    <button
+      type="button"
+      [class.ativa]="abaAtiva === 'verbetes_colaborativos'"
+      (click)="selecionarAba('verbetes_colaborativos')"
+    >
+      Gírias / Expressões
+    </button>
+    <button
+      type="button"
+      [class.ativa]="abaAtiva === 'relatos'"
+      (click)="selecionarAba('relatos')"
+    >
+      Relatos (Fórum)
+    </button>
+    <button
+      type="button"
+      [class.ativa]="abaAtiva === 'respostas_reflexao'"
+      (click)="selecionarAba('respostas_reflexao')"
+    >
+      Salas de Reflexão
+    </button>
+  </nav>
+
+  @if (erroMensagem) {
+    <p class="estado-msg erro" role="alert">{{ erroMensagem }}</p>
+  } @else if (carregando) {
+    <p class="estado-msg">Carregando submissões dos alunos...</p>
+  } @else if (registros.length === 0) {
+    <p class="estado-msg">Nenhum registo encontrado para o filtro selecionado.</p>
+  } @else {
+    <div class="lista-moderacao">
+      @for (item of registros; track item.id) {
+        <article class="card-moderacao" [class.pendente]="!item.status_aprovado">
+          <div class="topo-card">
+            <span class="badge-status" [class.aprovado]="item.status_aprovado">
+              {{ item.status_aprovado ? 'Aprovado' : 'Pendente' }}
+            </span>
+            <time class="data-envio">
+              {{ (item.data_criacao || item.created_at) | date:'dd/MM/yyyy HH:mm' }}
+            </time>
+          </div>
+
+          <div class="dados-aluno">
+            <strong>{{ item.autor_nome || item.autor_email || 'Conteúdo Padrão do Sistema' }}</strong>
+            @if (item.escola) {
+              <span>{{ item.escola }} • {{ item.serie || 'Série N/D' }} (Turma {{ item.turma || '-' }})</span>
+            }
+          </div>
+
+          <div class="conteudo-enviado">
+            @if (abaAtiva === 'verbetes_colaborativos') {
+              <p class="tag-contexto">Categoria: <strong>{{ item.contexto }}</strong></p>
+              <p class="destaque-expressao">«{{ item.expressao }}»</p>
+              <p>{{ item.significado }}</p>
+            } @else if (abaAtiva === 'respostas_reflexao') {
+              <p class="tag-contexto">Pergunta #{{ item.pergunta_id }}</p>
+              <p>{{ item.texto }}</p>
+            } @else {
+              <p>{{ item.texto }}</p>
+            }
+          </div>
+
+          <div class="acoes-moderacao">
+            <button
+              type="button"
+              class="btn-status"
+              [class.ocultar]="item.status_aprovado"
+              (click)="alternarStatus(item)"
+            >
+              {{ item.status_aprovado ? 'Ocultar do Mural' : 'Aprovar Publicação' }}
+            </button>
+            <button type="button" class="btn-excluir" (click)="excluir(item.id)">
+              Excluir
+            </button>
+          </div>
+        </article>
+      }
+    </div>
+  }
+</section>

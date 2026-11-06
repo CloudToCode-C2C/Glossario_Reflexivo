@@ -1,5 +1,4 @@
 <main class="login-wrapper">
-  <!-- A tela pública mantém somente a identidade do projeto e a entrada OAuth. -->
   <section class="login-card">
     <div class="marca-login" aria-hidden="true">
       <span class="material-icons">menu_book</span>
@@ -14,17 +13,113 @@
       formas mais respeitosas de comunicação.
     </p>
 
-    <button (click)="entrarComGoogle()" [disabled]="carregando" class="btn-google">
-      <span class="google-mark" aria-hidden="true">G</span>
-      {{ carregando ? 'Redirecionando para o Google...' : 'Entrar com o Google' }}
-    </button>
+    @if (verificandoSessao) {
+      <p class="texto-rodape">Verificando credenciais de acesso...</p>
+    } @else {
+      <form [formGroup]="loginForm" (ngSubmit)="entrarComoAluno()" class="form-identificacao">
+        <!-- Seletor de Perfil (Checkballs) -->
+        <div class="perfil-checkballs" role="radiogroup" aria-label="Selecione seu perfil">
+          <button
+            type="button"
+            class="checkball-card"
+            [class.ativo]="perfilAtual === 'ALUNO'"
+            (click)="selecionarPerfil('ALUNO')"
+          >
+            <span class="checkball-dot"></span>
+            <span class="checkball-label">ALUNO</span>
+          </button>
 
-    @if (erroLogin) {
-      <p class="msg-erro" role="alert">
-        Não foi possível conectar ao Google. Tente novamente.
-      </p>
+          <button
+            type="button"
+            class="checkball-card"
+            [class.ativo]="perfilAtual === 'PROFESSOR'"
+            (click)="selecionarPerfil('PROFESSOR')"
+          >
+            <span class="checkball-dot"></span>
+            <span class="checkball-label">PROFESSOR</span>
+          </button>
+        </div>
+
+        <!-- FLUXO ALUNO: Campos de Identificação Escolar -->
+        @if (perfilAtual === 'ALUNO') {
+          <div class="campos-aluno">
+            <div class="campo-item">
+              <label for="nome">Nome Completo</label>
+              <input
+                id="nome"
+                type="text"
+                formControlName="nome"
+                placeholder="Digite seu nome completo"
+                autocomplete="name"
+              />
+            </div>
+
+            <div class="campo-item">
+              <label for="escola">Instituição de Ensino (Escola)</label>
+              <select id="escola" formControlName="escola">
+                @for (escola of escolas; track escola) {
+                  <option [value]="escola">{{ escola }}</option>
+                }
+              </select>
+            </div>
+
+            <div class="campos-duplos">
+              <div class="campo-item">
+                <label for="serie">Série</label>
+                <select id="serie" formControlName="serie">
+                  @for (serie of series; track serie) {
+                    <option [value]="serie">{{ serie }}</option>
+                  }
+                </select>
+              </div>
+
+              <div class="campo-item">
+                <label for="turma">Turma</label>
+                <select id="turma" formControlName="turma">
+                  @for (turma of turmas; track turma) {
+                    <option [value]="turma">Turma {{ turma }}</option>
+                  }
+                </select>
+              </div>
+            </div>
+
+            <button type="submit" [disabled]="carregando" class="btn-google">
+              <span class="material-icons" aria-hidden="true">arrow_forward</span>
+              {{ carregando ? 'Entrando...' : 'Acessar o Glossário' }}
+            </button>
+          </div>
+        } @else {
+          <!-- FLUXO PROFESSOR: OAuth Google + Solicitação C2C -->
+          <div class="bloco-professor">
+            <p class="info-professor">
+              Acesso exclusivo para docentes autorizados gerenciarem e filtrarem as contribuições das turmas.
+            </p>
+
+            <button
+              type="button"
+              (click)="entrarComGoogle()"
+              [disabled]="carregando"
+              class="btn-google"
+            >
+              <span class="google-mark" aria-hidden="true">G</span>
+              {{ carregando ? 'Redirecionando para o Google...' : 'Entrar com o Google' }}
+            </button>
+
+            <p class="suporte-c2c">
+              Ainda não tem acesso liberado?
+              <a [href]="linkMailtoC2C">Clique aqui para solicitar à CloudToCode</a>
+            </p>
+          </div>
+        }
+      </form>
+
+      @if (erroLogin) {
+        <p class="msg-erro" role="alert">
+          {{ erroMensagem || 'Não foi possível concluir o acesso. Tente novamente.' }}
+        </p>
+      }
+
+      <p class="texto-rodape">Entre para acessar os conteúdos e participar da comunidade.</p>
     }
-
-    <p class="texto-rodape">Entre para acessar os conteúdos e participar da comunidade.</p>
   </section>
 </main>

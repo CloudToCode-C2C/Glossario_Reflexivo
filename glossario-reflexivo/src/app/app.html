@@ -1,20 +1,78 @@
-@if (usuarioLogado) {
-  <header style="max-width: 600px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: #fff; border-bottom: 1px solid #eaeaea;">
-    <span style="font-size: 0.8rem; color: #555;">
-      Conectado: <strong>{{ usuarioLogado.email }}</strong>
-    </span>
-    <button (click)="sair()" style="background: none; border: 1px solid #dc2626; color: #dc2626; padding: 0.25rem 0.6rem; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">
-      Sair
-    </button>
+@if (possuiSessaoAtiva) {
+  <header style="max-width: 600px; margin: 0 auto; background: var(--cor-superficie, #fff); border-bottom: 1px solid var(--cor-borda, #eaeaea); padding: 0.75rem 1rem; display: flex; flex-direction: column; gap: 0.65rem;">
+    <!-- Linha 1: Identificação + Botão Admin (se professor) + Sair -->
+    <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+      <span style="font-size: 0.8rem; color: var(--cor-texto-secundario, #555);">
+        {{ sessaoAluno ? 'Estudante:' : 'Docente:' }}
+        <strong style="color: var(--cor-texto-principal, #333);">{{ identificacaoExibicao }}</strong>
+      </span>
+
+      <div style="display: flex; align-items: center; gap: 0.5rem;">
+        @if (ehProfessorAutorizado) {
+          <a
+            routerLink="/admin"
+            routerLinkActive="ativo"
+            style="background: var(--cor-primaria, #845EC2); color: #fff; text-decoration: none; padding: 0.3rem 0.7rem; border-radius: 6px; font-size: 0.78rem; font-weight: 600;"
+          >
+            Painel Admin
+          </a>
+        }
+        <button
+          (click)="sair()"
+          style="background: none; border: 1px solid #dc2626; color: #dc2626; padding: 0.25rem 0.6rem; border-radius: 6px; cursor: pointer; font-size: 0.78rem; font-weight: 600;"
+        >
+          Sair
+        </button>
+      </div>
+    </div>
+
+    <!-- Linha 2: Dropdowns de Filtro Global (Exclusivo para Professor) -->
+    @if (ehProfessorAutorizado) {
+      <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 0.4rem; padding-top: 0.4rem; border-top: 1px dashed var(--cor-borda, #eaeaea);">
+        <select
+          [value]="filtroAtual.escola"
+          (change)="alterarFiltro('escola', $event)"
+          aria-label="Filtrar por Escola"
+          style="padding: 0.35rem; border-radius: 6px; border: 1px solid var(--cor-borda, #ccc); font-size: 0.75rem; background: #fff;"
+        >
+          <option value="TODAS">Todas as Escolas</option>
+          @for (escola of escolas; track escola) {
+            <option [value]="escola">{{ escola }}</option>
+          }
+        </select>
+
+        <select
+          [value]="filtroAtual.serie"
+          (change)="alterarFiltro('serie', $event)"
+          aria-label="Filtrar por Série"
+          style="padding: 0.35rem; border-radius: 6px; border: 1px solid var(--cor-borda, #ccc); font-size: 0.75rem; background: #fff;"
+        >
+          <option value="TODAS">Todas as Séries</option>
+          @for (serie of series; track serie) {
+            <option [value]="serie">{{ serie }}</option>
+          }
+        </select>
+
+        <select
+          [value]="filtroAtual.turma"
+          (change)="alterarFiltro('turma', $event)"
+          aria-label="Filtrar por Turma"
+          style="padding: 0.35rem; border-radius: 6px; border: 1px solid var(--cor-borda, #ccc); font-size: 0.75rem; background: #fff;"
+        >
+          <option value="TODAS">Todas as Turmas</option>
+          @for (turma of turmas; track turma) {
+            <option [value]="turma">Turma {{ turma }}</option>
+          }
+        </select>
+      </div>
+    }
   </header>
 }
 
 <main style="padding-bottom: 80px; max-width: 600px; margin: 2rem auto;">
-  <!-- O outlet injeta a tela pública ou a página protegida correspondente à rota atual. -->
   <router-outlet></router-outlet>
 </main>
 
-<!-- A navegação inferior só é exposta depois que a sessão autenticada foi confirmada. -->
-@if (usuarioLogado) {
+@if (possuiSessaoAtiva) {
   <app-bottom-nav></app-bottom-nav>
 }
