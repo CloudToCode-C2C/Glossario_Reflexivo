@@ -5,9 +5,8 @@ import {
   SupabaseService,
   SessaoAluno,
   FiltroProfessor,
-  ESCOLAS_PERMITIDAS,
   SERIES_PERMITIDAS,
-  TURMAS_PERMITIDAS
+  TURMAS_PERMITIDAS,
 } from './supabase.service';
 
 @Component({
@@ -23,7 +22,7 @@ export class App implements OnInit {
   sessaoAluno: SessaoAluno | null = null;
   ehProfessorAutorizado = false;
 
-  escolas = ESCOLAS_PERMITIDAS;
+  escolas: string[] = [];
   series = SERIES_PERMITIDAS;
   turmas = TURMAS_PERMITIDAS;
   filtroAtual: FiltroProfessor = { escola: 'TODAS', serie: 'TODAS', turma: 'TODAS' };
@@ -31,7 +30,7 @@ export class App implements OnInit {
   constructor(
     private supabaseService: SupabaseService,
     private router: Router,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
   ) {}
 
   get possuiSessaoAtiva(): boolean {
@@ -47,6 +46,21 @@ export class App implements OnInit {
 
   async ngOnInit() {
     this.filtroAtual = this.supabaseService.obterFiltroProfessorAtual();
+
+    this.supabaseService.escolasPermitidas$.subscribe((escolas) => {
+      this.escolas = escolas;
+
+      const escolaSelecionada = this.supabaseService.obterFiltroProfessorAtual().escola;
+      if (escolaSelecionada !== 'TODAS' && !escolas.includes(escolaSelecionada)) {
+        this.supabaseService.atualizarFiltroProfessor({ escola: 'TODAS' });
+      }
+
+      this.cdr.detectChanges();
+    });
+
+    // O login também carrega a lista, mas o App precisa cobrir entradas diretas
+    // com sessão OAuth já existente ou restauração do PWA.
+    await this.supabaseService.carregarEscolasAprovadas();
     await this.sincronizarEstadoAuth();
 
     this.supabaseService.sessaoAluno$.subscribe((aluno) => {
