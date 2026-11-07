@@ -10,8 +10,7 @@
   overflow: hidden;
   background:
     radial-gradient(circle at 12% 12%, rgba(132, 94, 194, 0.14), transparent 30%),
-    radial-gradient(circle at 90% 86%, rgba(255, 150, 113, 0.16), transparent 28%),
-    var(--cor-fundo);
+    radial-gradient(circle at 90% 86%, rgba(255, 150, 113, 0.16), transparent 28%), var(--cor-fundo);
   padding: 24px;
 
   &::before,
@@ -198,7 +197,9 @@
       font: inherit;
       font-size: 14px;
       box-sizing: border-box;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
 
       &:focus {
         outline: none;
@@ -224,8 +225,25 @@
       line-height: 1.5;
     }
 
+    .solicitacao-professor {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 4px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(58, 50, 44, 0.1);
+      text-align: left;
+    }
+
+    .solicitacao-titulo {
+      margin: 0;
+      color: var(--cor-texto-principal);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
     .suporte-c2c {
-      margin: 4px 0 0;
+      margin: 0;
       font-size: 12.5px;
       color: var(--cor-texto-secundario);
       line-height: 1.5;
@@ -236,6 +254,55 @@
         color: var(--cor-primaria);
         font-weight: 700;
         text-decoration: underline;
+      }
+    }
+
+    .btn-solicitar {
+      display: inline-flex;
+      min-height: 44px;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: 1px solid rgba(132, 94, 194, 0.35);
+      border-radius: 12px;
+      background: rgba(132, 94, 194, 0.08);
+      color: var(--cor-primaria);
+      font: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+
+      &:hover:not(:disabled),
+      &:focus-visible:not(:disabled) {
+        background: rgba(132, 94, 194, 0.15);
+      }
+
+      &:disabled {
+        cursor: not-allowed;
+        opacity: 0.6;
+      }
+    }
+
+    .feedback-solicitacao {
+      margin: 0;
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 12px;
+      line-height: 1.5;
+
+      &.sucesso {
+        background: var(--cor-sucesso-fundo);
+        color: #047857;
+      }
+
+      &.erro {
+        background: var(--cor-erro-fundo);
+        color: #b91c1c;
+      }
+
+      &.info {
+        background: rgba(44, 115, 210, 0.1);
+        color: #245ca8;
       }
     }
   }
@@ -257,7 +324,10 @@
     font-weight: 700;
     cursor: pointer;
     box-shadow: 0 8px 18px rgba(132, 94, 194, 0.2);
-    transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+    transition:
+      background-color 0.2s ease,
+      box-shadow 0.2s ease,
+      transform 0.2s ease;
 
     .google-mark {
       display: inline-grid;

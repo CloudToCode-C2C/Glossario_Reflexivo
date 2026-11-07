@@ -4,3 +4,130 @@
   min-height: 100vh;
   background-color: transparent !important;
 }
+
+.app-header {
+  width: min(100%, 600px);
+  margin: 0 auto;
+  padding: 0.75rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  background: var(--cor-superficie, #fff);
+  border-bottom: 1px solid var(--cor-borda, #eaeaea);
+}
+
+.app-header-top,
+.app-header-actions {
+  display: flex;
+  align-items: center;
+}
+
+.app-header-top {
+  justify-content: space-between;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.app-identity {
+  min-width: 0;
+  color: var(--cor-texto-secundario, #555);
+  font-size: 0.8rem;
+  overflow-wrap: anywhere;
+}
+
+.app-identity strong {
+  color: var(--cor-texto-principal, #333);
+}
+
+.app-header-actions {
+  flex-shrink: 0;
+  gap: 0.5rem;
+}
+
+.app-admin-link,
+.app-logout-button {
+  border-radius: 6px;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.app-admin-link {
+  color: #fff;
+  background: var(--cor-primaria, #845ec2);
+  text-decoration: none;
+}
+
+.app-logout-button {
+  color: #dc2626;
+  background: transparent;
+  border: 1px solid #dc2626;
+  cursor: pointer;
+}
+
+.professor-filters {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0.4rem;
+  padding-top: 0.65rem;
+  border-top: 1px dashed var(--cor-borda, #eaeaea);
+}
+
+.professor-filter {
+  width: 100%;
+  min-width: 0;
+  padding: 0.45rem 1.8rem 0.45rem 0.55rem;
+  color: var(--cor-texto-principal, #333);
+  background-color: #fff;
+  border: 1px solid var(--cor-borda, #ccc);
+  border-radius: 6px;
+  font: inherit;
+  font-size: 0.75rem;
+  text-overflow: ellipsis;
+}
+
+.app-main {
+  width: min(100%, 600px);
+  min-width: 0;
+  margin: 2rem auto 0;
+  padding: 0 1rem 80px;
+}
+
+@media (max-width: 520px) {
+  .app-header {
+    padding-inline: 0.75rem;
+  }
+
+  .app-header-top {
+    align-items: flex-start;
+  }
+
+  .app-identity {
+    flex: 1 1 100%;
+  }
+
+  .app-header-actions {
+    width: 100%;
+  }
+
+  .app-admin-link,
+  .app-logout-button {
+    flex: 1;
+    text-align: center;
+  }
+
+  .professor-filters {
+    grid-template-columns: 1fr;
+  }
+
+  .professor-filter {
+    min-height: 2.5rem;
+  }
+
+  .app-main {
+    margin-top: 1.25rem;
+    padding-inline: 0.75rem;
+  }
+}

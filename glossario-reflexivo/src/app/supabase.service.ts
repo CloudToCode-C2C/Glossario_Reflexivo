@@ -3,11 +3,14 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { BehaviorSubject } from 'rxjs';
 import { environment } from '../environments/environment';
 
-export const ESCOLAS_PERMITIDAS = [
+export const ESCOLAS_PADRAO = [
   'Instituto Federal de Brasília - Campus Ceilândia',
   'Centro de Ensino Fundamental 14 de Samambaia',
   'Centro Educacional 02 de Taguatinga',
 ];
+
+// Mantém compatibilidade com componentes que ainda usam o nome anterior.
+export const ESCOLAS_PERMITIDAS = ESCOLAS_PADRAO;
 
 export const SERIES_PERMITIDAS = ['6º Ano', '7º Ano', '8º Ano', '9º Ano', 'Ensino Médio'];
 
@@ -34,6 +37,8 @@ export interface FiltroProfessor {
 })
 export class SupabaseService {
   private supabase: SupabaseClient;
+  private escolasPermitidasSubject = new BehaviorSubject<string[]>(ESCOLAS_PADRAO);
+  public escolasPermitidas$ = this.escolasPermitidasSubject.asObservable();
 
   // Estado reativo para avisar o AppComponent quando o Aluno entra ou sai
   private sessaoAlunoSubject = new BehaviorSubject<SessaoAluno | null>(this.obterSessaoAluno());
@@ -72,7 +77,7 @@ export class SupabaseService {
         typeof sessao.nome === 'string' &&
         sessao.nome.trim().length >= 3 &&
         sessao.nome.trim().length <= 120;
-      const escolaValida = ESCOLAS_PERMITIDAS.includes(sessao.escola);
+      const escolaValida = this.escolasPermitidasSubject.value.includes(sessao.escola);
       const serieValida = SERIES_PERMITIDAS.includes(sessao.serie);
       const turmaValida = TURMAS_PERMITIDAS.includes(sessao.turma);
 
@@ -95,6 +100,48 @@ export class SupabaseService {
 
   obterFiltroProfessorAtual(): FiltroProfessor {
     return this.filtroProfessorSubject.value;
+  }
+
+  obterEscolasAtuais(): string[] {
+    return this.escolasPermitidasSubject.value;
+  }
+
+  async carregarEscolasAprovadas(): Promise<string[]> {
+    const { data, error } = await this.supabase
+      .from('escolas')
+      .select('identificador_completo')
+      .eq('status_aprovado', true)
+      .order('identificador_completo', { ascending: true });
+
+    if (!error && data && data.length > 0) {
+      const lista = data.map((item: any) => item.identificador_completo as string);
+      this.escolasPermitidasSubject.next(lista);
+      return lista;
+    }
+    return this.escolasPermitidasSubject.value;
+  }
+
+  async solicitarAcessoProfessor(dados: {
+    nome: string;
+    email: string;
+    escolaExistente?: string;
+    novaEscolaNome?: string;
+    novaEscolaCidade?: string;
+  }): Promise<'CRIADO' | 'CRIADO_COM_ESCOLA' | 'JA_PENDENTE' | 'JA_APROVADO'> {
+    const { data, error } = await this.supabase.rpc('solicitar_acesso_professor', {
+      p_nome: dados.nome,
+      p_email: dados.email,
+      p_escola_existente: dados.escolaExistente ?? null,
+      p_nova_escola_nome: dados.novaEscolaNome ?? null,
+      p_nova_escola_cidade: dados.novaEscolaCidade ?? null,
+    });
+
+    if (error) {
+      console.error('Erro ao solicitar acesso de professor:', error);
+      throw error;
+    }
+
+    return data as 'CRIADO' | 'CRIADO_COM_ESCOLA' | 'JA_PENDENTE' | 'JA_APROVADO';
   }
 
   async loginComGoogle() {

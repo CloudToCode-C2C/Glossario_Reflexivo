@@ -1,39 +1,28 @@
 @if (possuiSessaoAtiva) {
-  <header style="max-width: 600px; margin: 0 auto; background: var(--cor-superficie, #fff); border-bottom: 1px solid var(--cor-borda, #eaeaea); padding: 0.75rem 1rem; display: flex; flex-direction: column; gap: 0.65rem;">
+  <header class="app-header">
     <!-- Linha 1: Identificação + Botão Admin (se professor) + Sair -->
-    <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
-      <span style="font-size: 0.8rem; color: var(--cor-texto-secundario, #555);">
+    <div class="app-header-top">
+      <span class="app-identity">
         {{ sessaoAluno ? 'Estudante:' : 'Docente:' }}
-        <strong style="color: var(--cor-texto-principal, #333);">{{ identificacaoExibicao }}</strong>
+        <strong>{{ identificacaoExibicao }}</strong>
       </span>
 
-      <div style="display: flex; align-items: center; gap: 0.5rem;">
+      <div class="app-header-actions">
         @if (ehProfessorAutorizado) {
-          <a
-            routerLink="/admin"
-            routerLinkActive="ativo"
-            style="background: var(--cor-primaria, #845EC2); color: #fff; text-decoration: none; padding: 0.3rem 0.7rem; border-radius: 6px; font-size: 0.78rem; font-weight: 600;"
-          >
-            Painel Admin
-          </a>
+          <a routerLink="/admin" routerLinkActive="ativo" class="app-admin-link"> Painel Admin </a>
         }
-        <button
-          (click)="sair()"
-          style="background: none; border: 1px solid #dc2626; color: #dc2626; padding: 0.25rem 0.6rem; border-radius: 6px; cursor: pointer; font-size: 0.78rem; font-weight: 600;"
-        >
-          Sair
-        </button>
+        <button (click)="sair()" class="app-logout-button">Sair</button>
       </div>
     </div>
 
     <!-- Linha 2: Dropdowns de Filtro Global (Exclusivo para Professor) -->
     @if (ehProfessorAutorizado) {
-      <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 0.4rem; padding-top: 0.4rem; border-top: 1px dashed var(--cor-borda, #eaeaea);">
+      <div class="professor-filters">
         <select
           [value]="filtroAtual.escola"
           (change)="alterarFiltro('escola', $event)"
           aria-label="Filtrar por Escola"
-          style="padding: 0.35rem; border-radius: 6px; border: 1px solid var(--cor-borda, #ccc); font-size: 0.75rem; background: #fff;"
+          class="professor-filter"
         >
           <option value="TODAS">Todas as Escolas</option>
           @for (escola of escolas; track escola) {
@@ -45,7 +34,7 @@
           [value]="filtroAtual.serie"
           (change)="alterarFiltro('serie', $event)"
           aria-label="Filtrar por Série"
-          style="padding: 0.35rem; border-radius: 6px; border: 1px solid var(--cor-borda, #ccc); font-size: 0.75rem; background: #fff;"
+          class="professor-filter"
         >
           <option value="TODAS">Todas as Séries</option>
           @for (serie of series; track serie) {
@@ -57,7 +46,7 @@
           [value]="filtroAtual.turma"
           (change)="alterarFiltro('turma', $event)"
           aria-label="Filtrar por Turma"
-          style="padding: 0.35rem; border-radius: 6px; border: 1px solid var(--cor-borda, #ccc); font-size: 0.75rem; background: #fff;"
+          class="professor-filter"
         >
           <option value="TODAS">Todas as Turmas</option>
           @for (turma of turmas; track turma) {
@@ -69,7 +58,7 @@
   </header>
 }
 
-<main style="padding-bottom: 80px; max-width: 600px; margin: 2rem auto;">
+<main class="app-main">
   <router-outlet></router-outlet>
 </main>
 

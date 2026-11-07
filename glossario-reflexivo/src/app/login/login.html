@@ -92,7 +92,8 @@
           <!-- FLUXO PROFESSOR: OAuth Google + Solicitação C2C -->
           <div class="bloco-professor">
             <p class="info-professor">
-              Acesso exclusivo para docentes autorizados gerenciarem e filtrarem as contribuições das turmas.
+              Acesso exclusivo para docentes autorizados gerenciarem e filtrarem as contribuições
+              das turmas.
             </p>
 
             <button
@@ -105,10 +106,87 @@
               {{ carregando ? 'Redirecionando para o Google...' : 'Entrar com o Google' }}
             </button>
 
-            <p class="suporte-c2c">
-              Ainda não tem acesso liberado?
-              <a [href]="linkMailtoC2C">Clique aqui para solicitar à CloudToCode</a>
-            </p>
+            <div class="solicitacao-professor" [formGroup]="solicitacaoForm">
+              <p class="solicitacao-titulo">Ainda não tem acesso liberado?</p>
+
+              <div class="campo-item">
+                <label for="prof-nome">Nome Completo</label>
+                <input
+                  id="prof-nome"
+                  type="text"
+                  formControlName="nome"
+                  placeholder="Digite seu nome completo"
+                  autocomplete="name"
+                />
+              </div>
+
+              <div class="campo-item">
+                <label for="prof-email">E-mail Google</label>
+                <input
+                  id="prof-email"
+                  type="email"
+                  formControlName="email"
+                  placeholder="professor@escola.edu.br"
+                  autocomplete="email"
+                />
+              </div>
+
+              <div class="campo-item">
+                <label for="prof-escola">Instituição de Ensino</label>
+                <select id="prof-escola" formControlName="escolaSelecionada">
+                  @for (escola of escolas; track escola) {
+                    <option [value]="escola">{{ escola }}</option>
+                  }
+                  <option value="__NOVA_ESCOLA__">
+                    + Minha escola não está na lista (Solicitar inclusão)
+                  </option>
+                </select>
+              </div>
+
+              @if (cadastrandoNovaEscola) {
+                <div class="campo-item">
+                  <label for="nova-escola-nome">Nome da Nova Escola</label>
+                  <input
+                    id="nova-escola-nome"
+                    type="text"
+                    formControlName="novaEscolaNome"
+                    placeholder="Ex: Centro de Ensino Médio 03"
+                  />
+                </div>
+
+                <div class="campo-item">
+                  <label for="nova-escola-cidade">Cidade / Região Administrativa</label>
+                  <input
+                    id="nova-escola-cidade"
+                    type="text"
+                    formControlName="novaEscolaCidade"
+                    placeholder="Ex: Ceilândia, Taguatinga, Gama..."
+                  />
+                </div>
+              }
+
+              <button
+                type="button"
+                class="btn-solicitar"
+                [disabled]="enviandoSolicitacao"
+                (click)="enviarSolicitacaoProfessor()"
+              >
+                <span class="material-icons" aria-hidden="true">send</span>
+                {{ enviandoSolicitacao ? 'Enviando solicitação...' : 'Solicitar acesso' }}
+              </button>
+
+              @if (feedbackSolicitacao) {
+                <p
+                  class="feedback-solicitacao"
+                  [class.sucesso]="feedbackSolicitacao.tipo === 'sucesso'"
+                  [class.erro]="feedbackSolicitacao.tipo === 'erro'"
+                  [class.info]="feedbackSolicitacao.tipo === 'info'"
+                  role="status"
+                >
+                  {{ feedbackSolicitacao.texto }}
+                </p>
+              }
+            </div>
           </div>
         }
       </form>
