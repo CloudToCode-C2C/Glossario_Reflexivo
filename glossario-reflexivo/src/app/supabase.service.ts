@@ -26,6 +26,18 @@ export interface SessaoAluno {
   turma: string;
 }
 
+export interface VideoCategoria {
+  id: number;
+  categoria: string;
+  titulo: string;
+  youtube_id: string;
+  url_original: string;
+  autor_email?: string | null;
+  escola?: string | null;
+  fixo_sistema: boolean;
+  created_at: string;
+}
+
 export interface FiltroProfessor {
   escola: string; // 'TODAS' ou nome da escola
   serie: string; // 'TODAS' ou série específica
@@ -104,6 +116,13 @@ export class SupabaseService {
 
   obterEscolasAtuais(): string[] {
     return this.escolasPermitidasSubject.value;
+  }
+
+  extrairYoutubeId(url: string): string | null {
+    if (!url) return null;
+    const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?|shorts)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+    const match = url.trim().match(regex);
+    return match ? match[1] : null;
   }
 
   async carregarEscolasAprovadas(): Promise<string[]> {
@@ -279,6 +298,68 @@ export class SupabaseService {
     const { data, error } = await this.supabase.from('respostas_reflexao').insert([resposta]);
     if (error) throw error;
     return data;
+  }
+
+  async buscarVideosPorCategoria(categoria?: string): Promise<VideoCategoria[]> {
+    const isProf = await this.verificarProfessorAutorizado();
+
+    let query = isProf
+      ? this.supabase
+        .from('videos_categoria')
+        .select('*')
+        .order('fixo_sistema', { ascending: false })
+        .order('created_at', { ascending: true })
+      : this.supabase
+        .from('videos_categoria')
+        .select('id, categoria, titulo, youtube_id, url_original, escola, fixo_sistema, created_at')
+        .order("fixo_sistema", { ascending: false })
+        .order('created_at', { ascending: true });
+
+    if (categoria) {
+      query = query.eq('categoria', categoria);
+    }
+
+    const { data, error } = await query;
+    if (error) throw error;
+    return (data as VideoCategoria[]) || [];
+  }
+
+  async inserirVideoCategoria(dados: {
+    categoria: string;
+    titulo: string;
+    url: string;
+    escola?: string | null;
+  }): Promise<void> {
+    await this.exigirProfessorAutorizado();
+    const usuario = await this.obterUsuarioAtual();
+    const youtubeId = this.extrairYoutubeId(dados.url);
+    if (!youtubeId) {
+      throw new Error('URL do YouTube inválida.');
+    }
+
+    const { error } = await this.supabase.from('videos_categoria').insert([
+      {
+        categoria: dados.categoria,
+        titulo: dados.titulo.trim(),
+        youtube_id: youtubeId,
+        url_original: dados.url.trim(),
+        autor_email: usuario?.email ?? null,
+        escola: dados.escola && dados.escola !== 'TODAS' ? dados.escola : null,
+        fixo_sistema: false,
+      }
+    ]);
+
+    if (error) throw error;
+  }
+
+  async excluirVideoCategoria(id: number): Promise<void> {
+    await this.exigirProfessorAutorizado();
+    const { error } = await this.supabase
+      .from('videos_categoria')
+      .delete()
+      .eq('id', id);
+    
+    if (error) throw error;
   }
 
   private aplicarFiltroQueryProfessor(query: any) {

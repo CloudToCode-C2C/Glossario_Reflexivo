@@ -4,88 +4,237 @@
       <span class="material-icons" aria-hidden="true">arrow_back</span>
       Voltar ao Glossário
     </a>
-    <h1>Moderação Docente</h1>
-    <p>Utilize os seletores no topo do ecrã para filtrar por Escola, Série e Turma.</p>
+    <h1>Painel Docente</h1>
+    <p>Modere as submissões das turmas e gerencie a videoteca compartilhada do projeto.</p>
   </header>
 
-  <nav class="abas-moderacao" aria-label="Categorias de moderação">
+  <nav class="abas-moderacao" aria-label="Categorias de administração">
     <button
       type="button"
       [class.ativa]="abaAtiva === 'verbetes_colaborativos'"
       (click)="selecionarAba('verbetes_colaborativos')"
     >
-      Gírias / Expressões
+      Gírias
     </button>
     <button
       type="button"
       [class.ativa]="abaAtiva === 'relatos'"
       (click)="selecionarAba('relatos')"
     >
-      Relatos (Fórum)
+      Relatos
     </button>
     <button
       type="button"
       [class.ativa]="abaAtiva === 'respostas_reflexao'"
       (click)="selecionarAba('respostas_reflexao')"
     >
-      Salas de Reflexão
+      Reflexões
+    </button>
+    <button
+      type="button"
+      [class.ativa]="abaAtiva === 'videos_categoria'"
+      (click)="selecionarAba('videos_categoria')"
+    >
+      Videoteca (YouTube)
     </button>
   </nav>
 
   @if (erroMensagem) {
     <p class="estado-msg erro" role="alert">{{ erroMensagem }}</p>
-  } @else if (carregando) {
-    <p class="estado-msg">Carregando submissões dos alunos...</p>
-  } @else if (registros.length === 0) {
-    <p class="estado-msg">Nenhum registo encontrado para o filtro selecionado.</p>
-  } @else {
-    <div class="lista-moderacao">
-      @for (item of registros; track item.id) {
-        <article class="card-moderacao" [class.pendente]="!item.status_aprovado">
-          <div class="topo-card">
-            <span class="badge-status" [class.aprovado]="item.status_aprovado">
-              {{ item.status_aprovado ? 'Aprovado' : 'Pendente' }}
-            </span>
-            <time class="data-envio">
-              {{ (item.data_criacao || item.created_at) | date:'dd/MM/yyyy HH:mm' }}
-            </time>
+  } @else if (abaAtiva === 'videos_categoria') {
+    <!-- ==================== 4ª ABA: GESTÃO DA VIDEOTECA ==================== -->
+    <div class="secao-videoteca-admin">
+      <!-- Formulário para Adicionar Novo Vídeo -->
+      <form [formGroup]="videoForm" (ngSubmit)="adicionarVideo()" class="card-novo-video">
+        <h3>Adicionar Vídeo à Playlist Global</h3>
+        <p class="sub-form">Os vídeos adicionados ficam visíveis para todas as escolas participantes.</p>
+
+        <div class="campos-video-grid">
+          <div class="campo-admin">
+            <label for="vid-cat">Categoria do Glossário</label>
+            <select id="vid-cat" formControlName="categoria">
+              @for (cat of categoriasGlossario; track cat.id) {
+                <option [value]="cat.id">{{ cat.titulo }}</option>
+              }
+            </select>
           </div>
 
-          <div class="dados-aluno">
-            <strong>{{ item.autor_nome || item.autor_email || 'Conteúdo Padrão do Sistema' }}</strong>
-            @if (item.escola) {
-              <span>{{ item.escola }} • {{ item.serie || 'Série N/D' }} (Turma {{ item.turma || '-' }})</span>
-            }
+          <div class="campo-admin">
+            <label for="vid-titulo">Título Pedagógico do Vídeo</label>
+            <input
+              id="vid-titulo"
+              type="text"
+              formControlName="titulo"
+              placeholder="Ex: Entenda o que é Capacitismo em 3 minutos"
+            />
           </div>
+        </div>
 
-          <div class="conteudo-enviado">
-            @if (abaAtiva === 'verbetes_colaborativos') {
-              <p class="tag-contexto">Categoria: <strong>{{ item.contexto }}</strong></p>
-              <p class="destaque-expressao">«{{ item.expressao }}»</p>
-              <p>{{ item.significado }}</p>
-            } @else if (abaAtiva === 'respostas_reflexao') {
-              <p class="tag-contexto">Pergunta #{{ item.pergunta_id }}</p>
-              <p>{{ item.texto }}</p>
-            } @else {
-              <p>{{ item.texto }}</p>
-            }
-          </div>
+        <div class="campo-admin">
+          <label for="vid-url">Link do YouTube</label>
+          <input
+            id="vid-url"
+            type="url"
+            formControlName="url"
+            placeholder="https://youtu.be/... ou https://www.youtube.com/watch?v=..."
+          />
+        </div>
 
-          <div class="acoes-moderacao">
-            <button
-              type="button"
-              class="btn-status"
-              [class.ocultar]="item.status_aprovado"
-              (click)="alternarStatus(item)"
-            >
-              {{ item.status_aprovado ? 'Ocultar do Mural' : 'Aprovar Publicação' }}
-            </button>
-            <button type="button" class="btn-excluir" (click)="excluir(item.id)">
-              Excluir
-            </button>
-          </div>
-        </article>
+        <button type="submit" class="btn-salvar-video" [disabled]="salvandoVideo">
+          <span class="material-icons" aria-hidden="true">add_circle</span>
+          {{ salvandoVideo ? 'Adicionando vídeo...' : 'Adicionar à Playlist' }}
+        </button>
+
+        @if (feedbackVideo) {
+          <p class="feedback-video" [class.erro]="feedbackVideo.tipo === 'erro'">
+            {{ feedbackVideo.texto }}
+          </p>
+        }
+      </form>
+
+      <!-- Barra de Chips de Categoria (Padrão do Glossário) -->
+      <div class="filtros-scroll-admin">
+        <button
+          type="button"
+          class="chip-filtro-admin"
+          [class.ativo]="categoriaVideoFiltro === ''"
+          (click)="filtrarVideoPorBolha('')"
+        >
+          <span class="material-icons" aria-hidden="true">explore</span>
+          Todas ({{ videos.length }})
+        </button>
+
+        @for (cat of categoriasGlossario; track cat.id) {
+          <button
+            type="button"
+            class="chip-filtro-admin"
+            [class.ativo]="categoriaVideoFiltro === cat.id"
+            (click)="filtrarVideoPorBolha(cat.id)"
+          >
+            <span class="material-icons" aria-hidden="true">{{ cat.icone }}</span>
+            {{ cat.titulo }}
+          </button>
+        }
+      </div>
+
+      <!-- Checkbox: Mostrar apenas vídeos enviados por mim -->
+      <div class="barra-filtro-autoria">
+        <label class="toggle-meus-videos">
+          <input
+            type="checkbox"
+            [checked]="apenasMeusVideos"
+            (change)="alternarApenasMeusVideos($event)"
+          />
+          <span>Mostrar apenas vídeos adicionados por mim ({{ emailProfessorLogado }})</span>
+        </label>
+      </div>
+
+      @if (carregando) {
+        <p class="estado-msg">Carregando videoteca...</p>
+      } @else if (videosFiltrados.length === 0) {
+        <p class="estado-msg">Nenhum vídeo encontrado para este filtro.</p>
+      } @else {
+        <div class="lista-videos-admin">
+          @for (video of videosFiltrados; track video.id) {
+            <article class="card-video-admin" [class.fixo]="video.fixo_sistema">
+              <img
+                class="thumb-admin"
+                [src]="obterThumb(video.youtube_id)"
+                [alt]="video.titulo"
+                loading="lazy"
+              />
+              <div class="info-video-admin">
+                <div class="badges-video">
+                  <span class="badge-cat">{{ video.categoria }}</span>
+                  @if (video.fixo_sistema) {
+                    <span class="badge-fixo">
+                      <span class="material-icons" aria-hidden="true">lock</span>
+                      Acervo Base (Protegido)
+                    </span>
+                  } @else {
+                    <span class="badge-prof">
+                      Enviado por: {{ video.autor_email || 'Docente' }}
+                    </span>
+                  }
+                </div>
+                <h4>{{ video.titulo }}</h4>
+                <a [href]="video.url_original" target="_blank" rel="noopener noreferrer" class="link-externo">
+                  Abrir link original no YouTube
+                </a>
+              </div>
+
+              <div class="acoes-video-admin">
+                @if (podeExcluirVideo(video)) {
+                  <button
+                    type="button"
+                    class="btn-excluir-video"
+                    (click)="removerVideo(video)"
+                  >
+                    <span class="material-icons" aria-hidden="true">delete</span>
+                    Excluir
+                  </button>
+                }
+              </div>
+            </article>
+          }
+        </div>
       }
     </div>
+  } @else {
+    <!-- ==================== ABAS 1, 2 E 3: MODERAÇÃO ==================== -->
+    @if (carregando) {
+      <p class="estado-msg">Carregando submissões dos alunos...</p>
+    } @else if (registros.length === 0) {
+      <p class="estado-msg">Nenhum registo encontrado para o filtro selecionado.</p>
+    } @else {
+      <div class="lista-moderacao">
+        @for (item of registros; track item.id) {
+          <article class="card-moderacao" [class.pendente]="!item.status_aprovado">
+            <div class="topo-card">
+              <span class="badge-status" [class.aprovado]="item.status_aprovado">
+                {{ item.status_aprovado ? 'Aprovado' : 'Pendente' }}
+              </span>
+              <time class="data-envio">
+                {{ (item.data_criacao || item.created_at) | date:'dd/MM/yyyy HH:mm' }}
+              </time>
+            </div>
+
+            <div class="dados-aluno">
+              <strong>{{ item.autor_nome || item.autor_email || 'Conteúdo Padrão do Sistema' }}</strong>
+              @if (item.escola) {
+                <span>{{ item.escola }} • {{ item.serie || 'Série N/D' }} (Turma {{ item.turma || '-' }})</span>
+              }
+            </div>
+
+            <div class="conteudo-enviado">
+              @if (abaAtiva === 'verbetes_colaborativos') {
+                <p class="tag-contexto">Categoria: <strong>{{ item.contexto }}</strong></p>
+                <p class="destaque-expressao">«{{ item.expressao }}»</p>
+                <p>{{ item.significado }}</p>
+              } @else if (abaAtiva === 'respostas_reflexao') {
+                <p class="tag-contexto">Pergunta #{{ item.pergunta_id }}</p>
+                <p>{{ item.texto }}</p>
+              } @else {
+                <p>{{ item.texto }}</p>
+              }
+            </div>
+
+            <div class="acoes-moderacao">
+              <button
+                type="button"
+                class="btn-status"
+                [class.ocultar]="item.status_aprovado"
+                (click)="alternarStatus(item)"
+              >
+                {{ item.status_aprovado ? 'Ocultar do Mural' : 'Aprovar Publicação' }}
+              </button>
+              <button type="button" class="btn-excluir" (click)="excluir(item.id)">
+                Excluir
+              </button>
+            </div>
+          </article>
+        }
+      </div>
+    }
   }
 </section>

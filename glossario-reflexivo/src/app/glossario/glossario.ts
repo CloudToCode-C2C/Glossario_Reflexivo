@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, HostListener, OnInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectorRef, Input, HostListener, OnInit, OnDestroy } from '@angular/core';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { RouterLink } from '@angular/router';
+import { SupabaseService, VideoCategoria } from '../supabase.service';
 import { FormularioComponent } from '../formulario/formulario';
 import { MuralComponent } from '../mural/mural';
 
@@ -28,7 +30,18 @@ interface QuestaoReflexiva {
   styleUrl: './glossario.scss'
 })
 export class GlossarioComponent implements OnInit, OnDestroy {
+  videosDaCategoria: VideoCategoria[] = [];
+  carregandoVideos = false;
+  playlistAberta = false;
+  videoAtivo: VideoCategoria | null = null;
+  urlEmbedSegura: SafeResourceUrl | null = null;
   private categoriaDaRota = '';
+
+  constructor(
+    private supabaseService: SupabaseService,
+    private sanitizer: DomSanitizer,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   @Input()
   set categoria(value: string | undefined) {
@@ -36,6 +49,7 @@ export class GlossarioComponent implements OnInit, OnDestroy {
     this.categoriaSelecionada = this.categorias.find(
       categoria => categoria.id === this.categoriaDaRota
     ) ?? null;
+    this.resetarEBuscarPlaylist();
   }
 
   get categoria(): string {
@@ -193,11 +207,15 @@ export class GlossarioComponent implements OnInit, OnDestroy {
   }
 
   selecionarCategoriaNaGrade(id: string) {
-      this.categoriaSelecionada = this.categorias.find(c => c.id === id) ?? null;
+    this.categoriaSelecionada = this.categorias.find(c => c.id === id) ?? null;
+    this.resetarEBuscarPlaylist();
   }
 
   limparSelecao() {
-      this.categoriaSelecionada = null;
+    this.categoriaSelecionada = null;
+    this.playlistAberta = false;
+    this.videoAtivo = null;
+    this.urlEmbedSegura = null;
   }
 
   dispararFeedbackSucesso() {
@@ -270,6 +288,25 @@ export class GlossarioComponent implements OnInit, OnDestroy {
     this.pararCarrossel();
   }
 
+  alternarPlaylist() {
+    this.playlistAberta = !this.playlistAberta;
+    if (this.playlistAberta && !this.videoAtivo && this.videosDaCategoria.length > 0) {
+      this.selecionarVideoNaPlaylist(this.videosDaCategoria[0]);
+    }
+    this.cdr.detectChanges();
+  }
+
+  selecionarVideoNaPlaylist(video: VideoCategoria) {
+    this.videoAtivo = video;
+    const embedUrl = `https://www.youtube-nocookie.com/embed/${video.youtube_id}?rel=0`;
+    this.urlEmbedSegura = this.sanitizer.bypassSecurityTrustResourceUrl(embedUrl);
+    this.cdr.detectChanges();
+  }
+
+  obterThumbYoutube(youtubeId: string): string {
+    return `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`;
+  }
+
   @HostListener('window:keydown', ['$event'])
   controlarComTeclado(event: KeyboardEvent): void {
     if (this.categoriaSelecionada !== null) return;
@@ -299,5 +336,30 @@ export class GlossarioComponent implements OnInit, OnDestroy {
     if (!this.intervaloCarrossel) return;
     clearInterval(this.intervaloCarrossel);
     this.intervaloCarrossel = undefined;
+  }
+
+  private resetarEBuscarPlaylist(): void {
+    this.playlistAberta = false;
+    this.videoAtivo = null;
+    this.urlEmbedSegura = null;
+    if (this.categoriaSelecionada) {
+      void this.carregarVideosDaCategoria(this.categoriaSelecionada.id);
+    }
+  }
+
+  async carregarVideosDaCategoria(idCategoria: string) {
+    this.carregandoVideos = true;
+    this.cdr.detectChanges();
+    try {
+      this.videosDaCategoria = await this.supabaseService.buscarVideosPorCategoria(idCategoria);
+      if (this.videosDaCategoria.length > 0) {
+        this.selecionarVideoNaPlaylist(this.videosDaCategoria[0]);
+      }
+    } catch (e) {
+      console.error('Erro ao carregar vídeos da categoria:', e);
+    } finally {
+      this.carregandoVideos = false;
+      this.cdr.detectChanges();
+    }
   }
 }

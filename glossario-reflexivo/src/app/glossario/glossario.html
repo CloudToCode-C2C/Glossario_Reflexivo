@@ -53,14 +53,83 @@
         <p>{{ categoria.reformulacao }}</p>
       </div>
 
-      <div class="links-youtube" aria-label="Vídeos relacionados">
-        @for (linkVideo of categoria.linksVideo; track linkVideo; let indice = $index) {
-          <a [href]="linkVideo" target="_blank" rel="noopener noreferrer" class="botao-youtube-simples">
-            <span class="material-icons">play_circle</span>
-            {{ categoria.linksVideo.length > 1 ? 'Vídeo ' + (indice + 1) : 'Aprenda mais no YouTube' }}
-          </a>
+      <section class="bloco-videoteca" aria-label="Videoteca da categoria">
+        <button
+          type="button"
+          class="btn-toggle-playlist"
+          [class.aberta]="playlistAberta"
+          (click)="alternarPlaylist()"
+        >
+          <div class="btn-playlist-esquerda">
+            <span class="icone-play-badge">
+              <span class="material-icons" aria-hidden="true">smart_display</span>
+            </span>
+            <div class="textos-chamada">
+              <strong>Playlist Interativa de Vídeos</strong>
+              <span>
+                {{ carregandoVideos ? 'Carregando vídeos...' : (videosDaCategoria.length + (videosDaCategoria.length === 1 ? ' vídeo disponível' : ' vídeos disponíveis') + ' sobre ' + categoria.titulo) }}
+              </span>
+            </div>
+          </div>
+          <span class="material-icons seta-expansao" aria-hidden="true">
+            {{ playlistAberta ? 'expand_less' : 'expand_more' }}
+          </span>
+        </button>
+
+        @if (playlistAberta) {
+          <div class="gaveta-playlist">
+            @if (videosDaCategoria.length === 0) {
+              <p class="msg-sem-videos">Ainda não há vídeos cadastrados para esta categoria.</p>
+            } @else {
+              <!-- Player Principal Embutido -->
+              @if (videoAtivo && urlEmbedSegura) {
+                <div class="cinema-container">
+                  <div class="iframe-proporcao">
+                    <iframe
+                      [src]="urlEmbedSegura"
+                      [title]="videoAtivo.titulo"
+                      frameborder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowfullscreen
+                    ></iframe>
+                  </div>
+                  <div class="cinema-info">
+                    <span class="badge-tocando">
+                      <span class="material-icons" aria-hidden="true">equalizer</span>
+                      Reproduzindo agora
+                    </span>
+                    <h3>{{ videoAtivo.titulo }}</h3>
+                  </div>
+                </div>
+              }
+
+              <!-- Lista de Miniaturas da Playlist -->
+              <div class="fila-playlist">
+                <span class="titulo-fila">Escolha um vídeo da playlist ({{ videosDaCategoria.length }})</span>
+                <div class="grade-miniaturas">
+                  @for (video of videosDaCategoria; track video.id; let idx = $index) {
+                    <button
+                      type="button"
+                      class="card-miniatura"
+                      [class.ativo]="videoAtivo?.id === video.id"
+                      (click)="selecionarVideoNaPlaylist(video)"
+                    >
+                      <div class="thumb-wrapper">
+                        <img [src]="obterThumbYoutube(video.youtube_id)" [alt]="video.titulo" loading="lazy" />
+                        <span class="indice-video">{{ idx + 1 }}</span>
+                      </div>
+                      <div class="meta-miniatura">
+                        <strong>{{ video.titulo }}</strong>
+                        <span>{{ video.fixo_sistema ? 'Acervo Base do Projeto' : 'Indicação Docente' }}</span>
+                      </div>
+                    </button>
+                  }
+                </div>
+              </div>
+            }
+          </div>
         }
-      </div>
+      </section>
 
       <!-- Área de Interação -->
       <div class="area-interativa-jovem">
