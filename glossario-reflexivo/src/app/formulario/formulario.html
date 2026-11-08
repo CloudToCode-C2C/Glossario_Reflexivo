@@ -1,26 +1,52 @@
-<div class="form-container">
-  <!-- O formulário recebe a categoria do pai e transforma os campos em uma contribuição pendente. -->
-  <h3>Adicionar expressão de {{ categoriaAtual }}</h3>
-
-  <form [formGroup]="verbeteForm" (ngSubmit)="onSubmit()">
-    <div class="input-group">
-      <label for="expressao">Gíria ou Expressão:</label>
-      <input type="text" id="expressao" formControlName="expressao">
+<div class="card-formulario-wrapper">
+  
+  @if (!mensagemSucesso) {
+    <!-- CABEÇALHO DO FORMULÁRIO -->
+    <div class="cabecalho-form">
+      <span class="material-icons icone-form">edit_note</span>
+      <h3 class="titulo-form">Adicionar expressão de {{ categoriaAtual }}</h3>
     </div>
+    
+    <!-- O FORMULÁRIO -->
+    <form [formGroup]="verbeteForm" (ngSubmit)="onSubmit()" class="form-moderno">
+      
+      <div class="form-group">
+        <label for="expressao">Gíria ou Expressão:</label>
+        <div class="input-wrapper">
+          <input type="text" id="expressao" formControlName="expressao" placeholder="Digite a gíria aqui...">
+        </div>
+      </div>
 
-    <div class="input-group">
-      <label for="significado">Significado e Contexto de uso:</label>
-      <textarea id="significado" formControlName="significado" rows="3"></textarea>
-    </div>
+      <div class="form-group">
+        <label for="significado">Significado e Contexto de uso:</label>
+        <div class="input-wrapper">
+          <textarea id="significado" formControlName="significado" rows="4" placeholder="Explique onde ouviu e o que significa..."></textarea>
+        </div>
+      </div>
 
-    <button type="submit" [disabled]="verbeteForm.invalid || estaAEnviar" class="btn-enviar">
-      {{ estaAEnviar ? 'Enviando...' : 'Enviar Contribuição' }}
-    </button>
-  </form>
+      <!-- BOTÃO DE ENVIO COM A COR CORRETA -->
+      <button type="submit" [disabled]="verbeteForm.invalid || estaAEnviar" class="btn-enviar">
+        {{ estaAEnviar ? 'Enviando...' : 'Enviar Contribuição' }}
+      </button>
 
-  @if (mensagemSucesso) {
-    <div class="msg-sucesso">
-      <p>Expressão enviada com sucesso!</p>
+    </form>
+  } @else {
+    <!-- FEEDBACK DE SUCESSO ANIMADO -->
+    <div class="alerta-sucesso">
+      <div class="alerta-conteudo">
+        <div class="icone-sucesso">
+          <span class="material-icons">check_circle</span>
+        </div>
+        <div class="texto-sucesso">
+          <h4>Enviado com sucesso!</h4>
+          <p>Obrigado! Sua contribuição ajuda a construir um ambiente mais inclusivo.</p>
+        </div>
+      </div>
+      
+      <button type="button" class="btn-reiniciar" (click)="mensagemSucesso = false">
+        <span class="material-icons">add</span> Adicionar outra expressão
+      </button>
     </div>
   }
+
 </div>

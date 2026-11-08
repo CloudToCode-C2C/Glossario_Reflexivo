@@ -1,91 +1,98 @@
 <section class="pagina-forum">
-    <!-- Cabeçalho contextualiza o fórum como espaço seguro de escuta. -->
-    <header class="cabecalho-forum">
-        <div class="pill-badge">
-            <span class="material-icons" aria-hidden="true">forum</span>
-            <span>Espaço de escuta</span>
-        </div>
-
-        <h1 class="titulo-pagina">Fórum</h1>
-        <p class="subtitulo-pagina">
-            Um espaço seguro para compartilhar experiências e refletir sobre situações vividas
-            no ambiente escolar.
-        </p>
-    </header>
-
-    <div class="conteudo-forum">
-        <!-- Formulário e feed são mantidos em colunas independentes no layout responsivo. -->
-        <section class="form-section" aria-labelledby="titulo-novo-relato">
-            <div class="section-heading">
-                <div class="icone-circulo">
-                    <span class="material-icons" aria-hidden="true">edit_note</span>
-                </div>
-                <div>
-                    <h2 id="titulo-novo-relato">Compartilhe seu relato</h2>
-                    <p>
-                        Escreva uma experiência pessoal ou uma reflexão das suas atividades.
-                    </p>
-                </div>
-            </div>
-
-            <form [formGroup]="relatoForm" (ngSubmit)="onSubmit()">
-                <label for="texto-relato">Seu relato</label>
-                <textarea
-                    id="texto-relato"
-                    formControlName="texto"
-                    rows="5"
-                    placeholder="Escreva seu relato aqui..."
-                ></textarea>
-                
-                @if (mensagemSucesso) {
-                    <div class="msg-sucesso">
-                    <p>Relato enviado com sucesso!</p>
-                    </div>
-                }
-                <button type="submit" [disabled]="relatoForm.invalid" class="btn-enviar">
-                    <span class="material-icons" aria-hidden="true">send</span>
-                    <span>Enviar relato</span>
-                </button>
-            </form>
-        </section>
-
-        <section class="feed-section" aria-labelledby="titulo-relatos-recentes">
-            <div class="feed-heading">
-                <div>
-                    <span class="section-kicker">Comunidade</span>
-                    <h2 id="titulo-relatos-recentes">Relatos recentes</h2>
-                </div>
-                <span class="contador-relatos">{{ relatos.length }}</span>
-            </div>
-
-            <div class="lista-relatos">
-                @if (estaCarregando) {
-                    <p class="msg-vazia" aria-live="polite">Carregando relatos...</p>
-                } @else if (erroAoCarregar) {
-                    <p class="msg-vazia" role="alert">
-                        Não foi possível carregar os relatos. Tente novamente mais tarde.
-                    </p>
-                } @else {
-                @for (relato of relatos; track relato.id) {
-                <article class="card-relato">
-                    <div class="icone-relato" aria-hidden="true">
-                        <span class="material-icons">format_quote</span>
-                    </div>
-                    <div class="conteudo-relato">
-                        <p class="texto">{{ relato.texto }}</p>
-                        <time class="data" [attr.datetime]="relato.created_at">
-                            {{ relato.created_at | date:'dd/MM/yyyy HH:mm' }}
-                        </time>
-                    </div>
-                </article>
-                } @empty {
-                    <p class="msg-vazia">
-                        Ainda não há relatos por aqui. Seja a primeira pessoa a compartilhar uma
-                        experiência.
-                    </p>
-                }
-                }
-            </div>
-        </section>
+  <!-- Cabeçalho contextualiza o fórum como espaço seguro de escuta. -->
+  <header class="cabecalho-forum">
+    <div class="pill-badge">
+      <span class="material-icons" aria-hidden="true">forum</span>
+      <span>Espaço de escuta</span>
     </div>
+
+    <h1 class="titulo-pagina">Fórum</h1>
+    <p class="subtitulo-pagina">
+      Um espaço seguro para compartilhar experiências e refletir sobre situações vividas
+      no ambiente escolar.
+    </p>
+  </header>
+
+  <div class="conteudo-forum">
+    <!-- Seção do Formulário -->
+    <section class="form-section" aria-labelledby="titulo-novo-relato">
+      <div class="section-heading">
+        <div class="icone-circulo">
+          <span class="material-icons" aria-hidden="true">edit_note</span>
+        </div>
+        <div>
+          <h2 id="titulo-novo-relato">Compartilhe seu relato</h2>
+          <p>Escreva uma experiência pessoal ou uma reflexão das suas atividades.</p>
+        </div>
+      </div>
+
+      <form [formGroup]="relatoForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label for="texto-relato">Seu relato</label>
+          <textarea
+            id="texto-relato"
+            formControlName="texto"
+            rows="4"
+            placeholder="Escreva seu relato aqui..."
+          ></textarea>
+        </div>
+        
+        @if (mensagemSucesso) {
+          <div class="alerta-sucesso">
+            <div class="icone-sucesso">
+              <span class="material-icons">check_circle</span>
+            </div>
+            <div class="texto-sucesso">
+              <h4>Relato enviado com sucesso!</h4>
+              <p>Obrigado por compartilhar sua vivência conosco.</p>
+            </div>
+          </div>
+        }
+
+        <button type="submit" [disabled]="relatoForm.invalid || estaAEnviar" class="btn-enviar">
+          <span class="material-icons" aria-hidden="true">send</span>
+          <span>{{ estaAEnviar ? 'Enviando...' : 'Enviar relato' }}</span>
+        </button>
+      </form>
+    </section>
+
+    <!-- Seção do Feed de Relatos -->
+    <section class="feed-section" aria-labelledby="titulo-relatos-recentes">
+      <div class="feed-heading">
+        <div>
+          <span class="section-kicker">Comunidade</span>
+          <h2 id="titulo-relatos-recentes">Relatos recentes</h2>
+        </div>
+        <span class="contador-relatos">{{ relatos.length }}</span>
+      </div>
+
+      <div class="lista-relatos">
+        @if (estaCarregando) {
+          <p class="msg-vazia" aria-live="polite">Carregando relatos...</p>
+        } @else if (erroAoCarregar) {
+          <p class="msg-vazia" role="alert">
+            Não foi possível carregar os relatos. Tente novamente mais tarde.
+          </p>
+        } @else {
+          @for (relato of relatos; track relato.id) {
+            <article class="card-relato">
+              <div class="icone-relato" aria-hidden="true">
+                <span class="material-icons">format_quote</span>
+              </div>
+              <div class="conteudo-relato">
+                <p class="texto">{{ relato.texto }}</p>
+                <time class="data" [attr.datetime]="relato.created_at">
+                  {{ relato.created_at | date:'dd/MM/yyyy HH:mm' }}
+                </time>
+              </div>
+            </article>
+          } @empty {
+            <p class="msg-vazia">
+              Ainda não há relatos por aqui. Seja a primeira pessoa a compartilhar uma experiência.
+            </p>
+          }
+        }
+      </div>
+    </section>
+  </div>
 </section>

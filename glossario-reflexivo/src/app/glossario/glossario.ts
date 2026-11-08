@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, HostListener, OnInit, OnDestroy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FormularioComponent } from '../formulario/formulario';
 import { MuralComponent } from '../mural/mural';
@@ -12,9 +12,14 @@ export interface CategoriaGlossario {
   contexto: string;
   efeitos: string;
   reformulacao: string;
+  linkVideo: string; 
 }
 
-// Página que alterna entre a grade de categorias e o detalhe selecionado.
+interface QuestaoReflexiva {
+  numero: number;
+  texto: string;
+}
+
 @Component({
   selector: 'app-glossario',
   standalone: true,
@@ -22,10 +27,9 @@ export interface CategoriaGlossario {
   templateUrl: './glossario.html',
   styleUrl: './glossario.scss'
 })
-export class GlossarioComponent {
+export class GlossarioComponent implements OnInit, OnDestroy {
   private categoriaDaRota = '';
 
-  // Recebe o identificador da rota e resolve a categoria exibida no detalhe.
   @Input()
   set categoria(value: string | undefined) {
     this.categoriaDaRota = value ?? '';
@@ -39,150 +43,91 @@ export class GlossarioComponent {
   }
 
   categoriaSelecionada: CategoriaGlossario | null = null;
+  mostrarFeedback: boolean = false;
 
-  // Conteúdo pedagógico estático que alimenta a grade e a visão detalhada.
   readonly categorias: CategoriaGlossario[] = [
     {
       id: 'Etarismo',
       titulo: 'Etarismo',
-      definicao: 'Preconceito, discriminação, desvalorização, inferiorização e desqualificação de uma pessoa com base em sua idade. No ambiente escolar, pode atingir estudantes, professores, funcionários e demais profissionais, tanto pessoas mais velhas quanto mais jovens.',
-      exemplos: [
-        'Você é velho demais para isso!',
-        'Isso é coisa de velho!',
-        'Não tem idade para opinar!',
-        'Jovem não sabe de nada!',
-        'Caduco!',
-        'Cringe!',
-        'Novato/moleque!'
-      ],
-      contexto: 'Em situações de interação no ambiente escolar, por meio de piadas, comentários depreciativos e atitudes discriminatórias relacionadas à idade.',
+      definicao: 'Preconceito, discriminação, desvalorização, inferiorização e desqualificação de uma pessoa com base em sua idade.',
+      exemplos: ['Você é velho demais para isso!', 'Isso é coisa de velho!', 'Cringe!'],
+      contexto: 'Em situações de interação no ambiente escolar, por meio de piadas, comentários depreciativos e atitudes discriminatórias.',
       efeitos: 'Isolamento e impacto na saúde emocional.',
-      reformulacao: 'Idade não determina inteligência, competência, capacidade de aprendizagem ou valor da opinião de alguém.'
+      reformulacao: 'Idade não determina inteligência, competência, capacidade de aprendizagem ou valor da opinião de alguém.',
+      linkVideo: 'https://www.youtube.com/watch?v=F0O5y7mF89Q' 
     },
     {
       id: 'Capacitismo',
       titulo: 'Capacitismo',
-      definicao: 'Preconceito ou a discriminação contra pessoas com deficiência, baseado na ideia de que elas seriam menos capazes, inferiores, dependentes ou inadequadas por causa de sua deficiência.',
-      exemplos: [
-        'Retardado',
-        'Autista',
-        'Aleijado',
-        'Manco',
-        'Isso é coisa de deficiente!',
-        'Finge que é cego!',
-        'Incapaz'
-      ],
+      definicao: 'Preconceito ou a discriminação contra pessoas com deficiência, baseado na ideia de que elas seriam menos capazes.',
+      exemplos: ['Retardado', 'Autista', 'Aleijado', 'Manco'],
       contexto: 'Por meio de piadas, imitação de pessoas com deficiência e discussões.',
-      efeitos: 'Desvalorização das capacidades e das potencialidades individuais, constrangimento, humilhação e exclusão social, além da gravidade do uso de neurodivergências como xingamento.',
-      reformulacao: 'Podemos expressar irritação, surpresa ou discordância sem transformar uma deficiência em insulto.'
+      efeitos: 'Desvalorização das capacidades e constrangimento.',
+      reformulacao: 'Podemos expressar irritação ou discordância sem transformar uma deficiência em insulto.',
+      linkVideo: 'https://www.youtube.com/watch?v=1F563uYfQ3A' 
     },
     {
       id: 'Transfobia',
       titulo: 'Transfobia',
-      definicao: 'Preconceito, discriminação ou violência direcionada a pessoas em razão de sua identidade ou expressão de gênero, atingindo especialmente pessoas transgênero, transexuais e não binárias.',
-      exemplos: [
-        'Viado!',
-        'Bicha!',
-        'Sapatão!',
-        'Isso é coisa de gay!',
-        'Parece gay!',
-        'Vira homem!',
-        'Tá de viadagem!',
-        'Parece homem!',
-        'Traveco!'
-      ],
-      contexto: 'Por meio de xingamentos, apelidos, piadas, comentários, exclusão ou associação da orientação sexual ou da escolha de gênero a algo negativo.',
-      efeitos: 'Normalização da discriminação, bullying, constrangimento e humilhação. Desrespeito ao nome social ou negação do gênero da pessoa.',
-      reformulacao: 'Criticar uma atitude sem atacar a identidade de gênero ou a orientação sexual da pessoa.'
+      definicao: 'Preconceito, discriminação ou violência direcionada a pessoas em razão de sua identidade ou expressão de gênero.',
+      exemplos: ['Viado!', 'Bicha!', 'Traveco!'],
+      contexto: 'Por meio de xingamentos, apelidos, piadas e comentários.',
+      efeitos: 'Normalização da discriminação, constrangimento e humilhação.',
+      reformulacao: 'Criticar uma atitude sem atacar a identidade de gênero ou a orientação sexual da pessoa.',
+      linkVideo: 'https://www.youtube.com/watch?v=D-a_B-P2Btc'
     },
     {
       id: 'Preconceito Linguistico',
       titulo: 'Preconceito Linguístico',
-      definicao: "A discriminação exercida contra determinados falares e modos de expressão que fogem à norma-padrão urbanizada, camuflando o preconceito social, regional ou de classe sob o pretexto de uma suposta 'incapacidade gramatical'.",
-      exemplos: [
-        'Fala direito!',
-        'Fala igual caipira/roceiro!',
-        'Você fala tudo errado!',
-        'Isso é português errado!',
-        'Você não sabe falar, aprende português primeiro!',
-        'Você fala muito pobre!',
-        'Fala bonito, não fala igual pobre!'
-      ],
-      contexto: 'Quadras de esportes, brincadeiras de mau gosto, conflitos no pátio ou na sala de aula.',
+      definicao: "Discriminação exercida contra modos de expressão que fogem à norma-padrão urbanizada.",
+      exemplos: ['Fala direito!', 'Você fala tudo errado!'],
+      contexto: 'Quadras de esportes, brincadeiras de mau gosto, conflitos no pátio.',
       efeitos: 'Desvalorização da identidade e exclusão social.',
-      reformulacao: 'Respeitar as variedades linguísticas, entendendo que cada forma de falar possui seu contexto e que nenhuma delas torna seu falante inferior.'
+      reformulacao: 'Respeitar as variedades linguísticas, entendendo que cada forma de falar possui seu contexto.',
+      linkVideo: 'https://www.youtube.com/watch?v=2e1k6z8R3Uo'
     },
     {
       id: 'Raciais',
       titulo: 'Raciais',
       definicao: 'Expressões que inferiorizam pessoas negras (pretas e pardas) ou associam suas características a algo negativo.',
-      exemplos: [
-        'Inveja branca',
-        'Serviço de preto',
-        'Cabelo ruim/duro ou bombril',
-        'A coisa tá preta!',
-        'Não sou tua nega!',
-        'Lista negra',
-        'Macaco'
-      ],
-      contexto: 'Quadras de esportes, brincadeiras de mau gosto, conflitos no pátio e comentários sobre estética/aparência.',
+      exemplos: ['Inveja branca', 'Serviço de preto', 'Macaco'],
+      contexto: 'Quadras de esportes, brincadeiras de mau gosto e comentários.',
       efeitos: 'Destruição da autoimagem e naturalização do racismo.',
-      reformulacao: 'Não apenas substitua a palavra, mas descreva a situação, característica ou o comportamento sem associá-los aos fenótipos.'
+      reformulacao: 'Não apenas substitua a palavra, mas descreva a situação sem associá-los aos fenótipos.',
+      linkVideo: 'https://www.youtube.com/watch?v=sKtbv8L9E0c'
     },
     {
       id: 'Regionais',
       titulo: 'Regionais',
       definicao: 'Discriminação contra alguém por causa da sua região de origem, do seu sotaque ou da sua cultura.',
-      exemplos: [
-        'Coisa de caipira/roceiro',
-        'Baianada (usado para classificar algo desorganizado)',
-        'Imitação pejorativa de sotaques (por exemplo, do nordestino)'
-      ],
-      contexto: 'Por meio de xingamentos, apelidos, piadas, comentários e leituras em sala.',
-      efeitos: 'Complexo de inferioridade e de exclusão social.',
-      reformulacao: 'Respeitar os sotaques e falares regionais como identidades culturais legítimas, sem atribuir um comportamento negativo a um povo ou a uma região.'
+      exemplos: ['Coisa de caipira', 'Baianada'],
+      contexto: 'Por meio de xingamentos, apelidos e piadas.',
+      efeitos: 'Complexo de inferioridade e exclusão social.',
+      reformulacao: 'Respeitar os sotaques e falares regionais como identidades culturais legítimas.',
+      linkVideo: 'https://www.youtube.com/watch?v=fXyW2P-zZtw'
     },
     {
       id: 'Sexistas',
       titulo: 'Sexistas',
-      definicao: 'Preconceito ou discriminação baseada no sexo ou no gênero, manifestado por meio de estereótipos, comportamentos e expectativas sobre como homens e mulheres devem agir.',
-      exemplos: [
-        'Isso é coisa de mulher!',
-        'Mulher não entende de futebol!',
-        'Menino não brinca de boneca!',
-        'Lugar de mulher é na cozinha!',
-        'Mulher tem que ser delicada!',
-        'Homem tem que ser forte!',
-        'Homem não chora!',
-        'Ela está de TPM!',
-        'Você corre como menina!'
-      ],
-      contexto: "Por meio de piadas, apelidos, comentários, estereótipos e frases que determinam como homens e mulheres 'devem' agir.",
-      efeitos: 'Desvalorização da identidade, bullying e exclusão social.',
-      reformulacao: 'Retirar o gênero como critério para definir capacidade, comportamento ou valor, evitando desqualificar a fala feminina com base em fatores biológicos.'
+      definicao: 'Preconceito ou discriminação baseada no sexo ou no gênero, manifestado por meio de estereótipos.',
+      exemplos: ['Isso é coisa de mulher!', 'Homem não chora!'],
+      contexto: 'Por meio de piadas, estereótipos e frases determinantes.',
+      efeitos: 'Desvalorização da identidade.',
+      reformulacao: 'Retirar o gênero como critério para definir capacidade, comportamento ou valor.',
+      linkVideo: 'https://www.youtube.com/watch?v=GjYJgO9oQW8'
     },
     {
       id: 'Sociais',
       titulo: 'Sociais',
-      definicao: 'É o julgamento ou tratamento desigual de uma pessoa por causa de sua condição econômica, classe social, profissão, local onde mora, escolaridade ou modo de vida.',
-      exemplos: [
-        'Isso é coisa de pobre!',
-        'Maloqueiro!',
-        'Pé-rapado!',
-        'Você tem jeito de pobre!',
-        'Pobre não sabe falar!',
-        'Isso é coisa de gente sem estudo!',
-        'Só podia ser favelado!',
-        'Roupa de pobre!',
-        'Você não tem classe!'
-      ],
-      contexto: 'Quadras de esportes, brincadeiras de mau gosto, conflitos no pátio ou na sala de aula.',
-      efeitos: 'Desigualdade, bullying e reprodução de estereótipos.',
-      reformulacao: 'Diferentes grupos sociais possuem diferentes maneiras de usar a língua, deve-se isentar a pessoa de julgamentos, focando a atenção especificamente na atitude ou na situação.'
+      definicao: 'Julgamento ou tratamento desigual de uma pessoa por causa de sua condição econômica ou local onde mora.',
+      exemplos: ['Isso é coisa de pobre!', 'Maloqueiro!'],
+      contexto: 'Brincadeiras de mau gosto ou comentários elitistas.',
+      efeitos: 'Desigualdade e reprodução de estereótipos.',
+      reformulacao: 'Diferentes grupos sociais possuem diferentes maneiras de usar a língua; deve-se focar na atitude.',
+      linkVideo: 'https://www.youtube.com/watch?v=T1zE1-u_rP8'
     }
   ];
 
-  // Ícones e cores permanecem centralizados para manter o template declarativo.
   readonly icones: Record<string, string> = {
     Etarismo: 'elderly',
     Capacitismo: 'accessible',
@@ -204,4 +149,146 @@ export class GlossarioComponent {
     Sexistas: 'var(--cat-sexistas)',
     Sociais: 'var(--cat-sociais)'
   };
+
+  listaFiltrada: CategoriaGlossario[] = [];
+  categoriaFiltro: string = ''; 
+
+  ngOnInit(): void {
+    this.listaFiltrada = [...this.categorias];
+    this.iniciarCarrossel();
+  }
+
+  filtrarPorBolha(idCategoria: string) {
+    this.categoriaFiltro = idCategoria;
+    if (idCategoria === '') {
+      this.listaFiltrada = [...this.categorias];
+    } else {
+      this.listaFiltrada = this.categorias.filter(cat => cat.id === idCategoria);
+    }
+  }
+
+  filtrarCategorias(event: Event) {
+    const elemento = event.target as HTMLInputElement;
+    const busca = elemento.value.toLowerCase();
+    this.categoriaFiltro = ''; 
+
+    if (!busca) {
+      this.listaFiltrada = [...this.categorias];
+      return;
+    }
+
+    this.listaFiltrada = this.categorias.filter(cat => 
+      cat.titulo.toLowerCase().includes(busca) || 
+      cat.definicao.toLowerCase().includes(busca)
+    );
+  }
+
+  selecionarCategoriaNaGrade(id: string) {
+      this.categoriaSelecionada = this.categorias.find(c => c.id === id) ?? null;
+  }
+
+  limparSelecao() {
+      this.categoriaSelecionada = null;
+  }
+
+  dispararFeedbackSucesso() {
+    this.mostrarFeedback = true;
+    setTimeout(() => {
+      this.mostrarFeedback = false;
+    }, 5000); 
+  }
+
+  readonly questoesReflexivas: QuestaoReflexiva[] = [
+    {
+      numero: 1,
+      texto: 'Como o uso da língua pode contribuir para a construção ou para a desconstrução de preconceitos?',
+    },
+    {
+      numero: 2,
+      texto: 'Você acha que uma pessoa pode reproduzir uma expressão preconceituosa sem perceber seu significado?',
+    },
+    {
+      numero: 3,
+      texto: 'Quais consequências o uso frequente de expressões preconceituosas pode trazer para quem é alvo delas?',
+    },
+    {
+      numero: 4,
+      texto: 'Existe diferença entre liberdade de expressão e um discurso que desrespeita ou discrimina alguém?',
+    },
+    {
+      numero: 5,
+      texto: 'Depois de conhecer as expressões deste glossário, você mudaria alguma forma de falar? Qual? Por quê?',
+    },
+  ];
+
+  indiceQuestaoAtiva = 0;
+  carrosselEmExecucao = true;
+  private intervaloCarrossel?: ReturnType<typeof setInterval>;
+  private inicioToque = 0;
+
+  ngOnDestroy(): void {
+    this.pararIntervalo();
+  }
+
+  selecionarQuestao(indice: number): void {
+    this.indiceQuestaoAtiva = indice;
+    this.pararCarrossel();
+  }
+
+  proximaQuestao(): void {
+    this.indiceQuestaoAtiva = (this.indiceQuestaoAtiva + 1) % this.questoesReflexivas.length;
+  }
+
+  questaoAnterior(): void {
+    this.indiceQuestaoAtiva = (this.indiceQuestaoAtiva - 1 + this.questoesReflexivas.length) % this.questoesReflexivas.length;
+  }
+
+  iniciarToque(event: TouchEvent): void {
+    this.inicioToque = event.changedTouches[0]?.clientX ?? 0;
+  }
+
+  finalizarToque(event: TouchEvent): void {
+    const fimToque = event.changedTouches[0]?.clientX ?? this.inicioToque;
+    const distancia = fimToque - this.inicioToque;
+
+    if (Math.abs(distancia) < 50) return;
+
+    if (distancia < 0) {
+      this.proximaQuestao();
+    } else {
+      this.questaoAnterior();
+    }
+    this.pararCarrossel();
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  controlarComTeclado(event: KeyboardEvent): void {
+    if (this.categoriaSelecionada !== null) return;
+    
+    if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+    event.preventDefault();
+    if (event.key === 'ArrowRight') {
+      this.proximaQuestao();
+    } else {
+      this.questaoAnterior();
+    }
+    this.pararCarrossel();
+  }
+
+  private iniciarCarrossel(): void {
+    this.intervaloCarrossel = setInterval(() => {
+      this.proximaQuestao();
+    }, 5000);
+  }
+
+  private pararCarrossel(): void {
+    this.carrosselEmExecucao = false;
+    this.pararIntervalo();
+  }
+
+  private pararIntervalo(): void {
+    if (!this.intervaloCarrossel) return;
+    clearInterval(this.intervaloCarrossel);
+    this.intervaloCarrossel = undefined;
+  }
 }

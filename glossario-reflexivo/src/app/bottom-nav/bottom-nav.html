@@ -1,27 +1,23 @@
-<nav class="nav-container">
+<nav class="bottom-nav">
+  <div class="nav-container">
     
-    <!-- Acesso ao dashboard e às questões reflexivas. -->
+    <!-- Botão 1: Glossário (Agora é a Página Inicial "/") -->
     <a routerLink="/" routerLinkActive="ativo" [routerLinkActiveOptions]="{exact: true}" class="nav-item">
-        <span class="material-icons">home</span>
-        <span class="nav-label">Início</span>
+      <span class="material-icons">menu_book</span>
+      <span class="nav-label">Glossário</span>
     </a>
 
-    <!-- Acesso à grade de categorias e aos conteúdos teóricos. -->
-    <a routerLink="/glossario" routerLinkActive="ativo" class="nav-item">
-        <span class="material-icons">menu_book</span>
-        <span class="nav-label">Glossário</span>
-    </a>
-
-    <!-- Acesso ao mural de relatos da comunidade. -->
+    <!-- Botão 2: Fórum/Mural -->
     <a routerLink="/forum" routerLinkActive="ativo" class="nav-item">
-        <span class="material-icons">forum</span>
-        <span class="nav-label">Fórum</span>
+      <span class="material-icons">forum</span>
+      <span class="nav-label">Fórum</span>
     </a>
 
-    <!-- Acesso à fundamentação pedagógica do projeto. -->
+    <!-- Botão 3: Sobre (Antiga Home) -->
     <a routerLink="/sobre" routerLinkActive="ativo" class="nav-item">
-        <span class="material-icons">info</span>
-        <span class="nav-label">Sobre</span>
+      <span class="material-icons">school</span>
+      <span class="nav-label">Sobre</span>
     </a>
 
+  </div>
 </nav>

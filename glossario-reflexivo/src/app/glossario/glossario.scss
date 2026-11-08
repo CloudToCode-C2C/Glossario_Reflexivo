@@ -1,322 +1,473 @@
-/* Estilos da grade, do detalhe pedagógico e dos widgets colaborativos. */
-.pagina-glossario {
+/* =========================================================
+   ESTILOS GERAIS DA TELA DO GLOSSÁRIO
+   ========================================================= */
+
+.pagina-glossario-jovem {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  padding: var(--espaco-xl) var(--espaco-lg) calc(var(--espaco-xl) * 3.5);
+  padding: 24px 16px 112px; 
   background-color: var(--cor-fundo);
+  font-family: 'Inter', sans-serif;
 }
 
-.cabecalho-glossario {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin-bottom: var(--espaco-lg);
+/* CONTAINER CENTRAL (Desktop) */
+.cabecalho-jovem, .grade-social, .detalhe-jovem, .questoes-reflexivas, .area-interativa-jovem {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
 }
 
-.pill-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--espaco-sm);
-  margin-bottom: var(--espaco-md);
-  padding: var(--espaco-sm) var(--espaco-md);
-  border-radius: var(--borda-pill);
-  background-color: var(--cor-primaria-light);
-  color: var(--cor-primaria);
-  font-size: 13px;
-  font-weight: 700;
+/* --- CABEÇALHO --- */
+.boas-vindas {
+  margin-bottom: 24px;
+  
+  h1 {
+    font-size: clamp(28px, 6vw, 36px);
+    font-weight: 800;
+    color: var(--cor-texto-principal);
+    margin-bottom: 8px;
+    letter-spacing: -1px;
+  }
 
-  .material-icons {
-    font-size: 18px;
+  p {
+    font-size: 15px;
+    color: var(--cor-texto-secundario);
+    line-height: 1.5;
   }
 }
 
-.titulo-pagina {
-  margin: 0 0 var(--espaco-sm);
-  color: var(--cor-texto-principal);
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(32px, 8vw, 42px);
-  font-weight: 800;
-  letter-spacing: -1px;
-}
-
-.subtitulo-pagina {
-  max-width: 680px;
-  margin: 0;
-  color: var(--cor-texto-secundario);
-  font-size: 15px;
-  line-height: 1.6;
-}
-
-.categorias-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--espaco-md);
-}
-
-.categoria-card {
+/* =========================================================
+   ÁREA DOS FILTROS (BOTÕES DE CATEGORIA / CHIPS)
+   ========================================================= */
+.filtros-scroll {
   display: flex;
-  min-height: 230px;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  gap: var(--espaco-sm);
-  padding: var(--espaco-lg) var(--espaco-md);
+  flex-wrap: wrap; /* Faz os botões caírem para a linha de baixo se não couberem no desktop */
+  justify-content: center; /* Centraliza os botões na tela */
+  gap: 12px;
+  padding: 16px 0;
+  margin-bottom: 32px;
+  width: 100%;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Em telas pequenas (Celular), volta a ser um carrossel de arrastar */
+@media (max-width: 768px) {
+  .filtros-scroll {
+    flex-wrap: nowrap; /* Impede a quebra de linha no celular */
+    justify-content: flex-start; /* Alinha à esquerda no celular */
+    overflow-x: auto; /* Permite rolar para o lado */
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    padding-left: 16px;
+    padding-right: 16px;
+    
+    /* Esconde a barra de rolagem visualmente, mas mantém funcionando */
+    &::-webkit-scrollbar { display: none; }
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+.chip-filtro {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto; /* Impede que o botão seja esmagado */
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 100px;
   border: 1px solid var(--cor-borda);
-  border-left: 4px solid var(--cor-tema);
-  border-radius: var(--borda-suave);
   background-color: var(--cor-superficie);
-  box-shadow: var(--sombra-card);
   color: var(--cor-texto-principal);
-  text-decoration: none;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-
-  &:hover,
-  &:focus-visible {
-    transform: translateY(-3px);
-    box-shadow: var(--sombra-flutuante);
-  }
-
-  &:focus-visible {
-    outline: 3px solid var(--cor-primaria-light);
-    outline-offset: var(--espaco-sm);
-  }
-}
-
-.categoria-icone {
-  color: var(--cor-tema);
-  font-size: 34px;
-}
-
-.categoria-nome {
-  color: var(--cor-texto-principal);
-  font-size: 18px;
-  font-weight: 800;
-}
-
-.categoria-descricao {
-  display: -webkit-box;
-  overflow: hidden;
-  color: var(--cor-texto-secundario);
-  font-size: 13px;
-  line-height: 1.5;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
-}
-
-.categoria-acao {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--espaco-sm);
-  margin-top: auto;
-  color: var(--cor-primaria);
-  font-size: 13px;
-  font-weight: 700;
+  font-size: 15px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 
   .material-icons {
-    font-size: 18px;
+    font-size: 20px;
+    color: var(--cor-tema, var(--cor-primaria));
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  &.ativo {
+    background-color: var(--cor-tema, var(--cor-primaria));
+    color: var(--cor-texto-inverso);
+    border-color: transparent;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    
+    .material-icons { color: inherit; }
   }
 }
 
-.voltar-categorias {
+/* =========================================================
+   GRADE SOCIAL (RESTAURAÇÃO DOS CARDS ESPAÇOSOS)
+   ========================================================= */
+.grade-social {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr)); /* 1 coluna no celular */
+  gap: 24px; /* Espaço generoso entre os cards */
+  width: 100%; /* Ocupar toda a tela */
+}
+
+/* Regra intermediária: Tablets e telas médias */
+@media (min-width: 600px) and (max-width: 899px) {
+  .grade-social {
+    grid-template-columns: repeat(2, minmax(0, 1fr)); 
+  }
+}
+
+/* Regra vital: no Desktop, a grade passa a ter 2 colunas amplas (não exprimidas) */
+@media (min-width: 900px) {
+  .grade-social {
+    grid-template-columns: repeat(2, minmax(0, 1fr)); 
+  }
+}
+
+.card-jovem {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--cor-superficie);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 32px;
+  padding: 32px 24px; /* Mais espaço interno (padding) para não amassar o texto */
+  text-decoration: none;
+  border: 1px solid rgba(0,0,0,0.05); /* Borda suave para dar limite e destaque */
+  transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+  position: relative;
+  overflow: hidden;
+  
+  /* Força os cards a serem compridos e bonitos (não achatados) */
+  min-height: 250px; 
+  /* Adicionado para dar respiro aos lados na grade de 2 colunas */
+  max-width: 400px;
+  margin: 0 auto;
+
+  /* A barrinha de cor na lateral esquerda */
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 6px; height: 100%;
+    background-color: var(--cor-tema);
+  }
+
+  &:hover, &:focus-visible {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.card-jovem-topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+
+  .icone-bolha {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--cor-tema);
+    flex-shrink: 0;
+    
+    .material-icons { font-size: 32px; }
+  }
+
+  .btn-ir {
+    background-color: var(--cor-tema);
+    color: var(--cor-texto-inverso); 
+    width: 44px; 
+    height: 44px;
+    border-radius: 50%;
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+    
+    .material-icons { font-size: 20px; }
+  }
+}
+
+.card-jovem-conteudo {
+  flex-grow: 1; 
+  
+  h3 {
+    font-size: 22px; 
+    font-weight: 800;
+    color: var(--cor-texto-principal);
+    margin: 0 0 12px 0;
+  }
+  
+  p {
+    font-size: 15px; 
+    color: var(--cor-texto-secundario);
+    line-height: 1.6; 
+    margin: 0;
+    
+    /* Evita achatamento e sobra de vazio */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    line-clamp: 4; 
+    -webkit-line-clamp: 4; 
+    overflow: hidden;
+  }
+}
+
+/* =========================================================
+   TELA DE DETALHES DA CATEGORIA E YOUTUBE
+   ========================================================= */
+.detalhe-jovem {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.nav-voltar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+
+  .btn-voltar {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(255,255,255,0.1);
+    color: var(--cor-texto-principal);
+    border: none;
+    padding: 8px 16px;
+    border-radius: 100px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.3s;
+    
+    &:hover { background: rgba(255,255,255,0.2); }
+    .material-icons { font-size: 18px; }
+  }
+  
+  .tag-topo {
+    color: var(--cor-tema);
+    font-weight: 800;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+}
+
+.card-destaque-teoria {
+  background-color: var(--cor-superficie);
+  padding: 24px;
+  border-radius: 24px;
+  border-left: 6px solid var(--cor-tema);
+  
+  h2 {
+    font-size: 18px;
+    margin-bottom: 8px;
+    color: var(--cor-texto-principal);
+  }
+  p {
+    font-size: 15px;
+    color: var(--cor-texto-secundario);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  &.alerta { border-left-color: var(--cor-alerta); }
+  &.dica { border-left-color: var(--cor-sucesso); }
+}
+
+.botao-youtube-simples {
   display: inline-flex;
   align-items: center;
   align-self: flex-start;
-  gap: var(--espaco-sm);
-  margin-bottom: var(--espaco-lg);
-  color: var(--cor-primaria);
-  font-size: 14px;
+  gap: 8px;
+  background-color: transparent;
+  color: var(--cor-texto-principal);
+  border: 1px solid var(--cor-borda);
+  padding: 12px 24px;
+  border-radius: 100px;
   font-weight: 700;
+  font-size: 14px;
   text-decoration: none;
+  margin-top: 8px;
+  margin-bottom: 16px;
+  transition: all 0.3s ease;
 
-  &:focus-visible {
-    outline: 3px solid var(--cor-primaria-light);
-    outline-offset: var(--espaco-sm);
-    border-radius: var(--espaco-sm);
+  .material-icons {
+    color: #FF0000;
+    font-size: 20px;
+  }
+
+  &:hover {
+    background-color: rgba(255, 0, 0, 0.05);
+    border-color: rgba(255, 0, 0, 0.3);
+    transform: translateY(-2px);
   }
 }
 
-.cabecalho-detalhe {
-  margin-bottom: var(--espaco-md);
-  padding-left: var(--espaco-md);
-  border-left: 4px solid var(--cor-tema);
-
-  .titulo-pagina {
-    color: var(--cor-tema);
-  }
-}
-
-.teoria-categoria {
+/* =========================================================
+   CARROSSEL DE QUESTÕES REFLEXIVAS
+   ========================================================= */
+.questoes-reflexivas {
+  width: 100%;
+  max-width: 700px; 
+  margin: 64px auto 0;
   display: flex;
   flex-direction: column;
-  gap: var(--espaco-lg);
-  margin-bottom: var(--espaco-lg);
-  padding: var(--espaco-lg);
-  border-radius: var(--borda-suave);
-  background-color: var(--cor-superficie);
-  box-shadow: var(--sombra-card);
+  align-items: center;
 }
 
-.bloco-teoria {
+.cabecalho-questoes {
+  margin-bottom: 24px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .icone-destaque {
+    background-color: var(--cor-primaria-light);
+    color: var(--cor-primaria);
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    margin-bottom: 16px;
+  }
+
   h2 {
-    margin: 0 0 var(--espaco-sm);
+    margin: 0 0 8px;
     color: var(--cor-texto-principal);
-    font-size: 19px;
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
   }
 
   p {
     margin: 0;
     color: var(--cor-texto-secundario);
     font-size: 15px;
-    line-height: 1.7;
+    line-height: 1.6;
   }
 }
 
-.lista-exemplos {
-  display: grid;
-  gap: var(--espaco-sm);
-  margin: 0;
-  padding-left: var(--espaco-lg);
-  color: var(--cor-texto-secundario);
-  font-size: 15px;
-  line-height: 1.5;
-
-  li::marker {
-    color: var(--cor-primaria);
-  }
+.carrossel-viewport {
+  width: 100%;
+  overflow: hidden;
+  padding: 16px 0;
+  outline: none;
+  touch-action: pan-y;
 }
 
-.bloco-reformulacao {
-  padding: var(--espaco-md);
-  border-left: 4px solid var(--cor-primaria);
-  border-radius: 0 var(--borda-suave) var(--borda-suave) 0;
-  background: var(--cor-primaria-light);
-}
-
-.chat-container {
+.carrossel-trilho {
   display: flex;
-  width: min(100%, 900px);
+  align-items: center;
+  transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.slide-jovem {
+  flex: 0 0 100%;
+  display: flex;
   flex-direction: column;
-  gap: var(--espaco-md);
-  align-self: center;
-  margin: 0 auto var(--espaco-lg);
-  padding: var(--espaco-lg);
-  border: 1px solid var(--cor-borda);
-  border-radius: var(--borda-suave);
-  background: var(--cor-fundo);
-}
-
-.chat-message {
-  display: flex;
-  max-width: 90%;
-  align-items: flex-end;
-  gap: var(--espaco-sm);
-
-  &.left {
-    align-self: flex-start;
-
-    .avatar {
-      background: var(--cor-erro);
-    }
-  }
-
-  &.right {
-    align-self: flex-end;
-
-    .avatar {
-      background: var(--cor-sucesso);
-    }
-  }
-}
-
-.avatar {
-  display: flex;
-  width: 32px;
-  height: 32px;
   align-items: center;
   justify-content: center;
-  flex: 0 0 32px;
-  border-radius: var(--borda-pill);
-  color: var(--cor-texto-inverso);
-  font-size: 13px;
-  font-weight: 800;
-}
+  padding: 48px 32px;
+  
+  background-color: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: 24px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+  
+  text-align: center;
+  transform: scale(0.94);
+  opacity: 0.6;
+  transition: all 0.4s ease;
 
-.bubble {
-  max-width: calc(100% - 40px);
-  padding: var(--espaco-md);
-  border-radius: var(--borda-suave);
-  box-shadow: var(--sombra-card);
+  &.ativa {
+    transform: scale(1);
+    opacity: 1;
+    border-color: var(--cor-primaria);
+    box-shadow: 0 16px 40px rgba(132, 94, 194, 0.15); 
+  }
 
-  p {
-    margin: 0;
+  .numero-bolha {
+    width: 40px; 
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--cor-primaria-light);
+    color: var(--cor-primaria);
+    font-size: 16px;
+    font-weight: 800;
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    margin-bottom: 24px;
+  }
+
+  .texto-slide {
+    font-size: 22px;
+    font-weight: 600;
     color: var(--cor-texto-principal);
-    font-size: 14px;
-    line-height: 1.55;
-    overflow-wrap: anywhere;
+    line-height: 1.5;
+    font-family: 'Playfair Display', serif;
+    margin: 0 0 32px;
+    max-width: 540px;
+  }
+
+  .btn-sala-jovem {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: var(--cor-primaria);
+    color: var(--cor-texto-inverso); 
+    padding: 14px 28px;
+    border-radius: 100px; 
+    font-weight: 700;
+    font-size: 15px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    
+    .material-icons { font-size: 20px; }
+
+    &:hover, &:focus-visible {
+      transform: translateY(-2px);
+      background-color: var(--cor-primaria-hover);
+      box-shadow: 0 8px 24px rgba(132, 94, 194, 0.3);
+      outline: none;
+    }
   }
 }
 
-.bubble-label {
-  display: block;
-  margin-bottom: var(--espaco-sm);
-  color: var(--cor-texto-secundario);
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-.bubble.incorrect {
-  border: 1px solid var(--cor-erro);
-  border-bottom-left-radius: var(--espaco-sm);
-  background: var(--cor-erro-fundo);
-
-  .bubble-label {
-    color: var(--cor-erro);
-  }
-}
-
-.bubble.correct {
-  border: 1px solid var(--cor-sucesso);
-  border-bottom-right-radius: var(--espaco-sm);
-  background: var(--cor-sucesso-fundo);
-
-  .bubble-label {
-    color: var(--cor-sucesso);
-  }
-}
-
-.area-interativa {
+.indicadores-jovem {
   display: flex;
-  flex-direction: column;
-  gap: var(--espaco-lg);
-}
-
-@media (min-width: 520px) {
-  .categorias-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (min-width: 900px) {
-  .pagina-glossario {
-    padding-right: calc(var(--espaco-xl) * 1.5);
-    padding-left: calc(var(--espaco-xl) * 1.5);
-  }
-
-  .categorias-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-
-  .categoria-card {
-    min-height: 250px;
-  }
-
-  .teoria-categoria,
-  .chat-container,
-  .area-interativa {
-    width: min(100%, 900px);
-    align-self: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 24px;
+  
+  .ponto {
+    width: 8px; 
+    height: 8px;
+    background-color: var(--cor-borda);
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    
+    &.ativo {
+      width: 24px; 
+      border-radius: 100px;
+      background-color: var(--cor-primaria);
+    }
   }
 }

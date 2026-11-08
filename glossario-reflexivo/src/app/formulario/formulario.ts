@@ -2,7 +2,6 @@ import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { SupabaseService } from '../supabase.service';
 
-// Widget de contribuição que associa o verbete à categoria e ao usuário atual.
 @Component({
   selector: 'app-formulario',
   standalone: true,
@@ -27,7 +26,6 @@ export class FormularioComponent implements OnInit {
     significado: new FormControl('', [Validators.required])
   });
 
-  // Carrega o usuário para preencher a autoria no momento do envio.
   async ngOnInit() {
     // Tenta pegar o professor logado via OAuth
     this.usuario = await this.supabaseService.obterUsuarioAtual();
@@ -71,17 +69,28 @@ export class FormularioComponent implements OnInit {
       turma: this.sessaoAluno?.turma || null
     };
 
-    try {
-      await this.supabaseService.inserirVerbete(novoVerbete);
-      this.verbeteForm.reset();
-      this.mensagemSucesso = true;
-      setTimeout(() => this.mensagemSucesso = false, 3500);
-    } catch (error) {
-      console.error('Erro ao enviar:', error);
-      alert("Ocorreu um erro ao enviar. Tente novamente.");
-    } finally {
-      this.estaAEnviar = false;
-      this.cdr.detectChanges();
+      try {
+        await this.supabaseService.inserirVerbete(novoVerbete);
+
+        // Após sucesso, limpa os dados digitados e mostra o feedback.
+        this.verbeteForm.reset();
+        this.mensagemSucesso = true;
+        
+      } catch (error) {
+        console.error('Erro ao enviar para a base de dados: ', error);
+        alert("Ocorreu um erro ao enviar. Tente novamente.");
+      } finally {
+        this.estaAEnviar = false;
+        this.cdr.detectChanges();
+      }
+    } else {
+      this.verbeteForm.markAllAsTouched();
     }
+  }
+
+  // NOVA FUNÇÃO: Acionada ao clicar no botão "Adicionar outra expressão"
+  recomecarFormulario() {
+    // Muda o status para false, escondendo a mensagem e voltando a exibir os campos vazios
+    this.mensagemSucesso = false;
   }
 }
