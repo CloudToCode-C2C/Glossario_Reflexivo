@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef, signal } from '@angular/core';
 import { RouterOutlet, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { BottomNavComponent } from './bottom-nav/bottom-nav';
+import { SwUpdate } from '@angular/service-worker';
 import {
   SupabaseService,
   SessaoAluno,
@@ -31,6 +32,7 @@ export class App implements OnInit {
     private supabaseService: SupabaseService,
     private router: Router,
     private cdr: ChangeDetectorRef,
+    private swUpdate: SwUpdate
   ) {}
 
   get possuiSessaoAtiva(): boolean {
@@ -45,6 +47,14 @@ export class App implements OnInit {
   }
 
   async ngOnInit() {
+    if (this.swUpdate.isEnabled) {
+      this.swUpdate.versionUpdates.subscribe(evt => {
+        if (evt.type === 'VERSION_READY') {
+          window.location.reload();
+        }
+      });
+    }
+    
     this.filtroAtual = this.supabaseService.obterFiltroProfessorAtual();
 
     this.supabaseService.escolasPermitidas$.subscribe((escolas) => {

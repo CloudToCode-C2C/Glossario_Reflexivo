@@ -11,7 +11,7 @@ export const routes: Routes = [
   // 1. ROTA PÚBLICA (Acesso livre)
   {
     path: 'login',
-    component: LoginComponent,
+    loadComponent: () => import('./login/login').then(m => m.LoginComponent),
   },
   
   // 2. ÁREA RESTRITA (Exige Login)
@@ -22,17 +22,17 @@ export const routes: Routes = [
       // 2.1 A nova página inicial é o Glossário
       {
         path: '',
-        component: GlossarioComponent,
+        loadComponent: () => import('./glossario/glossario').then(m => m.GlossarioComponent),
       },
       // Suporte para o filtro de categoria criado pelo Arthur
       {
         path: 'admin',
         canActivate: [adminGuard],
-        component: AdminComponent,
+        loadComponent: () => import('./admin/admin').then(m => m.AdminComponent),
       },
       {
         path: 'glossario/:categoria',
-        component: GlossarioComponent,
+        loadComponent: () => import('./glossario/glossario').then(m => m.GlossarioComponent),
       },
       {
         path: 'glossario',
@@ -43,7 +43,7 @@ export const routes: Routes = [
       // 2.2 A aba Fórum/Mural
       {
         path: 'forum',
-        component: MuralRelatosComponent,
+        loadComponent: () => import('./mural-relatos/mural-relatos').then(m => m.MuralRelatosComponent),
       },
       {
         path: 'mural',
@@ -56,7 +56,7 @@ export const routes: Routes = [
       // Se quiser usar a antiga Home como Sobre, é só trocar o component.
       {
         path: 'sobre',
-        component: SobreComponent, 
+        loadComponent: () => import('./sobre/sobre').then(m => m.SobreComponent), 
       },
       // Redireciona a antiga rota 'home' para o sobre
       {
@@ -67,7 +67,7 @@ export const routes: Routes = [
       // 2.4 Rotas adicionais do projeto do Arthur
       {
         path: 'reflexao/:id',
-        component: ReflexaoSalaComponent,
+        loadComponent: () => import('./reflexao-sala/reflexao-sala').then(m => m.ReflexaoSalaComponent),
       },
     ]
   },
