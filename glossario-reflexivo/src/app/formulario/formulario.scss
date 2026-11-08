@@ -1,105 +1,202 @@
-/* Organiza o formulário de contribuição e seus estados de validação. */
-.form-container {
-    background-color: var(--cor-fundo);
-    padding: 1.5rem;
-    border-radius: 8px;
-    box-shadow: var(--sombra-card);
-    margin: 2rem auto;
-    max-width: 600px;
+/* =========================================================
+   CONTAINER PRINCIPAL DO FORMULÁRIO
+   ========================================================= */
+.card-formulario-wrapper {
+  background-color: var(--cor-superficie);
+  padding: 32px 24px;
+  border-radius: 24px; /* Bordas arredondadas e amigáveis */
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: var(--sombra-card);
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
 
-    h3 {
-        margin-top: 0;
-        color: var(--cor-texto-principal);
-    }
+/* =========================================================
+   CABEÇALHO DO FORMULÁRIO
+   ========================================================= */
+.cabecalho-form {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--cor-borda);
 
-    p {
-        font-size: 0.9rem;
+  .icone-form {
+    color: var(--cor-primaria); /* Ícone no tom principal */
+    font-size: 28px;
+  }
+
+  .titulo-form {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--cor-texto-principal);
+    margin: 0;
+  }
+}
+
+/* =========================================================
+   ESTILOS DOS CAMPOS (INPUTS)
+   ========================================================= */
+.form-moderno {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  label {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--cor-texto-secundario);
+    padding-left: 4px;
+  }
+
+  .input-wrapper {
+    position: relative;
+    width: 100%;
+
+    input, textarea {
+      width: 100%;
+      padding: 16px 20px;
+      border-radius: 16px; /* Borda macia, como solicitado */
+      border: 1px solid var(--cor-borda);
+      background-color: var(--cor-fundo); /* Fundo claro e limpo */
+      color: var(--cor-texto-principal);
+      font-size: 15px;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.3s ease;
+
+      &::placeholder {
         color: var(--cor-texto-secundario);
-        margin-bottom: 1.5rem;
+        opacity: 0.6;
+      }
+
+      &:focus {
+        outline: none;
+        border-color: var(--cor-primaria);
+        background-color: var(--cor-superficie);
+        box-shadow: 0 0 0 4px var(--cor-primaria-light);
+      }
     }
 
-    .input-group {
-        display: flex;
-        flex-direction: column;
-        margin-bottom: 1rem;
+    textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+  }
+}
 
-        label {
-            font-weight: bold;
-            margin-bottom: 0.3rem;
-            font-size: 0.9rem;
-            color: var(--cor-texto-principal);
-        }
+/* =========================================================
+   BOTÃO DE ENVIAR
+   ========================================================= */
+.btn-enviar {
+  margin-top: 12px;
+  width: 100%;
+  padding: 16px;
+  background-color: var(--cor-primaria); /* Cor vibrante */
+  color: var(--cor-texto-inverso); /* Texto legível e contrastante */
+  border: none;
+  border-radius: 100px; /* Estilo pílula moderno */
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
 
-        input, textarea {
-            padding: 0.8rem;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-family: 'Inter', sans-serif;
-            &:focus {
-                outline: none;
-                border-color: var(--cor-primaria);
-            }
-        }
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    background-color: var(--cor-primaria-hover);
+    box-shadow: 0 10px 20px rgba(132, 94, 194, 0.3);
+  }
+
+  &:disabled {
+    background-color: var(--cor-borda);
+    color: var(--cor-texto-secundario);
+    cursor: not-allowed;
+  }
+}
+
+/* =========================================================
+   ALERTA DE SUCESSO ANIMADO E MODERNO
+   ========================================================= */
+.alerta-sucesso {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background-color: var(--cor-sucesso-fundo);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-left: 6px solid var(--cor-sucesso);
+  padding: 32px 24px;
+  border-radius: 24px;
+  animation: slideInDown 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  
+  .alerta-conteudo {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .icone-sucesso .material-icons {
+    color: var(--cor-sucesso);
+    font-size: 40px;
+  }
+
+  .texto-sucesso {
+    h4 {
+      margin: 0 0 6px;
+      color: var(--cor-sucesso);
+      font-size: 20px;
+      font-weight: 800;
+    }
+    p {
+      margin: 0;
+      color: var(--cor-texto-secundario);
+      font-size: 15px;
+      line-height: 1.5;
+    }
+  }
+
+  /* BOTÃO PARA ADICIONAR NOVA EXPRESSÃO */
+  .btn-reiniciar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background-color: transparent;
+    color: var(--cor-sucesso);
+    border: 2px solid var(--cor-sucesso);
+    border-radius: 100px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    align-self: flex-start;
+
+    &:hover {
+      background-color: var(--cor-sucesso);
+      color: var(--cor-texto-inverso);
     }
 
-    .btn-enviar {
-        background-color: var(--cor-destaque);
-        color: var(--cor-texto-primario);
-        padding: 0.8rem 1.5rem;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-weight: bold;
-        width: 100%;
-        transition: background-color 0.2s;
-        &:disabled {
-            background-color: #aaa;
-            cursor: not-allowed;
-        }
-        &:hover:not(:disabled) {
-            background-color: color-mix(in srgb, var(--cor-destaque), black 10%);
-        }
+    .material-icons {
+      font-size: 18px;
     }
+  }
+}
 
-    .msg-sucesso {
-        margin-top: 1rem;
-        padding: 0.8rem;
-        background-color: var(--cor-suporte);
-        color: var(--cor-texto-principal);
-        border-radius: 4px;
-        text-align: center;
-        font-weight: bold;
-    }
-
-    .usuario-logado {
-        font-size: 0.9rem;
-        color: var(--cor-texto-primario);
-        margin-bottom: 1rem;
-        background-color: var(--cor-fundo);
-        padding: 0.5rem;
-        border-radius: 4px;
-
-        .link-sair {
-            color: var(--cor-primaria);
-            text-decoration: none;
-            font-weight: bold;
-            margin-left: 10px;
-        }
-    }
-
-    .area-login {
-        text-align: center;
-        padding: 2rem 0;
-
-        .btn-google {
-            background-color: var(--cor-suporte);
-            color: var(--cor-texto-inverso);
-            padding: 0.8rem 1.5rem;
-            border: none;
-            border-radius: 4px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 1rem;
-        }
-    }
+/* Animação suave para a mensagem aparecer */
+@keyframes slideInDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

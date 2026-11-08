@@ -1,108 +1,127 @@
-<section class="pagina-glossario">
-  @if (categoriaSelecionada; as categoria) {
-    <!-- Visão detalhada: teoria, exemplo visual e widgets colaborativos da categoria. -->
-    <a class="voltar-categorias" routerLink="/glossario">
-      <span class="material-icons" aria-hidden="true">arrow_back</span>
-      Voltar para categorias
-    </a>
+<section class="pagina-glossario-jovem">
 
-    <header
-      class="cabecalho-glossario cabecalho-detalhe"
-      [style.--cor-tema]="coresCategorias[categoria.id]"
-    >
-      <div class="pill-badge">
-        <span class="material-icons" aria-hidden="true">{{ icones[categoria.id] }}</span>
-        <span>Categoria selecionada</span>
-      </div>
-      <h1 class="titulo-pagina">{{ categoria.titulo }}</h1>
-    </header>
-
-    <article class="teoria-categoria">
-      <!-- Blocos editoriais que explicam a categoria antes da interação. -->
-      <section class="bloco-teoria">
-        <h2>Definição</h2>
-        <p>{{ categoria.definicao }}</p>
-      </section>
-
-      <section class="bloco-teoria">
-        <h2>Exemplos</h2>
-        <ul class="lista-exemplos">
-          @for (exemplo of categoria.exemplos; track exemplo) {
-            <li>{{ exemplo }}</li>
-          }
-        </ul>
-      </section>
-
-      <section class="bloco-teoria">
-        <h2>Contexto</h2>
-        <p>{{ categoria.contexto }}</p>
-      </section>
-
-      <section class="bloco-teoria">
-        <h2>Efeitos</h2>
-        <p>{{ categoria.efeitos }}</p>
-      </section>
-
-      <section class="bloco-teoria bloco-reformulacao">
-        <h2>Reformulação</h2>
-        <p>{{ categoria.reformulacao }}</p>
-      </section>
-    </article>
-
-    <section class="chat-container" aria-label="Exemplo de reformulação">
-      <!-- Contrasta uma expressão inadequada com uma forma educativa de reformulá-la. -->
-      <div class="chat-message left">
-        <div class="avatar" aria-hidden="true">A</div>
-        <div class="bubble incorrect">
-          <span class="bubble-label">Fala A</span>
-          <p>«{{ categoria.exemplos[0] }}»</p>
-        </div>
-      </div>
-
-      <div class="chat-message right">
-        <div class="bubble correct">
-          <span class="bubble-label">Fala B</span>
-          <p>{{ categoria.reformulacao }}</p>
-        </div>
-        <div class="avatar" aria-hidden="true">B</div>
-      </div>
-    </section>
-
-    <div class="area-interativa">
-      <!-- Formulário e mural compartilham o mesmo identificador de categoria. -->
-      <app-formulario [categoriaAtual]="categoria.id"></app-formulario>
-      <app-mural [categoriaFiltro]="categoria.id"></app-mural>
+  <!-- CABEÇALHO PEDAGÓGICO E ENGAJADOR -->
+  <header class="cabecalho-jovem">
+    <div class="boas-vindas">
+      <h1>Glossário</h1>
+      <p>Selecione um tema abaixo para compreender o impacto das expressões no nosso dia a dia e participe da construção deste glossário.</p>
     </div>
-  } @else {
-    <!-- Visão inicial: grade de acesso às oito categorias do glossário. -->
-    <header class="cabecalho-glossario">
-      <div class="pill-badge">
-        <span class="material-icons" aria-hidden="true">library_books</span>
-        <span>Aprenda e participe</span>
-      </div>
-      <h1 class="titulo-pagina">Glossário</h1>
-      <p class="subtitulo-pagina">
-        Escolha uma categoria para conhecer a teoria, explorar exemplos e contribuir com a turma.
-      </p>
-    </header>
 
-    <div class="categorias-grid">
-      @for (categoria of categorias; track categoria.id) {
+    <!-- FILTROS DE BOLHAS (Chips de Rolagem) -->
+    <div class="filtros-scroll">
+      <button 
+        class="chip-filtro" 
+        [class.ativo]="categoriaFiltro === ''"
+        (click)="filtrarPorBolha('')"
+      >
+        <span class="material-icons">explore</span> Todas as Categorias
+      </button>
+      
+      @for (cat of categorias; track cat.id) {
+        <button 
+          class="chip-filtro" 
+          [class.ativo]="categoriaFiltro === cat.id"
+          [style.--cor-chip]="coresCategorias[cat.id]"
+          (click)="filtrarPorBolha(cat.id)"
+        >
+          <span class="material-icons">{{ icones[cat.id] }}</span> {{ cat.titulo }}
+        </button>
+      }
+    </div>
+  </header>
+
+  <!-- VISÃO DE DETALHE DA CATEGORIA -->
+  @if (categoriaSelecionada; as categoria) {
+    
+    <div class="detalhe-jovem" [style.--cor-tema]="coresCategorias[categoria.id]">
+      <div class="nav-voltar">
+        <button class="btn-voltar" (click)="limparSelecao()">
+          <span class="material-icons">arrow_back</span> Voltar
+        </button>
+        <span class="tag-topo">{{ categoria.titulo }}</span>
+      </div>
+
+      <div class="card-destaque-teoria">
+        <h2>Compreendendo o Conceito</h2>
+        <p>{{ categoria.definicao }}</p>
+      </div>
+
+      <div class="card-destaque-teoria alerta">
+        <h2>Contexto de Uso Histórico</h2>
+        <p>{{ categoria.contexto }}</p>
+      </div>
+
+      <div class="card-destaque-teoria dica">
+        <h2>Como podemos reformular?</h2>
+        <p>{{ categoria.reformulacao }}</p>
+      </div>
+
+      <!-- BOTÃO YOUTUBE DISCRETO E INTEGRADO -->
+      <a [href]="categoria.linkVideo" target="_blank" class="botao-youtube-simples">
+        <span class="material-icons">play_circle</span>
+        Aprenda mais no YouTube
+      </a>
+
+      <!-- Área de Interação -->
+      <div class="area-interativa-jovem">
+        <app-formulario [categoriaAtual]="categoria.id"></app-formulario>
+        <app-mural [categoriaFiltro]="categoria.id"></app-mural>
+      </div>
+    </div>
+
+  } @else {
+    <!-- GRADE DE CATEGORIAS -->
+    <div class="grade-social">
+      @for (categoria of listaFiltrada; track categoria.id) {
         <a
-          class="categoria-card"
+          class="card-jovem"
           [routerLink]="['/glossario', categoria.id]"
           [style.--cor-tema]="coresCategorias[categoria.id]"
-          [attr.aria-label]="'Abrir categoria ' + categoria.titulo"
+          (click)="selecionarCategoriaNaGrade(categoria.id)"
         >
-          <span class="material-icons categoria-icone" aria-hidden="true">{{ icones[categoria.id] }}</span>
-          <span class="categoria-nome">{{ categoria.titulo }}</span>
-          <span class="categoria-descricao">{{ categoria.definicao }}</span>
-          <span class="categoria-acao">
-            Explorar
-            <span class="material-icons" aria-hidden="true">arrow_forward</span>
-          </span>
+          <div class="card-jovem-topo">
+            <div class="icone-bolha">
+              <span class="material-icons">{{ icones[categoria.id] }}</span>
+            </div>
+            <span class="btn-ir"><span class="material-icons">east</span></span>
+          </div>
+          <div class="card-jovem-conteudo">
+            <h3>{{ categoria.titulo }}</h3>
+            <p>{{ categoria.definicao }}</p>
+          </div>
         </a>
       }
     </div>
+
+    <!-- CARROSSEL REFLEXIVO -->
+    <section class="questoes-reflexivas">
+        <div class="cabecalho-questoes">
+            <div class="icone-destaque">
+              <span class="material-icons">psychology</span>
+            </div>
+            <h2>Questões Reflexivas</h2>
+            <p>Deslize e reserve um instante para pensar sobre as questões abaixo.</p>
+        </div>
+
+        <div class="carrossel-viewport" role="region" tabindex="0" (touchstart)="iniciarToque($event)" (touchend)="finalizarToque($event)">
+            <div class="carrossel-trilho" [style.transform]="'translate3d(-' + (indiceQuestaoAtiva * 100) + '%, 0, 0)'">
+                @for (questao of questoesReflexivas; track questao.numero; let indice = $index) {
+                    <article class="slide-jovem" [class.ativa]="indice === indiceQuestaoAtiva" (click)="selecionarQuestao(indice)" (keydown.enter)="selecionarQuestao(indice)">
+                        <span class="numero-bolha">{{ questao.numero }}</span>
+                        <p class="texto-slide">"{{ questao.texto }}"</p>
+                        <a class="btn-sala-jovem" [routerLink]="['/reflexao', questao.numero]" (click)="$event.stopPropagation()">
+                            <span class="material-icons">forum</span> Participar do debate
+                        </a>
+                    </article>
+                }
+            </div>
+        </div>
+
+        <div class="indicadores-jovem">
+            @for (questao of questoesReflexivas; track questao.numero; let indice = $index) {
+                <span class="ponto" [class.ativo]="indice === indiceQuestaoAtiva" (click)="selecionarQuestao(indice)"></span>
+            }
+        </div>
+    </section>
   }
 </section>
