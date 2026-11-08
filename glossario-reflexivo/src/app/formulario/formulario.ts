@@ -34,9 +34,9 @@ export class FormularioComponent implements OnInit {
     this.cdr.detectChanges();
   }
 
-  // Envia o verbete para o Supabase, associando-o à categoria e ao usuário atual.
   async onSubmit() {
     if (!this.categoriaAtual) {
+      console.error("Erro de Integração: O componente pai não enviou a categoria atual.");
       alert("Erro interno: Categoria da expressão não definida.");
       return;
     }
@@ -59,9 +59,7 @@ export class FormularioComponent implements OnInit {
       expressao: this.verbeteForm.value.expressao,
       significado: this.verbeteForm.value.significado,
       contexto: this.categoriaAtual,
-      status_aprovado: false, // Entra pendente para todos
-      
-      // Se for aluno, grava os metadados. Se for professor, grava o email.
+      status_aprovado: false,
       autor_nome: this.sessaoAluno?.nome || null,
       autor_email: this.usuario?.email || null,
       escola: this.sessaoAluno?.escola || null,
@@ -69,28 +67,25 @@ export class FormularioComponent implements OnInit {
       turma: this.sessaoAluno?.turma || null
     };
 
-      try {
-        await this.supabaseService.inserirVerbete(novoVerbete);
+    try {
+      await this.supabaseService.inserirVerbete(novoVerbete);
 
-        // Após sucesso, limpa os dados digitados e mostra o feedback.
-        this.verbeteForm.reset();
-        this.mensagemSucesso = true;
-        
-      } catch (error) {
-        console.error('Erro ao enviar para a base de dados: ', error);
-        alert("Ocorreu um erro ao enviar. Tente novamente.");
-      } finally {
-        this.estaAEnviar = false;
-        this.cdr.detectChanges();
-      }
-    } else {
-      this.verbeteForm.markAllAsTouched();
+      // Após sucesso, limpa os dados digitados e mostra o feedback.
+      this.verbeteForm.reset();
+      this.mensagemSucesso = true;
+      setTimeout(() => this.recomecarFormulario(), 3500);
+
+    } catch (error) {
+      console.error('Erro ao enviar para a base de dados: ', error);
+      alert("Ocorreu um erro ao enviar. Tente novamente.");
+    } finally {
+      this.estaAEnviar = false;
+      this.cdr.detectChanges();
     }
   }
 
-  // NOVA FUNÇÃO: Acionada ao clicar no botão "Adicionar outra expressão"
+  // Acionada pelo botão e pelo encerramento automático do feedback de sucesso.
   recomecarFormulario() {
-    // Muda o status para false, escondendo a mensagem e voltando a exibir os campos vazios
     this.mensagemSucesso = false;
   }
 }

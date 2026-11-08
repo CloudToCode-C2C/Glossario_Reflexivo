@@ -17,6 +17,7 @@ describe('FormularioComponent', () => {
           useValue: {
             inserirVerbete: vi.fn().mockResolvedValue([]),
             obterUsuarioAtual: vi.fn().mockResolvedValue({ email: 'aluno@example.com' }),
+            obterSessaoAluno: vi.fn().mockReturnValue(null),
           },
         },
       ],

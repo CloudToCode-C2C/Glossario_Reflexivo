@@ -286,6 +286,12 @@
   &.dica { border-left-color: var(--cor-sucesso); }
 }
 
+.links-youtube {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 .botao-youtube-simples {
   display: inline-flex;
   align-items: center;

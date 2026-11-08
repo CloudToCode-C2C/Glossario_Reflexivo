@@ -1,13 +1,11 @@
 <section class="pagina-glossario-jovem">
 
-  <!-- CABEÇALHO PEDAGÓGICO E ENGAJADOR -->
   <header class="cabecalho-jovem">
     <div class="boas-vindas">
       <h1>Glossário</h1>
       <p>Selecione um tema abaixo para compreender o impacto das expressões no nosso dia a dia e participe da construção deste glossário.</p>
     </div>
 
-    <!-- FILTROS DE BOLHAS (Chips de Rolagem) -->
     <div class="filtros-scroll">
       <button 
         class="chip-filtro" 
@@ -30,7 +28,6 @@
     </div>
   </header>
 
-  <!-- VISÃO DE DETALHE DA CATEGORIA -->
   @if (categoriaSelecionada; as categoria) {
     
     <div class="detalhe-jovem" [style.--cor-tema]="coresCategorias[categoria.id]">
@@ -56,11 +53,14 @@
         <p>{{ categoria.reformulacao }}</p>
       </div>
 
-      <!-- BOTÃO YOUTUBE DISCRETO E INTEGRADO -->
-      <a [href]="categoria.linkVideo" target="_blank" class="botao-youtube-simples">
-        <span class="material-icons">play_circle</span>
-        Aprenda mais no YouTube
-      </a>
+      <div class="links-youtube" aria-label="Vídeos relacionados">
+        @for (linkVideo of categoria.linksVideo; track linkVideo; let indice = $index) {
+          <a [href]="linkVideo" target="_blank" rel="noopener noreferrer" class="botao-youtube-simples">
+            <span class="material-icons">play_circle</span>
+            {{ categoria.linksVideo.length > 1 ? 'Vídeo ' + (indice + 1) : 'Aprenda mais no YouTube' }}
+          </a>
+        }
+      </div>
 
       <!-- Área de Interação -->
       <div class="area-interativa-jovem">

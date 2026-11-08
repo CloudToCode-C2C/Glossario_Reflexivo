@@ -12,7 +12,7 @@ export interface CategoriaGlossario {
   contexto: string;
   efeitos: string;
   reformulacao: string;
-  linkVideo: string; 
+  linksVideo: string[];
 }
 
 interface QuestaoReflexiva {
@@ -54,7 +54,10 @@ export class GlossarioComponent implements OnInit, OnDestroy {
       contexto: 'Em situações de interação no ambiente escolar, por meio de piadas, comentários depreciativos e atitudes discriminatórias.',
       efeitos: 'Isolamento e impacto na saúde emocional.',
       reformulacao: 'Idade não determina inteligência, competência, capacidade de aprendizagem ou valor da opinião de alguém.',
-      linkVideo: 'https://www.youtube.com/watch?v=F0O5y7mF89Q' 
+      linksVideo: [
+        'https://youtu.be/8fJ7xYPbUl4?feature=shared',
+        'https://youtu.be/NDqWo7p92TU?is=Ukxl8RU1XG9p2IaJ'
+      ]
     },
     {
       id: 'Capacitismo',
@@ -64,7 +67,7 @@ export class GlossarioComponent implements OnInit, OnDestroy {
       contexto: 'Por meio de piadas, imitação de pessoas com deficiência e discussões.',
       efeitos: 'Desvalorização das capacidades e constrangimento.',
       reformulacao: 'Podemos expressar irritação ou discordância sem transformar uma deficiência em insulto.',
-      linkVideo: 'https://www.youtube.com/watch?v=1F563uYfQ3A' 
+      linksVideo: ['https://youtu.be/gzcRlivcZPI?feature=shared']
     },
     {
       id: 'Transfobia',
@@ -74,7 +77,7 @@ export class GlossarioComponent implements OnInit, OnDestroy {
       contexto: 'Por meio de xingamentos, apelidos, piadas e comentários.',
       efeitos: 'Normalização da discriminação, constrangimento e humilhação.',
       reformulacao: 'Criticar uma atitude sem atacar a identidade de gênero ou a orientação sexual da pessoa.',
-      linkVideo: 'https://www.youtube.com/watch?v=D-a_B-P2Btc'
+      linksVideo: ['https://www.youtube.com/watch?v=D-a_B-P2Btc']
     },
     {
       id: 'Preconceito Linguistico',
@@ -84,7 +87,10 @@ export class GlossarioComponent implements OnInit, OnDestroy {
       contexto: 'Quadras de esportes, brincadeiras de mau gosto, conflitos no pátio.',
       efeitos: 'Desvalorização da identidade e exclusão social.',
       reformulacao: 'Respeitar as variedades linguísticas, entendendo que cada forma de falar possui seu contexto.',
-      linkVideo: 'https://www.youtube.com/watch?v=2e1k6z8R3Uo'
+      linksVideo: [
+        'https://youtu.be/uu6Wk1pNC-I?is=xsITCt-5ujiTa0B8',
+        'https://youtu.be/qQZNThg9DDA?is=4Z9_oL59ZXWgpPIt'
+      ]
     },
     {
       id: 'Raciais',
@@ -94,7 +100,10 @@ export class GlossarioComponent implements OnInit, OnDestroy {
       contexto: 'Quadras de esportes, brincadeiras de mau gosto e comentários.',
       efeitos: 'Destruição da autoimagem e naturalização do racismo.',
       reformulacao: 'Não apenas substitua a palavra, mas descreva a situação sem associá-los aos fenótipos.',
-      linkVideo: 'https://www.youtube.com/watch?v=sKtbv8L9E0c'
+      linksVideo: [
+        'https://youtu.be/2iSk3DVvlYk?feature=shared',
+        'https://youtu.be/X8FWkOXr-zo?feature=shared'
+      ]
     },
     {
       id: 'Regionais',
@@ -104,7 +113,7 @@ export class GlossarioComponent implements OnInit, OnDestroy {
       contexto: 'Por meio de xingamentos, apelidos e piadas.',
       efeitos: 'Complexo de inferioridade e exclusão social.',
       reformulacao: 'Respeitar os sotaques e falares regionais como identidades culturais legítimas.',
-      linkVideo: 'https://www.youtube.com/watch?v=fXyW2P-zZtw'
+      linksVideo: ['https://youtu.be/-E9KIfhM-NE?is=Glua-0q8RUlg_WEo']
     },
     {
       id: 'Sexistas',
@@ -114,7 +123,7 @@ export class GlossarioComponent implements OnInit, OnDestroy {
       contexto: 'Por meio de piadas, estereótipos e frases determinantes.',
       efeitos: 'Desvalorização da identidade.',
       reformulacao: 'Retirar o gênero como critério para definir capacidade, comportamento ou valor.',
-      linkVideo: 'https://www.youtube.com/watch?v=GjYJgO9oQW8'
+      linksVideo: ['https://youtu.be/E8csref7_QI?is=n6Rx_BKnXLepzzoO']
     },
     {
       id: 'Sociais',
@@ -124,7 +133,7 @@ export class GlossarioComponent implements OnInit, OnDestroy {
       contexto: 'Brincadeiras de mau gosto ou comentários elitistas.',
       efeitos: 'Desigualdade e reprodução de estereótipos.',
       reformulacao: 'Diferentes grupos sociais possuem diferentes maneiras de usar a língua; deve-se focar na atitude.',
-      linkVideo: 'https://www.youtube.com/watch?v=T1zE1-u_rP8'
+      linksVideo: ['https://youtu.be/US6fmmUw1aY?is=h7TPbPYgVpYkajOp']
     }
   ];
 
