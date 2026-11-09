@@ -405,7 +405,14 @@ export class SupabaseService {
       password,
     });
 
-    if (error) throw error;
+    if (error) {
+      if (error.status === 429 || error.message.toLowerCase().includes('already registered')) {
+        console.warn("Aviso do Auth: Conta já existente ou limite temporário atingido. Prosseguindo com o fluxo da C2C.");
+        return;
+      }
+      throw error;
+    }
+    
     if (!data.user) throw new Error('O Supabase não retornou o usuário criado.');
 
     await this.supabase.auth.signOut();
