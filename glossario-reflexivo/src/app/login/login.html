@@ -89,25 +89,62 @@
             </button>
           </div>
         } @else {
-          <!-- FLUXO PROFESSOR: OAuth Google + Solicitação C2C -->
+          <!-- FLUXO PROFESSOR: E-mail Institucional + Senha / Google OAuth + Solicitação C2C -->
           <div class="bloco-professor">
             <p class="info-professor">
               Acesso exclusivo para docentes autorizados gerenciarem e filtrarem as contribuições
               das turmas.
             </p>
 
+            <!-- Login Direto com E-mail Institucional (.edu.br, .gov.br, etc.) e Senha -->
+            <div class="campos-aluno" [formGroup]="profLoginForm">
+              <div class="campo-item">
+                <label for="login-prof-email">E-mail Institucional ou Docente</label>
+                <input
+                  id="login-prof-email"
+                  type="email"
+                  formControlName="email"
+                  placeholder="nome@ifb.edu.br"
+                  autocomplete="email"
+                />
+              </div>
+
+              <div class="campo-item">
+                <label for="login-prof-senha">Senha</label>
+                <input
+                  id="login-prof-senha"
+                  type="password"
+                  formControlName="senha"
+                  placeholder="Digite sua senha"
+                  autocomplete="current-password"
+                />
+              </div>
+
+              <button
+                type="button"
+                (click)="entrarComEmailProfessor()"
+                [disabled]="carregando"
+                class="btn-google"
+              >
+                <span class="material-icons" aria-hidden="true">login</span>
+                {{ carregando ? 'Autenticando...' : 'Entrar com E-mail e Senha' }}
+              </button>
+            </div>
+
+            <!-- Opção secundária para quem usa conta Google -->
             <button
               type="button"
               (click)="entrarComGoogle()"
               [disabled]="carregando"
-              class="btn-google"
+              class="btn-solicitar"
             >
               <span class="google-mark" aria-hidden="true">G</span>
-              {{ carregando ? 'Redirecionando para o Google...' : 'Entrar com o Google' }}
+              Ou entrar com conta Google
             </button>
 
+            <!-- Formulário de Solicitação / Primeiro Cadastro -->
             <div class="solicitacao-professor" [formGroup]="solicitacaoForm">
-              <p class="solicitacao-titulo">Ainda não tem acesso liberado?</p>
+              <p class="solicitacao-titulo">Primeiro acesso ou ainda não tem liberação?</p>
 
               <div class="campo-item">
                 <label for="prof-nome">Nome Completo</label>
@@ -121,13 +158,24 @@
               </div>
 
               <div class="campo-item">
-                <label for="prof-email">E-mail Google</label>
+                <label for="prof-email">E-mail Institucional (ex: &#64;ifb.edu.br)</label>
                 <input
                   id="prof-email"
                   type="email"
                   formControlName="email"
-                  placeholder="professor@escola.edu.br"
+                  placeholder="professor@ifb.edu.br"
                   autocomplete="email"
+                />
+              </div>
+
+              <div class="campo-item">
+                <label for="prof-senha">Crie uma Senha para o Aplicativo</label>
+                <input
+                  id="prof-senha"
+                  type="password"
+                  formControlName="senha"
+                  placeholder="Mínimo de 6 caracteres"
+                  autocomplete="new-password"
                 />
               </div>
 
@@ -172,7 +220,7 @@
                 (click)="enviarSolicitacaoProfessor()"
               >
                 <span class="material-icons" aria-hidden="true">send</span>
-                {{ enviandoSolicitacao ? 'Enviando solicitação...' : 'Solicitar acesso' }}
+                {{ enviandoSolicitacao ? 'Enviando solicitação...' : 'Solicitar acesso e cadastrar senha' }}
               </button>
 
               @if (feedbackSolicitacao) {
@@ -195,10 +243,28 @@
         <p class="msg-erro" role="alert">
           {{ erroMensagem || 'Não foi possível concluir o acesso. Tente novamente.' }}
         </p>
+        @if (mostrarAcaoConfirmacao) {
+          <button
+            type="button"
+            class="btn-confirmacao"
+            [disabled]="reenviandoConfirmacao"
+            (click)="reenviarConfirmacaoEmail()"
+          >
+            <span class="material-icons" aria-hidden="true">mark_email_read</span>
+            {{
+              reenviandoConfirmacao
+                ? 'Reenviando confirmação...'
+                : 'Não confirmou? Reenviar e-mail de confirmação'
+            }}
+          </button>
+          @if (mensagemConfirmacao) {
+            <p class="mensagem-confirmacao" role="status">{{ mensagemConfirmacao }}</p>
+          }
+        }
       }
 
       <p class="texto-rodape">Entre para acessar os conteúdos e participar da comunidade.</p>
     }
   </section>
-  <footer class="app-version-footer">Criado por CloudToCode | Versão 1.5</footer>
+  <footer class="app-version-footer">Criado por CloudToCode | Versão 1.6</footer>
 </main>

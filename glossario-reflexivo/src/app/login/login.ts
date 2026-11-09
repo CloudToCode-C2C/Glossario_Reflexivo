@@ -6,7 +6,6 @@ import {
   SupabaseService,
   SERIES_PERMITIDAS,
   TURMAS_PERMITIDAS,
-  EMAIL_SUPORTE_C2C,
 } from '../supabase.service';
 
 @Component({
@@ -18,7 +17,9 @@ import {
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
+  profLoginForm: FormGroup;
   solicitacaoForm: FormGroup;
+
   escolas: string[] = [];
   series = SERIES_PERMITIDAS;
   turmas = TURMAS_PERMITIDAS;
@@ -27,6 +28,10 @@ export class LoginComponent implements OnInit {
   verificandoSessao = true;
   erroLogin = false;
   erroMensagem = '';
+  emailNaoConfirmado = false;
+  mostrarAcaoConfirmacao = false;
+  reenviandoConfirmacao = false;
+  mensagemConfirmacao = '';
   enviandoSolicitacao = false;
   feedbackSolicitacao: { tipo: 'sucesso' | 'erro' | 'info'; texto: string } | null = null;
 
@@ -39,13 +44,22 @@ export class LoginComponent implements OnInit {
     this.loginForm = this.fb.group({
       perfil: ['ALUNO', Validators.required],
       nome: ['', [Validators.required, Validators.minLength(3)]],
-      escola: [this.escolas[0], Validators.required],
+      escola: ['', Validators.required],
       serie: [this.series[0], Validators.required],
       turma: [this.turmas[0], Validators.required],
     });
+
+    // Formulário de entrada direta do Professor (E-mail institucional + Senha)
+    this.profLoginForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      senha: ['', [Validators.required, Validators.minLength(6)]],
+    });
+
+    // Formulário de solicitação de acesso à C2C + definição de senha
     this.solicitacaoForm = this.fb.group({
       nome: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
+      senha: ['', [Validators.required, Validators.minLength(6)]],
       escolaSelecionada: ['', Validators.required],
       novaEscolaNome: [''],
       novaEscolaCidade: [''],
@@ -61,10 +75,10 @@ export class LoginComponent implements OnInit {
       }
       this.cdr.detectChanges();
     });
+
     try {
       await this.supabaseService.carregarEscolasAprovadas();
 
-      // 1. Verifica se há retorno de OAuth do Professor
       const session = await this.supabaseService.obterSessao();
       if (session) {
         const autorizado = await this.supabaseService.verificarProfessorAutorizado();
@@ -72,15 +86,13 @@ export class LoginComponent implements OnInit {
           this.router.navigate(['/glossario']);
           return;
         } else {
-          // Tem sessão Google, mas o e-mail não está na função is_admin() do banco
           await this.supabaseService.limparSessaoCompleta();
           this.loginForm.patchValue({ perfil: 'PROFESSOR' });
           this.erroLogin = true;
           this.erroMensagem =
-            'Acesso negado: seu e-mail não consta na lista de professores autorizados pela CloudToCode.';
+            'Acesso pendente: seu e-mail ainda aguarda aprovação da equipe CloudToCode.';
         }
       } else {
-        // 2. Se já houver sessão de aluno válida no LocalStorage, redireciona direto
         const sessaoAluno = this.supabaseService.obterSessaoAluno();
         if (sessaoAluno?.nome && sessaoAluno?.escola) {
           this.router.navigate(['/glossario']);
@@ -99,17 +111,13 @@ export class LoginComponent implements OnInit {
     return this.loginForm.get('perfil')?.value;
   }
 
-  get linkMailtoC2C(): string {
-    const assunto = encodeURIComponent('Solicitação de Acesso Professor - Glossário Reflexivo');
-    const corpo = encodeURIComponent(
-      'Olá equipe CloudToCode,\n\nSolicito a liberação do meu e-mail institucional na lista de professores autorizados.\n\nNome Completo:\nInstituição de Ensino:\nE-mail Google:',
-    );
-    return `mailto:${EMAIL_SUPORTE_C2C}?subject=${assunto}&body=${corpo}`;
-  }
-
   selecionarPerfil(perfil: 'ALUNO' | 'PROFESSOR') {
     this.erroLogin = false;
     this.erroMensagem = '';
+    this.emailNaoConfirmado = false;
+    this.mostrarAcaoConfirmacao = false;
+    this.mensagemConfirmacao = '';
+    this.feedbackSolicitacao = null;
     this.loginForm.patchValue({ perfil });
     this.cdr.detectChanges();
   }
@@ -154,6 +162,76 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  // Login do Professor via E-mail Institucional (@ifb.edu.br, etc.) e Senha
+  async entrarComEmailProfessor() {
+    this.erroLogin = false;
+    this.erroMensagem = '';
+    this.emailNaoConfirmado = false;
+    this.mostrarAcaoConfirmacao = false;
+    this.mensagemConfirmacao = '';
+
+    if (this.profLoginForm.invalid) {
+      this.profLoginForm.markAllAsTouched();
+      this.erroLogin = true;
+      this.erroMensagem = 'Informe seu e-mail institucional e sua senha (mínimo 6 caracteres).';
+      this.cdr.detectChanges();
+      return;
+    }
+
+    try {
+      this.carregando = true;
+      this.cdr.detectChanges();
+
+      const { email, senha } = this.profLoginForm.value;
+      await this.supabaseService.loginComEmailSenha(email, senha);
+
+      // Verifica na tabela professores_autorizados se a C2C já aprovou (status_aprovado = true)
+      const autorizado = await this.supabaseService.verificarProfessorAutorizado();
+      if (autorizado) {
+        this.router.navigate(['/glossario']);
+      } else {
+        await this.supabaseService.limparSessaoCompleta();
+        this.erroLogin = true;
+        this.erroMensagem =
+          'Acesso negado: seu cadastro ainda está em análise ou não foi autorizado pela CloudToCode.';
+      }
+    } catch (error: any) {
+      console.error('Falha no login por e-mail/senha:', error);
+      this.erroLogin = true;
+      this.emailNaoConfirmado = this.supabaseService.isEmailConfirmationError(error);
+      this.mostrarAcaoConfirmacao = true;
+      this.erroMensagem = this.emailNaoConfirmado
+        ? 'Seu e-mail ainda não foi confirmado. Abra a mensagem enviada pelo Supabase e clique no link de confirmação antes de entrar.'
+        : 'Não foi possível entrar. Se este é seu primeiro acesso, confirme o e-mail enviado pelo Supabase e tente novamente. Caso já tenha confirmado, confira o e-mail e a senha digitados.';
+    } finally {
+      this.carregando = false;
+      this.cdr.detectChanges();
+    }
+  }
+
+  async reenviarConfirmacaoEmail() {
+    const email = this.profLoginForm.get('email')?.value?.trim();
+    if (!email || this.profLoginForm.get('email')?.invalid) {
+      this.mensagemConfirmacao = 'Informe um e-mail válido acima para reenviar a confirmação.';
+      return;
+    }
+
+    try {
+      this.reenviandoConfirmacao = true;
+      this.mensagemConfirmacao = '';
+      await this.supabaseService.reenviarConfirmacaoEmail(email);
+      this.mensagemConfirmacao =
+        'Novo e-mail de confirmação enviado. Verifique também a caixa de spam e clique no link recebido.';
+    } catch (error) {
+      console.error('Falha ao reenviar confirmação de e-mail:', error);
+      this.mensagemConfirmacao =
+        'Não foi possível reenviar agora. Confira o endereço e tente novamente em alguns instantes.';
+    } finally {
+      this.reenviandoConfirmacao = false;
+      this.cdr.detectChanges();
+    }
+  }
+
   async entrarComGoogle() {
     try {
       this.carregando = true;
@@ -173,22 +251,22 @@ export class LoginComponent implements OnInit {
 
   async enviarSolicitacaoProfessor() {
     this.feedbackSolicitacao = null;
-    const { nome, email, escolaSelecionada, novaEscolaNome, novaEscolaCidade } =
+    const { nome, email, senha, escolaSelecionada, novaEscolaNome, novaEscolaCidade } =
       this.solicitacaoForm.value;
 
     const nomeValido = nome && nome.trim().length >= 3;
     const emailValido = this.solicitacaoForm.get('email')?.valid;
+    const senhaValida = senha && senha.length >= 6;
     const novaEscolaValida =
       !this.cadastrandoNovaEscola ||
       (novaEscolaNome?.trim().length >= 3 && novaEscolaCidade?.trim().length >= 2);
 
-    if (!nomeValido || !emailValido || !novaEscolaValida) {
+    if (!nomeValido || !emailValido || !senhaValida || !novaEscolaValida) {
       this.solicitacaoForm.markAllAsTouched();
       this.feedbackSolicitacao = {
         tipo: 'erro',
-        texto: this.cadastrandoNovaEscola
-          ? 'Preencha seu nome, e-mail válido, o nome da nova escola e a cidade/RA.'
-          : 'Preencha seu nome, um e-mail Google válido e selecione a escola.',
+        texto:
+          'Preencha seu nome, e-mail válido, crie uma senha de no mínimo 6 caracteres e informe a escola.',
       };
       this.cdr.detectChanges();
       return;
@@ -198,6 +276,10 @@ export class LoginComponent implements OnInit {
     this.cdr.detectChanges();
 
     try {
+      // 1. Registra a credencial criptografada no Supabase Auth (auth.users)
+      await this.supabaseService.criarCredencialAuthProfessor(email.trim(), senha);
+
+      // 2. Registra o pedido na tabela professores_autorizados (aguardando C2C)
       const resultado = await this.supabaseService.solicitarAcessoProfessor({
         nome: nome.trim(),
         email: email.trim(),
@@ -210,32 +292,37 @@ export class LoginComponent implements OnInit {
         this.feedbackSolicitacao = {
           tipo: 'sucesso',
           texto:
-            'Solicitação enviada! Tanto a nova escola quanto o seu e-mail foram encaminhados para aprovação da CloudToCode.',
+            'Solicitação e senha cadastradas! Assim que a CloudToCode aprovar a escola e seu e-mail, você poderá entrar acima.',
         };
         this.solicitacaoForm.reset({ escolaSelecionada: this.escolas[0] ?? '' });
       } else if (resultado === 'CRIADO') {
         this.feedbackSolicitacao = {
           tipo: 'sucesso',
           texto:
-            'Solicitação registrada com sucesso! A CloudToCode avaliará seu cadastro e liberará seu acesso em breve.',
+            'Solicitação e senha registradas! Assim que a CloudToCode liberar seu e-mail no sistema, basta entrar acima.',
         };
         this.solicitacaoForm.reset({ escolaSelecionada: this.escolas[0] ?? '' });
       } else if (resultado === 'JA_PENDENTE') {
         this.feedbackSolicitacao = {
           tipo: 'info',
-          texto: 'Este e-mail já possui uma solicitação pendente em análise pela CloudToCode.',
+          texto:
+            'Este e-mail já possui uma solicitação pendente em análise pela CloudToCode.',
         };
       } else if (resultado === 'JA_APROVADO') {
         this.feedbackSolicitacao = {
           tipo: 'sucesso',
           texto:
-            'Este e-mail já está aprovado! Você já pode clicar em "Entrar com o Google" acima.',
+            'Seu e-mail já está autorizado pela CloudToCode! Use os campos de E-mail e Senha no topo para entrar.',
         };
       }
     } catch (error) {
+      console.error('Erro na solicitação:', error);
       this.feedbackSolicitacao = {
         tipo: 'erro',
-        texto: 'Não foi possível registrar sua solicitação no momento. Tente novamente.',
+        texto:
+          (error as { code?: string })?.code === 'user_already_exists'
+            ? 'Este e-mail já possui uma conta no Supabase. Use a recuperação de senha do Supabase ou peça ao administrador para definir uma senha antes de solicitar novamente.'
+            : 'Não foi possível registrar sua solicitação no momento. Tente novamente.',
       };
     } finally {
       this.enviandoSolicitacao = false;

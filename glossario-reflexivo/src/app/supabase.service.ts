@@ -362,6 +362,55 @@ export class SupabaseService {
     if (error) throw error;
   }
 
+  async loginComEmailSenha(email: string, password: string): Promise<void> {
+    await this.limparSessaoCompleta();
+    const { error } = await this.supabase.auth.signInWithPassword({ email: email.trim().toLowerCase(), password });
+    if (error) throw error;
+  }
+
+  isEmailConfirmationError(error: unknown): boolean {
+    if (!error || typeof error !== 'object') return false;
+
+    const authError = error as {
+      code?: unknown;
+      message?: unknown;
+      error_description?: unknown;
+    };
+    const details = [authError.code, authError.message, authError.error_description]
+      .filter((value): value is string => typeof value === 'string')
+      .join(' ')
+      .toLowerCase()
+      .replace(/[_-]/g, ' ');
+
+    return (
+      details.includes('email not confirmed') ||
+      details.includes('email confirmation required') ||
+      details.includes('confirm your email') ||
+      details.includes('confirm the email')
+    );
+  }
+
+  async reenviarConfirmacaoEmail(email: string): Promise<void> {
+    const { error } = await this.supabase.auth.resend({
+      type: 'signup',
+      email: email.trim().toLowerCase(),
+      options: { emailRedirectTo: `${window.location.origin}/login` },
+    });
+    if (error) throw error;
+  }
+
+  async criarCredencialAuthProfessor(email: string, password: string): Promise<void> {
+    const { data, error } = await this.supabase.auth.signUp({
+      email: email.trim().toLowerCase(),
+      password,
+    });
+
+    if (error) throw error;
+    if (!data.user) throw new Error('O Supabase não retornou o usuário criado.');
+
+    await this.supabase.auth.signOut();
+  }
+
   private aplicarFiltroQueryProfessor(query: any) {
     const filtro = this.filtroProfessorSubject.value;
     if (filtro.escola !== 'TODAS') {

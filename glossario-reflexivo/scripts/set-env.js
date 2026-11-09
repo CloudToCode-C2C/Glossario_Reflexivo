@@ -1,5 +1,13 @@
 const fs = require('fs');
 
+const requiredVariables = ['SUPABASE_URL', 'SUPABASE_KEY'];
+const missingVariables = requiredVariables.filter((name) => !process.env[name]?.trim());
+if (missingVariables.length > 0) {
+  throw new Error(
+    `Variáveis obrigatórias ausentes para o build: ${missingVariables.join(', ')}`
+  );
+}
+
 // Garante que o diretório de ambientes exista antes da geração do arquivo.
 const targetDir = './src/environments';
 if (!fs.existsSync(targetDir)) {
