@@ -41,7 +41,7 @@ export class App implements OnInit {
 
   get identificacaoExibicao(): string {
     if (this.sessaoAluno) {
-      return `${this.sessaoAluno.nome} • ${this.sessaoAluno.serie} ${this.sessaoAluno.turma}`;
+      return `${this.sessaoAluno.nome} • ${this.sessaoAluno.escola} • ${this.sessaoAluno.serie} ${this.sessaoAluno.turma}`;
     }
     return this.usuarioLogado?.email ?? '';
   }

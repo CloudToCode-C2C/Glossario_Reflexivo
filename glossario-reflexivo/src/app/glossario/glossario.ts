@@ -14,7 +14,6 @@ export interface CategoriaGlossario {
   contexto: string;
   efeitos: string;
   reformulacao: string;
-  linksVideo: string[];
 }
 
 interface QuestaoReflexiva {
@@ -67,11 +66,7 @@ export class GlossarioComponent implements OnInit, OnDestroy {
       exemplos: ['Você é velho demais para isso!', 'Isso é coisa de velho!', 'Cringe!'],
       contexto: 'Em situações de interação no ambiente escolar, por meio de piadas, comentários depreciativos e atitudes discriminatórias.',
       efeitos: 'Isolamento e impacto na saúde emocional.',
-      reformulacao: 'Idade não determina inteligência, competência, capacidade de aprendizagem ou valor da opinião de alguém.',
-      linksVideo: [
-        'https://youtu.be/8fJ7xYPbUl4?feature=shared',
-        'https://youtu.be/NDqWo7p92TU?is=Ukxl8RU1XG9p2IaJ'
-      ]
+      reformulacao: 'Idade não determina inteligência, competência, capacidade de aprendizagem ou valor da opinião de alguém.'
     },
     {
       id: 'Capacitismo',
@@ -80,18 +75,16 @@ export class GlossarioComponent implements OnInit, OnDestroy {
       exemplos: ['Retardado', 'Autista', 'Aleijado', 'Manco'],
       contexto: 'Por meio de piadas, imitação de pessoas com deficiência e discussões.',
       efeitos: 'Desvalorização das capacidades e constrangimento.',
-      reformulacao: 'Podemos expressar irritação ou discordância sem transformar uma deficiência em insulto.',
-      linksVideo: ['https://youtu.be/gzcRlivcZPI?feature=shared']
+      reformulacao: 'Podemos expressar irritação ou discordância sem transformar uma deficiência em insulto.'
     },
     {
       id: 'Transfobia',
       titulo: 'Transfobia',
-      definicao: 'Preconceito, discriminação ou violência direcionada a pessoas em razão de sua identidade ou expressão de gênero.',
+      definicao: 'Preconceito, discriminação ou violência direcionada a pessoas em razão de sua identidade ou expressão de gênero, atingindo especialmente pessoas transgênero, transexuais e não binárias.',
       exemplos: ['Viado!', 'Bicha!', 'Traveco!'],
-      contexto: 'Por meio de xingamentos, apelidos, piadas e comentários.',
-      efeitos: 'Normalização da discriminação, constrangimento e humilhação.',
-      reformulacao: 'Criticar uma atitude sem atacar a identidade de gênero ou a orientação sexual da pessoa.',
-      linksVideo: ['https://www.youtube.com/watch?v=D-a_B-P2Btc']
+      contexto: 'Por meio de xingamentos, apelidos, piadas, comentários, exclusão ou associação da identidade ou expressão de gênero a algo negativo.',
+      efeitos: 'Normalização da discriminação, bullying, constrangimento e humilhação. Desrespeito ao nome social ou ngação do gênero da pessoa.',
+      reformulacao: 'Criticar uma atitude sem atacar a identidade de gênero ou a orientação sexual da pessoa. Respeitar a identidade de alguém não é uma scolha de opinião, é um compromisso com a dignidade humana. Na escola, a diversidade merece respeito, nunca preconceito.'
     },
     {
       id: 'Preconceito Linguistico',
@@ -100,11 +93,7 @@ export class GlossarioComponent implements OnInit, OnDestroy {
       exemplos: ['Fala direito!', 'Você fala tudo errado!'],
       contexto: 'Quadras de esportes, brincadeiras de mau gosto, conflitos no pátio.',
       efeitos: 'Desvalorização da identidade e exclusão social.',
-      reformulacao: 'Respeitar as variedades linguísticas, entendendo que cada forma de falar possui seu contexto.',
-      linksVideo: [
-        'https://youtu.be/uu6Wk1pNC-I?is=xsITCt-5ujiTa0B8',
-        'https://youtu.be/qQZNThg9DDA?is=4Z9_oL59ZXWgpPIt'
-      ]
+      reformulacao: 'Respeitar as variedades linguísticas, entendendo que cada forma de falar possui seu contexto.'
     },
     {
       id: 'Raciais',
@@ -113,11 +102,7 @@ export class GlossarioComponent implements OnInit, OnDestroy {
       exemplos: ['Inveja branca', 'Serviço de preto', 'Macaco'],
       contexto: 'Quadras de esportes, brincadeiras de mau gosto e comentários.',
       efeitos: 'Destruição da autoimagem e naturalização do racismo.',
-      reformulacao: 'Não apenas substitua a palavra, mas descreva a situação sem associá-los aos fenótipos.',
-      linksVideo: [
-        'https://youtu.be/2iSk3DVvlYk?feature=shared',
-        'https://youtu.be/X8FWkOXr-zo?feature=shared'
-      ]
+      reformulacao: 'Não apenas substitua a palavra, mas descreva a situação sem associá-los aos fenótipos.'
     },
     {
       id: 'Regionais',
@@ -126,8 +111,7 @@ export class GlossarioComponent implements OnInit, OnDestroy {
       exemplos: ['Coisa de caipira', 'Baianada'],
       contexto: 'Por meio de xingamentos, apelidos e piadas.',
       efeitos: 'Complexo de inferioridade e exclusão social.',
-      reformulacao: 'Respeitar os sotaques e falares regionais como identidades culturais legítimas.',
-      linksVideo: ['https://youtu.be/-E9KIfhM-NE?is=Glua-0q8RUlg_WEo']
+      reformulacao: 'Respeitar os sotaques e falares regionais como identidades culturais legítimas.'
     },
     {
       id: 'Sexistas',
@@ -136,8 +120,7 @@ export class GlossarioComponent implements OnInit, OnDestroy {
       exemplos: ['Isso é coisa de mulher!', 'Homem não chora!'],
       contexto: 'Por meio de piadas, estereótipos e frases determinantes.',
       efeitos: 'Desvalorização da identidade.',
-      reformulacao: 'Retirar o gênero como critério para definir capacidade, comportamento ou valor.',
-      linksVideo: ['https://youtu.be/E8csref7_QI?is=n6Rx_BKnXLepzzoO']
+      reformulacao: 'Retirar o gênero como critério para definir capacidade, comportamento ou valor.'
     },
     {
       id: 'Sociais',
@@ -146,8 +129,7 @@ export class GlossarioComponent implements OnInit, OnDestroy {
       exemplos: ['Isso é coisa de pobre!', 'Maloqueiro!'],
       contexto: 'Brincadeiras de mau gosto ou comentários elitistas.',
       efeitos: 'Desigualdade e reprodução de estereótipos.',
-      reformulacao: 'Diferentes grupos sociais possuem diferentes maneiras de usar a língua; deve-se focar na atitude.',
-      linksVideo: ['https://youtu.be/US6fmmUw1aY?is=h7TPbPYgVpYkajOp']
+      reformulacao: 'Diferentes grupos sociais possuem diferentes maneiras de usar a língua; deve-se focar na atitude.'
     }
   ];
 
