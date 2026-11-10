@@ -251,6 +251,9 @@ export class LoginComponent implements OnInit {
 
   async enviarSolicitacaoProfessor() {
     this.feedbackSolicitacao = null;
+    this.erroLogin = false;
+    this.erroMensagem = '';
+
     const { nome, email, senha, escolaSelecionada, novaEscolaNome, novaEscolaCidade } =
       this.solicitacaoForm.value;
 
@@ -276,53 +279,32 @@ export class LoginComponent implements OnInit {
     this.cdr.detectChanges();
 
     try {
-      // 1. Registra a credencial criptografada no Supabase Auth (auth.users)
-      await this.supabaseService.criarCredencialAuthProfessor(email.trim(), senha);
+      const emailLimpo = email.trim().toLowerCase();
 
-      // 2. Registra o pedido na tabela professores_autorizados (aguardando C2C)
-      const resultado = await this.supabaseService.solicitarAcessoProfessor({
+      // 1. Cria a credencial no Supabase Auth (auth.users)
+      await this.supabaseService.criarCredencialAuthProfessor(emailLimpo, senha);
+
+      // 2. Registra a solicitação e confirma o e-mail no auth.users via RPC
+      await this.supabaseService.solicitarAcessoProfessor({
         nome: nome.trim(),
-        email: email.trim(),
+        email: emailLimpo,
         escolaExistente: this.cadastrandoNovaEscola ? undefined : escolaSelecionada,
         novaEscolaNome: this.cadastrandoNovaEscola ? novaEscolaNome.trim() : undefined,
         novaEscolaCidade: this.cadastrandoNovaEscola ? novaEscolaCidade.trim() : undefined,
       });
 
-      if (resultado === 'CRIADO_COM_ESCOLA') {
-        this.feedbackSolicitacao = {
-          tipo: 'sucesso',
-          texto:
-            'Solicitação e senha cadastradas! Assim que a CloudToCode aprovar a escola e seu e-mail, você poderá entrar acima.',
-        };
-        this.solicitacaoForm.reset({ escolaSelecionada: this.escolas[0] ?? '' });
-      } else if (resultado === 'CRIADO') {
-        this.feedbackSolicitacao = {
-          tipo: 'sucesso',
-          texto:
-            'Solicitação e senha registradas! Assim que a CloudToCode liberar seu e-mail no sistema, basta entrar acima.',
-        };
-        this.solicitacaoForm.reset({ escolaSelecionada: this.escolas[0] ?? '' });
-      } else if (resultado === 'JA_PENDENTE') {
-        this.feedbackSolicitacao = {
-          tipo: 'info',
-          texto:
-            'Este e-mail já possui uma solicitação pendente em análise pela CloudToCode.',
-        };
-      } else if (resultado === 'JA_APROVADO') {
-        this.feedbackSolicitacao = {
-          tipo: 'sucesso',
-          texto:
-            'Seu e-mail já está autorizado pela CloudToCode! Use os campos de E-mail e Senha no topo para entrar.',
-        };
+      if (this.cadastrandoNovaEscola) {
+        await this.supabaseService.carregarEscolasAprovadas();
       }
-    } catch (error) {
-      console.error('Erro na solicitação:', error);
+
+      // 3. Faz o login após a confirmação feita pela RPC
+      await this.supabaseService.loginComEmailSenha(emailLimpo, senha);
+      await this.router.navigate(['/glossario']);
+    } catch (error: any) {
+      console.error('Detalhe do erro no cadastro/login do professor:', error);
       this.feedbackSolicitacao = {
         tipo: 'erro',
-        texto:
-          (error as { code?: string })?.code === 'user_already_exists'
-            ? 'Este e-mail já possui uma conta no Supabase. Use a recuperação de senha do Supabase ou peça ao administrador para definir uma senha antes de solicitar novamente.'
-            : 'Não foi possível registrar sua solicitação no momento. Tente novamente.',
+        texto: error?.message || 'Não foi possível concluir o acesso. Tente novamente.',
       };
     } finally {
       this.enviandoSolicitacao = false;

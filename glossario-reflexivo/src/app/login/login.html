@@ -144,7 +144,8 @@
 
             <!-- Formulário de Solicitação / Primeiro Cadastro -->
             <div class="solicitacao-professor" [formGroup]="solicitacaoForm">
-              <p class="solicitacao-titulo">Primeiro acesso ou ainda não tem liberação?</p>
+              <!--<p class="solicitacao-titulo">Primeiro acesso ou ainda não tem liberação?</p>-->
+              <p class="solicitacao-titulo">Primeiro acesso? Crie sua conta de Professor.</p>
 
               <div class="campo-item">
                 <label for="prof-nome">Nome Completo</label>
@@ -186,7 +187,7 @@
                     <option [value]="escola">{{ escola }}</option>
                   }
                   <option value="__NOVA_ESCOLA__">
-                    + Minha escola não está na lista (Solicitar inclusão)
+                    + Minha escola não está na lista (Cadastrar nova escola)
                   </option>
                 </select>
               </div>
@@ -219,11 +220,11 @@
                 [disabled]="enviandoSolicitacao"
                 (click)="enviarSolicitacaoProfessor()"
               >
-                <span class="material-icons" aria-hidden="true">send</span>
+                <span class="material-icons" aria-hidden="true">person_add</span>
                 {{
                   enviandoSolicitacao
-                    ? 'Enviando solicitação...'
-                    : 'Solicitar acesso e cadastrar senha'
+                    ? 'Criando conta e entrando...'
+                    : 'Cadastrar e Acessar Agora'
                 }}
               </button>
 

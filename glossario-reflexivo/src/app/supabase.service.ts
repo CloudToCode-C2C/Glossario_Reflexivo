@@ -415,7 +415,8 @@ export class SupabaseService {
     
     if (!data.user) throw new Error('O Supabase não retornou o usuário criado.');
 
-    await this.supabase.auth.signOut();
+    // STAND-BY: Descomentar após a banca.
+    // await this.supabase.auth.signOut();
   }
 
   private aplicarFiltroQueryProfessor(query: any) {
