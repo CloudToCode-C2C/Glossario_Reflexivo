@@ -7,12 +7,12 @@ Este projeto nasceu da necessidade de transformar um material pedagógico denso 
 
 ## 🚀 Funcionalidades
 
-O aplicativo está estruturado em 4 pilares principais:
+O aplicativo está estruturado em 4 pilares principais, com foco na usabilidade e engajamento do público adolescente:
 
-*   **📖 Glossário Interativo:** Um catálogo de 8 categorias de preconceito (Etarismo, Capacitismo, Transfobia, Preconceito Linguístico, Raciais, Regionais, Sexistas e Sociais). Apresenta definições claras e simula diálogos estilo "Chat" contrastando falas inadequadas com reformulações educativas.
-*   **🗣️ Mural de Relatos:** Um espaço seguro onde os alunos podem compartilhar suas experiências e vivências escolares relacionadas ao tema. Todas as submissões passam por moderação prévia.
-*   **💭 Salas de Reflexão:** Fóruns temáticos baseados em 5 questões geradoras. Com uma interface familiar semelhante a um chat de mensagens, os alunos podem debater e ver as opiniões da turma de forma fluida.
-*   **🎓 Fundamentação Teórica (Sobre):** Uma seção dedicada a explicar o embasamento teórico e listar as referências bibliográficas (como Marcos Bagno e Luiz Antônio Marcuschi) que guiam o projeto.
+-   **📖 Glossário Interativo:** Um catálogo exploratório de 8 categorias de preconceito (Etarismo, Capacitismo, Transfobia, Preconceito Linguístico, Raciais, Regionais, Sexistas e Sociais). Apresenta definições claras, contextos históricos de uso, dicas de reformulação de falas e **integração dinâmica com vídeos do YouTube** para aprofundamento. A tela inicial também conta com um carrossel de "Momentos de Reflexão".
+-   **🗣️ Fórum (Espaço de Escuta):** Um ambiente seguro e comunitário onde os alunos podem compartilhar experiências pessoais e vivências escolares. Possui envio de relatos com feedback visual e um feed de leitura moderno estilo rede social.
+-   **💭 Salas de Reflexão:** Ambientes de debate acessados diretamente pelas questões geradoras do glossário. Permitem que a turma interaja e participe de discussões direcionadas de forma fluida.
+-   **🎓 Fundamentação Teórica (Sobre):** Uma seção dinâmica que introduz conceitos-chave (como Variação e Preconceito Linguístico) através de cards interativos, além de apresentar o embasamento teórico e listar as referências bibliográficas (como Marcos Bagno e Luiz Antônio Marcuschi) que sustentam as escolhas pedagógicas do projeto.
 
 ## 🛠️ Arquitetura e Tecnologias
 
