@@ -1,6 +1,6 @@
 @if (possuiSessaoAtiva) {
   <header class="app-header">
-    <!-- Linha 1: Identificação + Botão Admin (se professor) + Sair -->
+    <!-- Identificação da sessão e ações disponíveis para o perfil atual. -->
     <div class="app-header-top">
       <span class="app-identity">
         {{ sessaoAluno ? 'Estudante:' : 'Docente:' }}
@@ -15,7 +15,7 @@
       </div>
     </div>
 
-    <!-- Linha 2: Dropdowns de Filtro Global (Exclusivo para Professor) -->
+    <!-- Os filtros do professor afetam os dados exibidos nas telas protegidas. -->
     @if (ehProfessorAutorizado) {
       <div class="professor-filters">
         <select

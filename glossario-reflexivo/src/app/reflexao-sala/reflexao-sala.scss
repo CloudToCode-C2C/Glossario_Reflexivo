@@ -1,4 +1,4 @@
-/* Estrutura a sala como viewport completo com cabeçalho, feed e rodapé fixos. */
+/* Ocupa a tela inteira e mantém a pergunta e o envio visíveis durante a rolagem. */
 :host {
   display: block;
   position: fixed;

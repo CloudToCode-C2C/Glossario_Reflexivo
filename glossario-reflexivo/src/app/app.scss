@@ -1,4 +1,4 @@
-/* Mantém o componente raiz neutro para que cada rota controle sua própria composição. */
+/* O componente raiz fornece a estrutura comum; cada rota cuida do próprio layout. */
 :host {
   display: block;
   min-height: 100vh;

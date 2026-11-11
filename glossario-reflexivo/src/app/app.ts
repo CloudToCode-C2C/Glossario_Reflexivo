@@ -68,8 +68,7 @@ export class App implements OnInit {
       this.cdr.detectChanges();
     });
 
-    // O login também carrega a lista, mas o App precisa cobrir entradas diretas
-    // com sessão OAuth já existente ou restauração do PWA.
+    // Carrega a lista também quando o app abre com uma sessão OAuth ou PWA restaurada.
     await this.supabaseService.carregarEscolasAprovadas();
     await this.sincronizarEstadoAuth();
 

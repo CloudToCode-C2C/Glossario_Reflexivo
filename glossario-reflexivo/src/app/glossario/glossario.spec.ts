@@ -7,7 +7,7 @@ import { SupabaseService } from '../supabase.service';
 import { FormularioComponent } from '../formulario/formulario';
 import { MuralComponent } from '../mural/mural';
 
-// Verifica as duas visões do glossário e o repasse da categoria aos widgets.
+// Confere as telas de lista e detalhe, incluindo o filtro repassado aos componentes filhos.
 describe('GlossarioComponent', () => {
   let component: GlossarioComponent;
   let fixture: ComponentFixture<GlossarioComponent>;

@@ -81,7 +81,7 @@
             @if (videosDaCategoria.length === 0) {
               <p class="msg-sem-videos">Ainda não há vídeos cadastrados para esta categoria.</p>
             } @else {
-              <!-- Player Principal Embutido -->
+              <!-- O vídeo ativo fica incorporado para que a pessoa continue na página da categoria. -->
               @if (videoAtivo && urlEmbedSegura) {
                 <div class="cinema-container">
                   <div class="iframe-proporcao">
@@ -103,7 +103,7 @@
                 </div>
               }
 
-              <!-- Lista de Miniaturas da Playlist -->
+              <!-- A lista permite escolher outro vídeo sem fechar a videoteca. -->
               <div class="fila-playlist">
                 <span class="titulo-fila">Escolha um vídeo da playlist ({{ videosDaCategoria.length }})</span>
                 <div class="grade-miniaturas">
@@ -131,7 +131,7 @@
         }
       </section>
 
-      <!-- Área de Interação -->
+      <!-- Reúne as atividades disponíveis para a categoria atualmente selecionada. -->
       <div class="area-interativa-jovem">
         <app-formulario [categoriaAtual]="categoria.id"></app-formulario>
         <app-mural [categoriaFiltro]="categoria.id"></app-mural>
@@ -139,7 +139,7 @@
     </div>
 
   } @else {
-    <!-- GRADE DE CATEGORIAS -->
+    <!-- A grade inicial permite escolher uma categoria do glossário. -->
     <div class="grade-social">
       @for (categoria of listaFiltrada; track categoria.id) {
         <a
@@ -162,7 +162,7 @@
       }
     </div>
 
-    <!-- CARROSSEL REFLEXIVO -->
+    <!-- Cada pergunta leva à sala onde as respostas são registradas e moderadas. -->
     <section class="questoes-reflexivas">
         <div class="cabecalho-questoes">
             <div class="icone-destaque">

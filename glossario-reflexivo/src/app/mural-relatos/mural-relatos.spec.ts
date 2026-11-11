@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MuralRelatosComponent } from './mural-relatos';
 
-// Confirma a criação do fórum que combina relatos e formulário.
+// Confere a criação da tela que reúne o formulário e os relatos publicados.
 describe('MuralRelatosComponent', () => {
   let component: MuralRelatosComponent;
   let fixture: ComponentFixture<MuralRelatosComponent>;

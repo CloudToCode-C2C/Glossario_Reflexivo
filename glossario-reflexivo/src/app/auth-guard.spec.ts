@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { CanActivateFn } from '@angular/router';
 import { authGuard } from './auth-guard';
 
-// Garante que o guard preserve o bloqueio de rotas sem sessão.
+// Confere que uma pessoa sem sessão seja enviada ao login antes de abrir a área protegida.
 describe('authGuard', () => {
   const executeGuard: CanActivateFn = (...guardParameters) =>
     TestBed.runInInjectionContext(() => authGuard(...guardParameters));

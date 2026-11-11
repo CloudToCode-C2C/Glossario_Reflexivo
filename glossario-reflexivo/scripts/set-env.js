@@ -8,13 +8,13 @@ if (missingVariables.length > 0) {
   );
 }
 
-// Garante que o diretório de ambientes exista antes da geração do arquivo.
+// Cria a pasta de ambientes antes de escrever a configuração usada no build.
 const targetDir = './src/environments';
 if (!fs.existsSync(targetDir)) {
   fs.mkdirSync(targetDir, { recursive: true });
 }
 
-// Monta o ambiente de produção com as credenciais fornecidas pela plataforma de deploy.
+// Usa as variáveis do deploy para configurar a conexão com o Supabase em produção.
 const envConfigFile = `
 export const environment = {
   production: true,
@@ -23,6 +23,6 @@ export const environment = {
 };
 `;
 
-// Persiste o arquivo antes que o compilador Angular resolva os imports de ambiente.
+// O arquivo precisa existir antes de o Angular resolver os imports do ambiente.
 fs.writeFileSync(`${targetDir}/environment.ts`, envConfigFile);
 console.log('Arquivo environment.ts gerado dinamicamente com sucesso.');

@@ -8,23 +8,23 @@ import { AdminComponent } from './admin/admin';
 import { SobreComponent } from './sobre/sobre';
 
 export const routes: Routes = [
-  // 1. ROTA PÚBLICA (Acesso livre)
+  // O login fica público; as outras páginas exigem uma sessão válida.
   {
     path: 'login',
     loadComponent: () => import('./login/login').then(m => m.LoginComponent),
   },
   
-  // 2. ÁREA RESTRITA (Exige Login)
+  // As rotas abaixo compartilham a verificação de acesso.
   {
     path: '',
     canActivate: [authGuard],
     children: [
-      // 2.1 A nova página inicial é o Glossário
+      // O glossário é a página inicial da área protegida.
       {
         path: '',
         loadComponent: () => import('./glossario/glossario').then(m => m.GlossarioComponent),
       },
-      // Suporte para o filtro de categoria criado pelo Arthur
+      // O painel é restrito a professores autorizados.
       {
         path: 'admin',
         canActivate: [adminGuard],
@@ -40,7 +40,7 @@ export const routes: Routes = [
         pathMatch: 'full',
       },
 
-      // 2.2 A aba Fórum/Mural
+      // O fórum reúne os relatos enviados pela comunidade.
       {
         path: 'forum',
         loadComponent: () => import('./mural-relatos/mural-relatos').then(m => m.MuralRelatosComponent),
@@ -51,20 +51,18 @@ export const routes: Routes = [
         pathMatch: 'full',
       },
 
-      // 2.3 A aba Sobre 
-      // Se ele já tinha um SobreComponent, vamos usá-lo. 
-      // Se quiser usar a antiga Home como Sobre, é só trocar o component.
+      // A página apresenta o projeto e sua fundamentação.
       {
         path: 'sobre',
         loadComponent: () => import('./sobre/sobre').then(m => m.SobreComponent), 
       },
-      // Redireciona a antiga rota 'home' para o sobre
+      // Mantém compatibilidade com links antigos para /home.
       {
         path: 'home',
         redirectTo: 'sobre',
       },
 
-      // 2.4 Rotas adicionais do projeto do Arthur
+      // Cada sala corresponde a uma pergunta de reflexão.
       {
         path: 'reflexao/:id',
         loadComponent: () => import('./reflexao-sala/reflexao-sala').then(m => m.ReflexaoSalaComponent),
@@ -72,7 +70,7 @@ export const routes: Routes = [
     ]
   },
   
-  // Rota de fallback
+  // Caminhos que não existem voltam à página inicial.
   {
     path: '**',
     redirectTo: 'glossario',

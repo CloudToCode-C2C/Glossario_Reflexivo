@@ -26,7 +26,7 @@ interface RespostaReflexao {
   created_at: string;
 }
 
-// Sala de debate vinculada a uma pergunta e às respostas persistidas no Supabase.
+// Exibe uma pergunta e permite consultar e enviar respostas para moderação.
 @Component({
   selector: 'app-reflexao-sala',
   standalone: true,
@@ -35,7 +35,7 @@ interface RespostaReflexao {
   styleUrl: './reflexao-sala.scss',
 })
 export class ReflexaoSalaComponent implements OnInit, OnDestroy {
-  // O mesmo conjunto de perguntas usado no carrossel da página inicial.
+  // Os identificadores correspondem às perguntas e aos links do carrossel da página inicial.
   readonly perguntasReflexivas: PerguntaReflexiva[] = [
     {
       id: 1,
@@ -90,15 +90,13 @@ export class ReflexaoSalaComponent implements OnInit, OnDestroy {
     private readonly cdr: ChangeDetectorRef,
   ) {}
 
-  // Observa a rota para trocar a pergunta sem recriar a página inteira.
+  // A sala acompanha a pergunta da rota e recarrega as respostas quando o filtro docente muda.
   ngOnInit(): void {
-    // 1. Escuta a mudança na rota
     this.rotaSubscription = this.route.paramMap.subscribe(params => {
       const id = Number(params.get('id'));
       void this.selecionarPergunta(id);
     });
 
-    // 2. Escuta a mudança no filtro do professor para recarregar as respostas
     this.supabaseService.filtroProfessor$.subscribe(() => {
       if (this.perguntaAtual) {
         void this.selecionarPergunta(this.perguntaAtual.id);
@@ -110,7 +108,7 @@ export class ReflexaoSalaComponent implements OnInit, OnDestroy {
     this.rotaSubscription?.unsubscribe();
   }
 
-  // Envia respostas pendentes e informa ao usuário o resultado da operação.
+  // Registra a resposta como pendente; ela só aparece no feed depois da aprovação.
   async enviarResposta(): Promise<void> {
     if (this.respostaForm.invalid || !this.perguntaAtual || this.enviando) {
       this.respostaForm.markAllAsTouched();
@@ -155,7 +153,7 @@ export class ReflexaoSalaComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Resolve a pergunta da rota e carrega somente as respostas correspondentes.
+  // Limpa o estado anterior e busca as respostas da pergunta selecionada na URL.
   private async selecionarPergunta(id: number): Promise<void> {
     this.perguntaAtual = this.perguntasReflexivas.find(pergunta => pergunta.id === id) ?? null;
     this.respostas = [];
@@ -184,7 +182,7 @@ export class ReflexaoSalaComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Mantém a resposta mais recente visível depois que o feed é renderizado.
+  // Leva a rolagem até o fim depois que as respostas forem renderizadas.
   private rolarFeedParaOFim(): void {
     const feed = this.feedRespostas?.nativeElement;
     if (feed) {

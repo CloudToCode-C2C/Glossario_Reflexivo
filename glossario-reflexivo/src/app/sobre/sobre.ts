@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-// Estrutura textual da fundamentação exibida como artigo pedagógico.
+// Define os textos que formam as seções da fundamentação teórica.
 export interface FundamentacaoTeorica {
   introducao: string;
   citacaoMinayo: string;
@@ -8,7 +8,6 @@ export interface FundamentacaoTeorica {
   mensagemFinal: string;
 }
 
-// Página institucional com fundamentação, autores e referências bibliográficas.
 @Component({
   selector: 'app-sobre',
   standalone: true,
@@ -16,7 +15,7 @@ export interface FundamentacaoTeorica {
   styleUrl: './sobre.scss',
 })
 export class SobreComponent {
-  // Texto editorial mantido separado do template para facilitar revisão de conteúdo.
+  // Mantém o texto da página fora do HTML para facilitar futuras revisões editoriais.
   readonly fundamentacaoTeorica: FundamentacaoTeorica = {
     introducao: 'O material coloca em diálogo os estudos de Bortoni-Ricardo (2004) e Bagno (2007) para mostrar que a língua vai muito além de regras e estruturas. O recurso também convida à reflexão sobre como discursos naturalizados no ambiente escolar podem esconder e até legitimar violências simbólicas muitas vezes presentes em julgamentos sobre as diferentes formas de falar.',
     citacaoMinayo: 'Para Minayo (2001), a subjetividade no discurso social reflete a vivência, as representações e as emoções dos sujeitos, demonstrando que a fala nunca é neutra. No ambiente escolar, a linguagem atua diretamente na mediação de conflitos, na construção da autoimagem dos estudantes e no fortalecimento do sentimento de pertencimento.',
@@ -24,7 +23,7 @@ export class SobreComponent {
     mensagemFinal: 'Assim, este glossário busca promover a reflexão sobre as diferentes formas de expressão, incentivando o respeito às variedades linguísticas e o reconhecimento da língua como uma prática social dinâmica. Afinal, falar diferente não significa falar errado!'
   };
 
-  // Referências que sustentam as escolhas pedagógicas do glossário.
+  // Lista de obras citadas na fundamentação e nas escolhas pedagógicas do projeto.
   referencias = [
     "BAGNO, Marcos. Nada na língua é por acaso: por uma pedagogia da variação linguística. São Paulo: Parábola Editorial, 2007.",
     "BAGNO, Marcos. Preconceito linguístico: o que é, como se faz. São Paulo: Parábola Editorial, 1999.",

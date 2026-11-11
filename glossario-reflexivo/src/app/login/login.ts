@@ -49,13 +49,13 @@ export class LoginComponent implements OnInit {
       turma: [this.turmas[0], Validators.required],
     });
 
-    // Formulário de entrada direta do Professor (E-mail institucional + Senha)
+    // Acesso do professor com e-mail e senha.
     this.profLoginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       senha: ['', [Validators.required, Validators.minLength(6)]],
     });
 
-    // Formulário de solicitação de acesso à C2C + definição de senha
+    // Cadastro e pedido de autorização para novos professores.
     this.solicitacaoForm = this.fb.group({
       nome: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
@@ -67,6 +67,7 @@ export class LoginComponent implements OnInit {
   }
 
   async ngOnInit() {
+    // Atualiza as opções de escola dos dois formulários quando a lista é carregada.
     this.supabaseService.escolasPermitidas$.subscribe((lista) => {
       this.escolas = lista;
       if (lista.length > 0 && !this.loginForm.get('escola')?.value) {
@@ -162,7 +163,7 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  // Login do Professor via E-mail Institucional (@ifb.edu.br, etc.) e Senha
+  // Confere as credenciais e só mantém a sessão se o professor já estiver autorizado.
   async entrarComEmailProfessor() {
     this.erroLogin = false;
     this.erroMensagem = '';
@@ -185,7 +186,7 @@ export class LoginComponent implements OnInit {
       const { email, senha } = this.profLoginForm.value;
       await this.supabaseService.loginComEmailSenha(email, senha);
 
-      // Verifica na tabela professores_autorizados se a C2C já aprovou (status_aprovado = true)
+      // Uma conta válida ainda precisa estar aprovada para acessar as áreas protegidas.
       const autorizado = await this.supabaseService.verificarProfessorAutorizado();
       if (autorizado) {
         this.router.navigate(['/glossario']);
@@ -210,6 +211,7 @@ export class LoginComponent implements OnInit {
   }
 
   async reenviarConfirmacaoEmail() {
+    // O reenvio só é possível com um endereço válido no campo de login do professor.
     const email = this.profLoginForm.get('email')?.value?.trim();
     if (!email || this.profLoginForm.get('email')?.invalid) {
       this.mensagemConfirmacao = 'Informe um e-mail válido acima para reenviar a confirmação.';
@@ -233,6 +235,7 @@ export class LoginComponent implements OnInit {
   }
 
   async entrarComGoogle() {
+    // O Supabase redireciona de volta ao app depois da autenticação do Google.
     try {
       this.carregando = true;
       this.erroLogin = false;
@@ -250,6 +253,7 @@ export class LoginComponent implements OnInit {
   }
 
   async enviarSolicitacaoProfessor() {
+    // Valida os dados antes de criar a conta e encaminhar o pedido à equipe responsável.
     this.feedbackSolicitacao = null;
     this.erroLogin = false;
     this.erroMensagem = '';
@@ -281,10 +285,10 @@ export class LoginComponent implements OnInit {
     try {
       const emailLimpo = email.trim().toLowerCase();
 
-      // 1. Cria a credencial no Supabase Auth (auth.users)
+      // Cria a credencial antes de registrar a solicitação de acesso.
       await this.supabaseService.criarCredencialAuthProfessor(emailLimpo, senha);
 
-      // 2. Registra a solicitação e confirma o e-mail no auth.users via RPC
+      // Registra os dados do professor e, se necessário, a nova escola informada.
       await this.supabaseService.solicitarAcessoProfessor({
         nome: nome.trim(),
         email: emailLimpo,
@@ -297,7 +301,7 @@ export class LoginComponent implements OnInit {
         await this.supabaseService.carregarEscolasAprovadas();
       }
 
-      // 3. Faz o login após a confirmação feita pela RPC
+      // Após registrar o pedido, inicia a sessão e abre o glossário.
       await this.supabaseService.loginComEmailSenha(emailLimpo, senha);
       await this.router.navigate(['/glossario']);
     } catch (error: any) {

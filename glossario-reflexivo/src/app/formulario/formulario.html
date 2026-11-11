@@ -1,13 +1,13 @@
 <div class="card-formulario-wrapper">
   
   @if (!mensagemSucesso) {
-    <!-- CABEÇALHO DO FORMULÁRIO -->
+    <!-- Identifica a contribuição que pode ser enviada para a categoria atual. -->
     <div class="cabecalho-form">
       <span class="material-icons icone-form">edit_note</span>
       <h3 class="titulo-form">Adicionar expressão de {{ categoriaAtual }}</h3>
     </div>
     
-    <!-- O FORMULÁRIO -->
+    <!-- O aluno informa a expressão e explica o significado antes do envio. -->
     <form [formGroup]="verbeteForm" (ngSubmit)="onSubmit()" class="form-moderno">
       
       <div class="form-group">
@@ -24,14 +24,14 @@
         </div>
       </div>
 
-      <!-- BOTÃO DE ENVIO COM A COR CORRETA -->
+      <!-- O botão acompanha o estado de envio para evitar envios repetidos. -->
       <button type="submit" [disabled]="verbeteForm.invalid || estaAEnviar" class="btn-enviar">
         {{ estaAEnviar ? 'Enviando...' : 'Enviar Contribuição' }}
       </button>
 
     </form>
   } @else {
-    <!-- FEEDBACK DE SUCESSO ANIMADO -->
+    <!-- A confirmação aparece depois que o serviço salva o verbete. -->
     <div class="alerta-sucesso">
       <div class="alerta-conteudo">
         <div class="icone-sucesso">

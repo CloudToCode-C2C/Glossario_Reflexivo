@@ -1,10 +1,8 @@
-/* =========================================================
-   CONTAINER PRINCIPAL DO FORMULÁRIO
-   ========================================================= */
+/* Cartão que mantém os campos do verbete organizados em uma única coluna. */
 .card-formulario-wrapper {
   background-color: var(--cor-superficie);
   padding: 32px 24px;
-  border-radius: 24px; /* Bordas arredondadas e amigáveis */
+  border-radius: 24px;
   border: 1px solid rgba(0, 0, 0, 0.05);
   box-shadow: var(--sombra-card);
   width: 100%;
@@ -12,9 +10,7 @@
   margin: 0 auto;
 }
 
-/* =========================================================
-   CABEÇALHO DO FORMULÁRIO
-   ========================================================= */
+/* Título e ícone que identificam o formulário da categoria selecionada. */
 .cabecalho-form {
   display: flex;
   align-items: center;
@@ -24,7 +20,7 @@
   border-bottom: 1px solid var(--cor-borda);
 
   .icone-form {
-    color: var(--cor-primaria); /* Ícone no tom principal */
+    color: var(--cor-primaria);
     font-size: 28px;
   }
 
@@ -36,9 +32,7 @@
   }
 }
 
-/* =========================================================
-   ESTILOS DOS CAMPOS (INPUTS)
-   ========================================================= */
+/* Espaçamento e apresentação dos campos de expressão e significado. */
 .form-moderno {
   display: flex;
   flex-direction: column;
@@ -64,9 +58,9 @@
     input, textarea {
       width: 100%;
       padding: 16px 20px;
-      border-radius: 16px; /* Borda macia, como solicitado */
+      border-radius: 16px;
       border: 1px solid var(--cor-borda);
-      background-color: var(--cor-fundo); /* Fundo claro e limpo */
+      background-color: var(--cor-fundo);
       color: var(--cor-texto-principal);
       font-size: 15px;
       font-family: 'Inter', sans-serif;
@@ -92,17 +86,15 @@
   }
 }
 
-/* =========================================================
-   BOTÃO DE ENVIAR
-   ========================================================= */
+/* O botão destaca a ação principal e diferencia estados ativos e desabilitados. */
 .btn-enviar {
   margin-top: 12px;
   width: 100%;
   padding: 16px;
-  background-color: var(--cor-primaria); /* Cor vibrante */
-  color: var(--cor-texto-inverso); /* Texto legível e contrastante */
+  background-color: var(--cor-primaria);
+  color: var(--cor-texto-inverso);
   border: none;
-  border-radius: 100px; /* Estilo pílula moderno */
+  border-radius: 100px;
   font-size: 16px;
   font-weight: 800;
   cursor: pointer;
@@ -121,9 +113,7 @@
   }
 }
 
-/* =========================================================
-   ALERTA DE SUCESSO ANIMADO E MODERNO
-   ========================================================= */
+/* Mensagem exibida depois que o serviço confirma o salvamento do verbete. */
 .alerta-sucesso {
   display: flex;
   flex-direction: column;
@@ -161,7 +151,7 @@
     }
   }
 
-  /* BOTÃO PARA ADICIONAR NOVA EXPRESSÃO */
+  /* Permite fechar a confirmação e começar outra contribuição. */
   .btn-reiniciar {
     display: inline-flex;
     align-items: center;
@@ -189,7 +179,7 @@
   }
 }
 
-/* Animação suave para a mensagem aparecer */
+/* Anima a entrada da confirmação sem deslocar o restante da página. */
 @keyframes slideInDown {
   0% {
     opacity: 0;

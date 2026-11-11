@@ -1,4 +1,4 @@
-/* Mantém a tela pública limpa, centralizada e visualmente alinhada ao glossário. */
+/* Centraliza o cartão de acesso e adapta o fundo da tela de login a diferentes alturas. */
 .login-wrapper {
   position: relative;
   isolation: isolate;
@@ -109,7 +109,7 @@
     line-height: 1.6;
   }
 
-  /* --- CHECKBALLS (ALUNO / PROFESSOR) --- */
+  /* Organiza a escolha do perfil antes dos campos específicos de cada acesso. */
   .perfil-checkballs {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -161,7 +161,7 @@
     }
   }
 
-  /* --- CAMPOS DO ALUNO --- */
+  /* Mantém os dados escolares em uma coluna e os campos de turma lado a lado. */
   .campos-aluno {
     display: flex;
     flex-direction: column;
@@ -210,7 +210,7 @@
     }
   }
 
-  /* --- BLOCO DO PROFESSOR --- */
+  /* Agrupa o login, o acesso pelo Google e o pedido de autorização docente. */
   .bloco-professor {
     display: flex;
     flex-direction: column;

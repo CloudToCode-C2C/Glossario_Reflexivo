@@ -6,7 +6,7 @@ interface QuestaoReflexiva {
   texto: string;
 }
 
-// Controla o dashboard inicial e a interação do carrossel de perguntas.
+// Controla a navegação automática e manual das perguntas da página inicial.
 @Component({
   imports: [RouterLink],
   selector: 'app-home',
@@ -14,7 +14,7 @@ interface QuestaoReflexiva {
   templateUrl: './home.html',
 })
 export class Home implements OnInit, OnDestroy {
-  // Perguntas compartilhadas entre os slides da Home e as salas de debate.
+  // Os números também são usados como identificadores das salas de reflexão.
   readonly questoesReflexivas: QuestaoReflexiva[] = [
     {
       numero: 1,
@@ -49,7 +49,7 @@ export class Home implements OnInit, OnDestroy {
   private intervaloCarrossel?: ReturnType<typeof setInterval>;
   private inicioToque = 0;
 
-  // Inicia e encerra o autoplay junto com o ciclo de vida do componente.
+  // O temporizador acompanha o ciclo de vida do componente para não ficar ativo fora da tela.
   ngOnInit(): void {
     this.iniciarCarrossel();
   }
@@ -58,7 +58,7 @@ export class Home implements OnInit, OnDestroy {
     this.pararIntervalo();
   }
 
-  // Um clique fixa o slide escolhido e interrompe a troca automática.
+  // A escolha manual pausa o avanço automático para dar tempo de ler a pergunta.
   selecionarQuestao(indice: number): void {
     this.indiceQuestaoAtiva = indice;
     this.pararCarrossel();
@@ -75,7 +75,7 @@ export class Home implements OnInit, OnDestroy {
       this.questoesReflexivas.length;
   }
 
-  // Registra o ponto inicial do gesto de arrastar no dispositivo móvel.
+  // Guarda a coordenada inicial para identificar a direção do gesto ao terminar.
   iniciarToque(event: TouchEvent): void {
     this.inicioToque = event.changedTouches[0]?.clientX ?? 0;
   }
@@ -95,7 +95,7 @@ export class Home implements OnInit, OnDestroy {
     this.pararCarrossel();
   }
 
-  // Permite navegar com o teclado quando o carrossel está focado.
+  // As setas oferecem a mesma navegação do gesto, sem depender de toque ou mouse.
   @HostListener('window:keydown', ['$event'])
   controlarComTeclado(event: KeyboardEvent): void {
     if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
@@ -109,14 +109,14 @@ export class Home implements OnInit, OnDestroy {
     this.pararCarrossel();
   }
 
-  // Avança os slides em intervalos regulares até que o usuário interaja.
+  // Enquanto ninguém interage, mostra a próxima pergunta a cada cinco segundos.
   private iniciarCarrossel(): void {
     this.intervaloCarrossel = setInterval(() => {
       this.proximaQuestao();
     }, 5000);
   }
 
-  // Centraliza a interrupção do autoplay e a atualização do estado visual.
+  // Atualiza o indicador do carrossel e encerra o temporizador quando há interação.
   private pararCarrossel(): void {
     this.carrosselEmExecucao = false;
     this.pararIntervalo();

@@ -28,7 +28,7 @@ export class MuralComponent implements OnInit, OnDestroy {
   constructor(private supabaseService: SupabaseService) {}
 
   ngOnInit(): void {
-    // O BehaviorSubject dispara imediatamente na entrada e sempre que o professor muda o filtro
+    // O BehaviorSubject emite ao entrar na tela e novamente quando o filtro do professor muda.
     this.filtroSub = this.supabaseService.filtroProfessor$.subscribe(() => {
       void this.carregarDados();
     });
@@ -39,6 +39,7 @@ export class MuralComponent implements OnInit, OnDestroy {
   }
 
   async carregarDados(): Promise<void> {
+    // Recarrega os dados do serviço e atualiza os sinais usados pelo template.
     this.carregando.set(true);
 
     try {

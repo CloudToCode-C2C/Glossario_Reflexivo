@@ -9,7 +9,7 @@ export const ESCOLAS_PADRAO = [
   'Centro Educacional 02 de Taguatinga',
 ];
 
-// Mantém compatibilidade com componentes que ainda usam o nome anterior.
+// Mantém o nome antigo para os componentes que ainda importam essa constante.
 export const ESCOLAS_PERMITIDAS = ESCOLAS_PADRAO;
 
 export const SERIES_PERMITIDAS = ['6º Ano', '7º Ano', '8º Ano', '9º Ano', 'Ensino Médio'];
@@ -39,9 +39,9 @@ export interface VideoCategoria {
 }
 
 export interface FiltroProfessor {
-  escola: string; // 'TODAS' ou nome da escola
-  serie: string; // 'TODAS' ou série específica
-  turma: string; // 'TODAS' ou letra da turma
+  escola: string; // 'TODAS' aplica o filtro a todas as escolas.
+  serie: string; // 'TODAS' inclui todas as séries.
+  turma: string; // 'TODAS' inclui todas as turmas.
 }
 
 @Injectable({
@@ -52,11 +52,11 @@ export class SupabaseService {
   private escolasPermitidasSubject = new BehaviorSubject<string[]>(ESCOLAS_PADRAO);
   public escolasPermitidas$ = this.escolasPermitidasSubject.asObservable();
 
-  // Estado reativo para avisar o AppComponent quando o Aluno entra ou sai
+  // Compartilha o estado da sessão local do aluno com os componentes inscritos.
   private sessaoAlunoSubject = new BehaviorSubject<SessaoAluno | null>(this.obterSessaoAluno());
   public sessaoAluno$ = this.sessaoAlunoSubject.asObservable();
 
-  // Estado reativo do Filtro Global do Professor (reflete em todas as abas)
+  // Os filtros do professor são compartilhados pelas listas e pelo painel de moderação.
   private filtroProfessorSubject = new BehaviorSubject<FiltroProfessor>({
     escola: 'TODAS',
     serie: 'TODAS',
@@ -68,18 +68,21 @@ export class SupabaseService {
     this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
   }
 
+  // Encaminha aos componentes as mudanças de autenticação emitidas pelo Supabase.
   escutarMudancasAuth(callback: (event: string, session: any) => void) {
     return this.supabase.auth.onAuthStateChange((event, session) => {
       callback(event, session);
     });
   }
 
+  // Salva os dados do aluno no navegador e publica a nova sessão para o restante do app.
   salvarSessaoAluno(dados: Omit<SessaoAluno, 'perfil'>): void {
     const sessao: SessaoAluno = { ...dados, perfil: 'ALUNO' };
     localStorage.setItem('c2c_sessao_aluno', JSON.stringify(sessao));
     this.sessaoAlunoSubject.next(sessao);
   }
 
+  // Valida os dados locais antes de usá-los como identidade ou filtro de acesso.
   obterSessaoAluno(): SessaoAluno | null {
     const raw = localStorage.getItem('c2c_sessao_aluno');
     if (!raw) return null;
@@ -93,7 +96,7 @@ export class SupabaseService {
       const serieValida = SERIES_PERMITIDAS.includes(sessao.serie);
       const turmaValida = TURMAS_PERMITIDAS.includes(sessao.turma);
 
-      // Se o usuário adulterou qualquer valor no DevTools, limpa o LocalStorage e nega acesso
+      // Descarta a sessão se algum dado não corresponder aos valores aceitos pelo app.
       if (!nomeValido || !escolaValida || !serieValida || !turmaValida) {
         localStorage.removeItem('c2c_sessao_aluno');
         return null;
@@ -105,19 +108,23 @@ export class SupabaseService {
     }
   }
 
+  // Atualiza apenas os campos informados e mantém os demais filtros atuais.
   atualizarFiltroProfessor(parcial: Partial<FiltroProfessor>): void {
     const atual = this.filtroProfessorSubject.value;
     this.filtroProfessorSubject.next({ ...atual, ...parcial });
   }
 
+  // Devolve os filtros vigentes para as telas que precisam iniciar com o estado atual.
   obterFiltroProfessorAtual(): FiltroProfessor {
     return this.filtroProfessorSubject.value;
   }
 
+  // Usado para validar escolas e montar as opções dos formulários.
   obterEscolasAtuais(): string[] {
     return this.escolasPermitidasSubject.value;
   }
 
+  // Aceita os formatos comuns de link do YouTube e retorna o identificador do vídeo.
   extrairYoutubeId(url: string): string | null {
     if (!url) return null;
     const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?|shorts)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
@@ -125,6 +132,7 @@ export class SupabaseService {
     return match ? match[1] : null;
   }
 
+  // Carrega apenas escolas aprovadas; se a consulta não trouxer dados, mantém a lista atual.
   async carregarEscolasAprovadas(): Promise<string[]> {
     const { data, error } = await this.supabase
       .from('escolas')
@@ -140,6 +148,7 @@ export class SupabaseService {
     return this.escolasPermitidasSubject.value;
   }
 
+  // Encaminha o pedido de acesso para a função do banco, que registra professor e escola.
   async solicitarAcessoProfessor(dados: {
     nome: string;
     email: string;
@@ -163,6 +172,7 @@ export class SupabaseService {
     return data as 'CRIADO' | 'CRIADO_COM_ESCOLA' | 'JA_PENDENTE' | 'JA_APROVADO';
   }
 
+  // Inicia o fluxo OAuth e remove uma possível sessão local de aluno antes do redirecionamento.
   async loginComGoogle() {
     localStorage.removeItem('c2c_sessao_aluno');
     this.sessaoAlunoSubject.next(null);
@@ -175,7 +185,7 @@ export class SupabaseService {
     return data;
   }
 
-  // Agora limpa tanto o LocalStorage do aluno quanto o OAuth do professor
+  // Encerra a sessão local do aluno e a autenticação do professor.
   async fazerLogout() {
     localStorage.removeItem('c2c_sessao_aluno');
     this.sessaoAlunoSubject.next(null);
@@ -183,10 +193,12 @@ export class SupabaseService {
     if (error) throw error;
   }
 
+  // Mantém uma única operação para encerrar qualquer tipo de sessão ativa.
   async limparSessaoCompleta(): Promise<void> {
     await this.fazerLogout();
   }
 
+  // Consulta a sessão do Supabase e retorna null quando ela não pode ser recuperada.
   async obterSessao() {
     const {
       data: { session },
@@ -199,6 +211,7 @@ export class SupabaseService {
     return session;
   }
 
+  // A autorização é confirmada no banco, não apenas pela existência de uma sessão OAuth.
   async verificarProfessorAutorizado(): Promise<boolean> {
     const { data: sessionData } = await this.supabase.auth.getSession();
     if (!sessionData.session?.user) return false;
@@ -211,13 +224,15 @@ export class SupabaseService {
     return !!data;
   }
 
+  // Entrega ao app a identidade associada à sessão atual do Supabase.
   async obterUsuarioAtual() {
     const session = await this.obterSessao();
     return session?.user ?? null;
   }
 
-  // --- BUSCAS SEGURAS (Respeitando permissões de coluna do Aluno e Filtro do Professor) ---
+  // Consultas públicas retornam apenas conteúdo aprovado e respeitam o perfil e os filtros.
 
+  // Os alunos veem contribuições da própria escola; professores podem filtrar os resultados.
   async buscarVerbetes(): Promise<any[]> {
     const aluno = this.obterSessaoAluno();
     const isProf = !aluno && (await this.verificarProfessorAutorizado());
@@ -229,7 +244,7 @@ export class SupabaseService {
       .order('created_at', { ascending: false });
 
     if (aluno) {
-      // Seguro pois aluno.escola foi validado contra ESCOLAS_PERMITIDAS
+      // A validação da sessão garante que a escola pertence à lista permitida.
       query = query.or(`escola.eq."${aluno.escola}",escola.is.null`);
     } else if (isProf) {
       query = this.aplicarFiltroQueryProfessor(query);
@@ -240,12 +255,14 @@ export class SupabaseService {
     return (data as any[]) || [];
   }
 
+  // Novos verbetes ficam pendentes até a revisão de um professor.
   async inserirVerbete(verbete: any) {
     const { data, error } = await this.supabase.from('verbetes_colaborativos').insert([verbete]);
     if (error) throw error;
     return data;
   }
 
+  // Aplica aos relatos aprovados as mesmas regras de visibilidade usadas no glossário.
   async buscarRelatos(): Promise<any[]> {
     const aluno = this.obterSessaoAluno();
     const isProf = !aluno && (await this.verificarProfessorAutorizado());
@@ -267,11 +284,13 @@ export class SupabaseService {
     return (data as any[]) || [];
   }
 
+  // Relatos enviados aguardam aprovação antes de aparecerem no feed.
   async inserirRelato(relato: any) {
     const { error } = await this.supabase.from('relatos').insert([relato]);
     if (error) throw error;
   }
 
+  // Busca as respostas aprovadas da pergunta indicada e respeita os filtros do perfil.
   async buscarRespostasReflexao(perguntaId: number): Promise<any[]> {
     const aluno = this.obterSessaoAluno();
     const isProf = !aluno && (await this.verificarProfessorAutorizado());
@@ -294,12 +313,14 @@ export class SupabaseService {
     return (data as any[]) || [];
   }
 
+  // Respostas novas entram na fila de moderação.
   async inserirRespostaReflexao(resposta: any) {
     const { data, error } = await this.supabase.from('respostas_reflexao').insert([resposta]);
     if (error) throw error;
     return data;
   }
 
+  // Professores recebem os dados completos; os demais perfis recebem apenas campos públicos.
   async buscarVideosPorCategoria(categoria?: string): Promise<VideoCategoria[]> {
     const isProf = await this.verificarProfessorAutorizado();
 
@@ -324,6 +345,7 @@ export class SupabaseService {
     return (data as VideoCategoria[]) || [];
   }
 
+  // Só professores autorizados podem cadastrar vídeos na playlist de uma categoria.
   async inserirVideoCategoria(dados: {
     categoria: string;
     titulo: string;
@@ -352,6 +374,7 @@ export class SupabaseService {
     if (error) throw error;
   }
 
+  // Exclui o vídeo depois de confirmar que a operação vem de um professor autorizado.
   async excluirVideoCategoria(id: number): Promise<void> {
     await this.exigirProfessorAutorizado();
     const { error } = await this.supabase
@@ -362,12 +385,14 @@ export class SupabaseService {
     if (error) throw error;
   }
 
+  // Limpa qualquer sessão anterior antes de autenticar o professor com senha.
   async loginComEmailSenha(email: string, password: string): Promise<void> {
     await this.limparSessaoCompleta();
     const { error } = await this.supabase.auth.signInWithPassword({ email: email.trim().toLowerCase(), password });
     if (error) throw error;
   }
 
+  // Normaliza as mensagens do Supabase para identificar quando falta confirmar o e-mail.
   isEmailConfirmationError(error: unknown): boolean {
     if (!error || typeof error !== 'object') return false;
 
@@ -390,6 +415,7 @@ export class SupabaseService {
     );
   }
 
+  // Solicita ao Supabase um novo e-mail de confirmação para a conta.
   async reenviarConfirmacaoEmail(email: string): Promise<void> {
     const { error } = await this.supabase.auth.resend({
       type: 'signup',
@@ -399,6 +425,7 @@ export class SupabaseService {
     if (error) throw error;
   }
 
+  // Cria a credencial inicial do professor no Auth; o cadastro ainda depende de autorização.
   async criarCredencialAuthProfessor(email: string, password: string): Promise<void> {
     const { data, error } = await this.supabase.auth.signUp({
       email: email.trim().toLowerCase(),
@@ -415,10 +442,11 @@ export class SupabaseService {
     
     if (!data.user) throw new Error('O Supabase não retornou o usuário criado.');
 
-    // STAND-BY: Descomentar após a banca.
+    // O RPC seguinte usa a sessão criada aqui para registrar o pedido de autorização.
     // await this.supabase.auth.signOut();
   }
 
+  // Aplica os filtros selecionados pelo professor a uma consulta compatível com essas colunas.
   private aplicarFiltroQueryProfessor(query: any) {
     const filtro = this.filtroProfessorSubject.value;
     if (filtro.escola !== 'TODAS') {
@@ -433,6 +461,7 @@ export class SupabaseService {
     return query;
   }
 
+  // Centraliza a checagem antes de qualquer alteração disponível apenas ao professor.
   private async exigirProfessorAutorizado(): Promise<void> {
     const autorizado = await this.verificarProfessorAutorizado();
     if (!autorizado) {
@@ -440,6 +469,7 @@ export class SupabaseService {
     }
   }
 
+  // Lista as contribuições da aba atual com os filtros escolhidos no cabeçalho.
   async listarRegistrosAdmin(
     tabela: 'verbetes_colaborativos' | 'relatos' | 'respostas_reflexao',
   ): Promise<any[]> {
@@ -455,6 +485,7 @@ export class SupabaseService {
     return (data as any[]) || [];
   }
 
+  // Altera a aprovação de uma contribuição depois de confirmar a permissão docente.
   async atualizarStatusAprovacao(
     tabela: 'verbetes_colaborativos' | 'relatos' | 'respostas_reflexao',
     id: string | number,
@@ -466,6 +497,7 @@ export class SupabaseService {
     if (error) throw error;
   }
 
+  // Remove uma contribuição do painel após validar que a operação é autorizada.
   async excluirRegistroAdmin(
     tabela: 'verbetes_colaborativos' | 'relatos' | 'respostas_reflexao',
     id: string | number,

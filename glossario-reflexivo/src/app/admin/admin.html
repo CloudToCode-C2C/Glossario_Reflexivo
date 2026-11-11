@@ -42,9 +42,9 @@
   @if (erroMensagem) {
     <p class="estado-msg erro" role="alert">{{ erroMensagem }}</p>
   } @else if (abaAtiva === 'videos_categoria') {
-    <!-- ==================== 4ª ABA: GESTÃO DA VIDEOTECA ==================== -->
+    <!-- A aba da videoteca permite cadastrar vídeos e organizar a lista por categoria. -->
     <div class="secao-videoteca-admin">
-      <!-- Formulário para Adicionar Novo Vídeo -->
+      <!-- Título e link são informados junto da categoria em que o vídeo será exibido. -->
       <form [formGroup]="videoForm" (ngSubmit)="adicionarVideo()" class="card-novo-video">
         <h3>Adicionar Vídeo à Playlist Global</h3>
         <p class="sub-form">Os vídeos adicionados ficam visíveis para todas as escolas participantes.</p>
@@ -92,7 +92,7 @@
         }
       </form>
 
-      <!-- Barra de Chips de Categoria (Padrão do Glossário) -->
+      <!-- Selecionar uma categoria também prepara o formulário para novos cadastros. -->
       <div class="filtros-scroll-admin">
         <button
           type="button"
@@ -117,7 +117,7 @@
         }
       </div>
 
-      <!-- Checkbox: Mostrar apenas vídeos enviados por mim -->
+      <!-- Este filtro ajuda cada professor a localizar os vídeos que cadastrou. -->
       <div class="barra-filtro-autoria">
         <label class="toggle-meus-videos">
           <input
@@ -181,7 +181,7 @@
       }
     </div>
   } @else {
-    <!-- ==================== ABAS 1, 2 E 3: MODERAÇÃO ==================== -->
+    <!-- As demais abas exibem contribuições que podem ser aprovadas ou removidas. -->
     @if (carregando) {
       <p class="estado-msg">Carregando submissões dos alunos...</p>
     } @else if (registros.length === 0) {

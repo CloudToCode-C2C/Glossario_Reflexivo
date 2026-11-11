@@ -1,10 +1,10 @@
-/* Define o layout do fórum alinhado ao tema rústico/creme */
+/* Organiza o formulário e o feed do fórum sobre o fundo usado nas páginas do projeto. */
 .pagina-forum {
     display: flex;
     min-height: 100vh;
     flex-direction: column;
     padding: 32px 24px 112px;
-    background-color: #F4EFEA; /* Fundo creme rústico unificado */
+    background-color: #F4EFEA;
     font-family: 'Inter', sans-serif;
 }
 
@@ -65,7 +65,7 @@
 .feed-section {
     padding: 32px;
     border: 1px solid rgba(0, 0, 0, 0.05);
-    border-radius: 28px; /* Cantos super arredondados */
+    border-radius: 28px;
     background: var(--cor-superficie);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
 }
@@ -135,7 +135,7 @@ form {
         min-height: 140px;
         padding: 16px 20px;
         border: 1px solid var(--cor-borda);
-        border-radius: 16px; /* Borda macia */
+        border-radius: 16px;
         background: var(--cor-fundo);
         color: var(--cor-texto-principal);
         font-size: 15px;
@@ -158,7 +158,7 @@ form {
     }
 }
 
-/* Alerta de sucesso animado alinhado ao glossário */
+/* Confirmação visual mostrada depois que o relato é enviado. */
 .alerta-sucesso {
     display: flex;
     align-items: center;
@@ -205,7 +205,7 @@ form {
     margin-top: 8px;
     padding: 16px;
     border: none;
-    border-radius: 100px; /* Estilo pílula moderno */
+    border-radius: 100px;
     background: var(--cor-primaria);
     color: var(--cor-texto-inverso);
     font-size: 16px;

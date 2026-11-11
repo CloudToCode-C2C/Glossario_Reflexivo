@@ -27,9 +27,8 @@ export class FormularioComponent implements OnInit {
   });
 
   async ngOnInit() {
-    // Tenta pegar o professor logado via OAuth
+    // Recupera as duas formas de sessão para registrar corretamente quem enviou o verbete.
     this.usuario = await this.supabaseService.obterUsuarioAtual();
-    // Tenta pegar o aluno no LocalStorage
     this.sessaoAluno = this.supabaseService.obterSessaoAluno();
     this.cdr.detectChanges();
   }
@@ -46,7 +45,7 @@ export class FormularioComponent implements OnInit {
       return;
     }
 
-    // Valida se há ALGUMA sessão ativa (Aluno ou Professor)
+    // O envio depende de uma sessão de aluno ou de professor.
     if (!this.usuario && !this.sessaoAluno) {
       alert("Sessão expirada. Faça login novamente.");
       return;
@@ -70,7 +69,7 @@ export class FormularioComponent implements OnInit {
     try {
       await this.supabaseService.inserirVerbete(novoVerbete);
 
-      // Após sucesso, limpa os dados digitados e mostra o feedback.
+      // Depois de salvar, limpa os campos e mostra a confirmação de envio.
       this.verbeteForm.reset();
       this.mensagemSucesso = true;
       setTimeout(() => this.recomecarFormulario(), 3500);
@@ -84,7 +83,7 @@ export class FormularioComponent implements OnInit {
     }
   }
 
-  // Acionada pelo botão e pelo encerramento automático do feedback de sucesso.
+  // Fecha a confirmação, seja pelo botão ou pelo temporizador do formulário.
   recomecarFormulario() {
     this.mensagemSucesso = false;
   }
