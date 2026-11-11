@@ -9,7 +9,6 @@ interface Relato {
   created_at: string;
 }
 
-// Fórum de relatos: combina formulário de envio, moderação e feed comunitário.
 @Component({
   selector: 'app-mural-relatos',
   standalone: true,
@@ -35,12 +34,11 @@ export class MuralRelatosComponent implements OnInit {
     private cdr: ChangeDetectorRef,
   ) {}
 
-  // Obtém a autoria atual e carrega os relatos aprovados pelo serviço.
   async ngOnInit() {
     this.usuarioAtual = await this.supabaseService.obterUsuarioAtual();
     this.sessaoAluno = this.supabaseService.obterSessaoAluno();
 
-    // Agora o mural escuta as mudanças no filtro do professor também
+    // Atualiza os relatos quando o professor muda os filtros.
     this.supabaseService.filtroProfessor$.subscribe(() => {
       this.carregarRelatos();
     });

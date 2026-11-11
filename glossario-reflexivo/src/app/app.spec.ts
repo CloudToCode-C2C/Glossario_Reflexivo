@@ -5,7 +5,7 @@ import { App } from './app';
 import { routes } from './app.routes';
 import { SupabaseService } from './supabase.service';
 
-// Verifica a composição da raiz, a navegação e a integração com a sessão.
+// Testa o componente raiz e a navegação.
 describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({

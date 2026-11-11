@@ -1,7 +1,4 @@
-/* =========================================================
-   ESTILOS GERAIS DA TELA DO GLOSSÁRIO
-   ========================================================= */
-
+/* Configurações básicas da página de glossário */
 .pagina-glossario-jovem {
   display: flex;
   flex-direction: column;
@@ -11,14 +8,14 @@
   font-family: 'Inter', sans-serif;
 }
 
-/* CONTAINER CENTRAL (Desktop) */
+/* Largura máxima para os containers centrais */
 .cabecalho-jovem, .grade-social, .detalhe-jovem, .questoes-reflexivas, .area-interativa-jovem {
   width: 100%;
   max-width: 900px;
   margin: 0 auto;
 }
 
-/* --- CABEÇALHO --- */
+/* Estilo do cabeçalho da página */
 .boas-vindas {
   margin-bottom: 24px;
   
@@ -37,13 +34,11 @@
   }
 }
 
-/* =========================================================
-   ÁREA DOS FILTROS (BOTÕES DE CATEGORIA / CHIPS)
-   ========================================================= */
+/* Área com os chips de filtro */
 .filtros-scroll {
   display: flex;
-  flex-wrap: wrap; /* Faz os botões caírem para a linha de baixo se não couberem no desktop */
-  justify-content: center; /* Centraliza os botões na tela */
+  flex-wrap: wrap; 
+  justify-content: center; 
   gap: 12px;
   padding: 16px 0;
   margin-bottom: 32px;
@@ -53,28 +48,28 @@
   margin-right: auto;
 }
 
-/* Em telas pequenas (Celular), volta a ser um carrossel de arrastar */
+/* Ajuste dos chips para rolagem horizontal em telas menores */
 @media (max-width: 768px) {
   .filtros-scroll {
-    flex-wrap: nowrap; /* Impede a quebra de linha no celular */
-    justify-content: flex-start; /* Alinha à esquerda no celular */
-    overflow-x: auto; /* Permite rolar para o lado */
+    flex-wrap: nowrap; 
+    justify-content: flex-start; 
+    overflow-x: auto; 
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
     padding-left: 16px;
     padding-right: 16px;
     
-    /* Esconde a barra de rolagem visualmente, mas mantém funcionando */
     &::-webkit-scrollbar { display: none; }
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
 }
 
+/* Estilo individual de cada chip de filtro */
 .chip-filtro {
   display: flex;
   align-items: center;
-  flex: 0 0 auto; /* Impede que o botão seja esmagado */
+  flex: 0 0 auto; 
   gap: 8px;
   padding: 12px 24px;
   border-radius: 100px;
@@ -108,30 +103,29 @@
   }
 }
 
-/* =========================================================
-   GRADE SOCIAL (RESTAURAÇÃO DOS CARDS ESPAÇOSOS)
-   ========================================================= */
+/* Configuração do grid para os cards das categorias */
 .grade-social {
   display: grid;
-  grid-template-columns: repeat(1, minmax(0, 1fr)); /* 1 coluna no celular */
-  gap: 24px; /* Espaço generoso entre os cards */
-  width: 100%; /* Ocupar toda a tela */
+  grid-template-columns: repeat(1, minmax(0, 1fr)); 
+  gap: 24px; 
+  width: 100%; 
 }
 
-/* Regra intermediária: Tablets e telas médias */
+/* Grid com 2 colunas para telas médias e tablets */
 @media (min-width: 600px) and (max-width: 899px) {
   .grade-social {
     grid-template-columns: repeat(2, minmax(0, 1fr)); 
   }
 }
 
-/* Regra vital: no Desktop, a grade passa a ter 2 colunas amplas (não exprimidas) */
+/* Grid com 2 colunas amplas para desktop */
 @media (min-width: 900px) {
   .grade-social {
     grid-template-columns: repeat(2, minmax(0, 1fr)); 
   }
 }
 
+/* Estilo do card individual de categoria */
 .card-jovem {
   display: flex;
   flex-direction: column;
@@ -139,20 +133,16 @@
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-radius: 32px;
-  padding: 32px 24px; /* Mais espaço interno (padding) para não amassar o texto */
+  padding: 32px 24px; 
   text-decoration: none;
-  border: 1px solid rgba(0,0,0,0.05); /* Borda suave para dar limite e destaque */
+  border: 1px solid rgba(0,0,0,0.05); 
   transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
   position: relative;
   overflow: hidden;
-  
-  /* Força os cards a serem compridos e bonitos (não achatados) */
   min-height: 250px; 
-  /* Adicionado para dar respiro aos lados na grade de 2 colunas */
   max-width: 400px;
   margin: 0 auto;
 
-  /* A barrinha de cor na lateral esquerda */
   &::before {
     content: '';
     position: absolute;
@@ -166,6 +156,7 @@
   }
 }
 
+/* Cabeçalho do card de categoria (ícone e botão) */
 .card-jovem-topo {
   display: flex;
   justify-content: space-between;
@@ -198,6 +189,7 @@
   }
 }
 
+/* Conteúdo de texto do card de categoria */
 .card-jovem-conteudo {
   flex-grow: 1; 
   
@@ -213,8 +205,6 @@
     color: var(--cor-texto-secundario);
     line-height: 1.6; 
     margin: 0;
-    
-    /* Evita achatamento e sobra de vazio */
     display: -webkit-box;
     -webkit-box-orient: vertical;
     line-clamp: 4; 
@@ -223,15 +213,14 @@
   }
 }
 
-/* =========================================================
-   TELA DE DETALHES DA CATEGORIA E YOUTUBE
-   ========================================================= */
+/* Container da página de detalhes de uma categoria */
 .detalhe-jovem {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
+/* Botão de voltar na página de detalhes */
 .nav-voltar {
   display: flex;
   align-items: center;
@@ -264,6 +253,7 @@
   }
 }
 
+/* Caixas de destaque com a teoria na página de detalhes */
 .card-destaque-teoria {
   background-color: var(--cor-superficie);
   padding: 24px;
@@ -286,14 +276,12 @@
   &.dica { border-left-color: var(--cor-sucesso); }
 }
 
-/* =========================================================
-   VIDEOTECA / PLAYLIST EXPANSÍVEL
-   ========================================================= */
-
+/* Container principal do botão da videoteca/playlist */
 .bloco-videoteca {
   margin: 8px 0 16px;
 }
 
+/* Botão de abrir/fechar a gaveta da playlist */
 .btn-toggle-playlist {
   width: 100%;
   display: flex;
@@ -358,6 +346,7 @@
   }
 }
 
+/* Gaveta que contém o vídeo em execução e a fila */
 .gaveta-playlist {
   margin-top: 12px;
   padding: 20px;
@@ -369,6 +358,7 @@
   gap: 20px;
 }
 
+/* Container do vídeo ativo (iframe) */
 .cinema-container {
   display: flex;
   flex-direction: column;
@@ -417,6 +407,7 @@
   }
 }
 
+/* Fila de vídeos disponíveis na playlist */
 .fila-playlist {
   display: flex;
   flex-direction: column;
@@ -505,9 +496,7 @@
   }
 }
 
-/* =========================================================
-   CARROSSEL DE QUESTÕES REFLEXIVAS
-   ========================================================= */
+/* Configuração do container do carrossel de perguntas */
 .questoes-reflexivas {
   width: 100%;
   max-width: 700px; 
@@ -517,6 +506,7 @@
   align-items: center;
 }
 
+/* Cabeçalho do carrossel */
 .cabecalho-questoes {
   margin-bottom: 24px;
   text-align: center;
@@ -553,6 +543,7 @@
   }
 }
 
+/* Viewport com overflow oculto para os slides do carrossel */
 .carrossel-viewport {
   width: 100%;
   overflow: hidden;
@@ -561,12 +552,14 @@
   touch-action: pan-y;
 }
 
+/* Container móvel que abriga os slides */
 .carrossel-trilho {
   display: flex;
   align-items: center;
   transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
+/* Estilo individual de cada slide de pergunta no carrossel */
 .slide-jovem {
   flex: 0 0 100%;
   display: flex;
@@ -640,6 +633,7 @@
   }
 }
 
+/* Indicadores de bolinha para navegação no carrossel */
 .indicadores-jovem {
   display: flex;
   justify-content: center;

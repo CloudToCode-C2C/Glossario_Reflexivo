@@ -6,23 +6,23 @@ export const authGuard: CanActivateFn = async () => {
   const supabaseService = inject(SupabaseService);
   const router = inject(Router);
 
-  // 1. Verifica se é um Aluno identificado no LocalStorage
+  // Aluno com sessão válida.
   const sessaoAluno = supabaseService.obterSessaoAluno();
   if (sessaoAluno && sessaoAluno.nome && sessaoAluno.escola) {
     return true;
   }
 
-  // 2. Se não for aluno, verifica se é um Professor autenticado na Whitelist
+  // Professor autorizado.
   const isProfessor = await supabaseService.verificarProfessorAutorizado();
   if (isProfessor) {
     return true;
   }
 
-  // 3. Sem sessão válida -> Força ida para /login
+  // Sem sessão válida, envia para o login.
   return router.createUrlTree(['/login']);
 };
 
-// Guard exclusivo para a futura tela de Admin do Professor
+// Restringe o painel a professores autorizados.
 export const adminGuard: CanActivateFn = async () => {
   const supabaseService = inject(SupabaseService);
   const router = inject(Router);

@@ -3,7 +3,7 @@ import { provideRouter } from '@angular/router';
 import { vi } from 'vitest';
 import { Home } from './home';
 
-// Verifica renderização, seleção, autoplay e gestos do carrossel reflexivo.
+// Testa o carrossel de perguntas.
 describe('Home', () => {
   let component: Home;
   let fixture: ComponentFixture<Home>;

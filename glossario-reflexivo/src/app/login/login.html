@@ -17,7 +17,7 @@
       <p class="texto-rodape">Verificando credenciais de acesso...</p>
     } @else {
       <form [formGroup]="loginForm" (ngSubmit)="entrarComoAluno()" class="form-identificacao">
-        <!-- Seletor de Perfil (Checkballs) -->
+        <!-- Perfil de acesso -->
         <div class="perfil-checkballs" role="radiogroup" aria-label="Selecione seu perfil">
           <button
             type="button"
@@ -40,7 +40,7 @@
           </button>
         </div>
 
-        <!-- FLUXO ALUNO: Campos de Identificação Escolar -->
+        <!-- Dados do aluno -->
         @if (perfilAtual === 'ALUNO') {
           <div class="campos-aluno">
             <div class="campo-item">
@@ -89,14 +89,14 @@
             </button>
           </div>
         } @else {
-          <!-- FLUXO PROFESSOR: E-mail Institucional + Senha / Google OAuth + Solicitação C2C -->
+          <!-- Acesso do professor -->
           <div class="bloco-professor">
             <p class="info-professor">
               Acesso exclusivo para docentes autorizados gerenciarem e filtrarem as contribuições
               das turmas.
             </p>
 
-            <!-- Login Direto com E-mail Institucional (.edu.br, .gov.br, etc.) e Senha -->
+            <!-- Login com e-mail e senha -->
             <div class="campos-aluno" [formGroup]="profLoginForm">
               <div class="campo-item">
                 <label for="login-prof-email">E-mail Institucional ou Docente</label>
@@ -131,7 +131,7 @@
               </button>
             </div>
 
-            <!-- Opção secundária para quem usa conta Google -->
+            <!-- Login com Google -->
             <button
               type="button"
               (click)="entrarComGoogle()"
@@ -142,9 +142,8 @@
               Ou entrar com conta Google
             </button>
 
-            <!-- Formulário de Solicitação / Primeiro Cadastro -->
+            <!-- Solicitação de acesso -->
             <div class="solicitacao-professor" [formGroup]="solicitacaoForm">
-              <!--<p class="solicitacao-titulo">Primeiro acesso ou ainda não tem liberação?</p>-->
               <p class="solicitacao-titulo">Primeiro acesso? Crie sua conta de Professor.</p>
 
               <div class="campo-item">

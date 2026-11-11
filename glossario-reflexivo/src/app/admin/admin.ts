@@ -23,7 +23,7 @@ export class AdminComponent implements OnInit, OnDestroy {
   erroMensagem = '';
   emailProfessorLogado = '';
 
-  // Filtros e formulário da 4ª aba (Videoteca)
+  // Categorias e filtros da videoteca.
   readonly categoriasGlossario = [
     { id: 'Etarismo', titulo: 'Etarismo', icone: 'elderly' },
     { id: 'Capacitismo', titulo: 'Capacitismo', icone: 'accessible' },
@@ -94,7 +94,7 @@ export class AdminComponent implements OnInit, OnDestroy {
     }
   }
 
-  // --- LÓGICA DA 4ª ABA: VIDEOTECA ---
+  // Videoteca
 
   get videosFiltrados(): VideoCategoria[] {
     return this.videos.filter(v => {
@@ -196,7 +196,7 @@ export class AdminComponent implements OnInit, OnDestroy {
     }
   }
 
-  // --- LÓGICA DAS ABAS 1, 2 E 3 (MODERAÇÃO DE ALUNOS) ---
+  // Moderação de contribuições
 
   async alternarStatus(item: any): Promise<void> {
     if (this.abaAtiva === 'videos_categoria') return;

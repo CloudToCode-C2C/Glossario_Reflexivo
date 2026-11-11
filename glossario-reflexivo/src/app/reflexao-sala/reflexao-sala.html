@@ -1,5 +1,5 @@
 <section class="sala-reflexao" aria-labelledby="titulo-sala">
-  <!-- Cabeçalho fixo preserva a pergunta enquanto o feed é rolado. -->
+  <!-- Pergunta em discussão -->
   <header class="cabecalho-sala">
     <div class="barra-superior">
       <a class="botao-voltar" routerLink="/" aria-label="Voltar para o início">
@@ -32,7 +32,7 @@
     aria-live="polite"
     aria-label="Respostas da sala"
   >
-    <!-- O feed alterna entre carregamento, erro, vazio e respostas renderizadas. -->
+    <!-- Respostas da pergunta -->
     @if (carregando) {
       <p class="estado-feed">Carregando respostas...</p>
     } @else if (erroAoCarregar) {
@@ -60,7 +60,7 @@
   </div>
 
   <footer class="rodape-resposta">
-    <!-- O rodapé acompanha o teclado móvel e concentra o envio da resposta. -->
+    <!-- Envio de resposta -->
     @if (mensagemSucesso) {
       <p class="mensagem mensagem-sucesso" role="status">{{ mensagemSucesso }}</p>
     }

@@ -5,7 +5,7 @@ import { vi } from 'vitest';
 import { ReflexaoSalaComponent } from './reflexao-sala';
 import { SupabaseService } from '../supabase.service';
 
-// Verifica carregamento, erro e renderização do feed de uma sala de debate.
+// Testa o feed da sala de reflexão.
 describe('ReflexaoSalaComponent', () => {
   let component: ReflexaoSalaComponent;
   let fixture: ComponentFixture<ReflexaoSalaComponent>;

@@ -3,7 +3,7 @@ import { provideRouter, withComponentInputBinding, withViewTransitions } from '@
 import { routes } from './app.routes';
 import { provideServiceWorker } from '@angular/service-worker';
 
-// Registra os provedores globais usados por roteamento, erros e PWA.
+// Provedores globais do app.
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),

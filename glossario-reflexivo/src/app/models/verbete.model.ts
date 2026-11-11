@@ -1,4 +1,4 @@
-// Modelo mínimo usado para representar um verbete persistido.
+// Dados de um verbete salvo.
 export interface Verbete {
     id: number;
     expressao: string;

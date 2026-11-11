@@ -28,7 +28,7 @@ export class MuralComponent implements OnInit, OnDestroy {
   constructor(private supabaseService: SupabaseService) {}
 
   ngOnInit(): void {
-    // O BehaviorSubject dispara imediatamente na entrada e sempre que o professor muda o filtro
+    // Recarrega os verbetes quando o filtro do professor muda.
     this.filtroSub = this.supabaseService.filtroProfessor$.subscribe(() => {
       void this.carregarDados();
     });

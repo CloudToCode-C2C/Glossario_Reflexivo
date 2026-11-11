@@ -8,13 +8,13 @@ if (missingVariables.length > 0) {
   );
 }
 
-// Garante que o diretório de ambientes exista antes da geração do arquivo.
+// Cria a pasta de ambientes se ela ainda não existir.
 const targetDir = './src/environments';
 if (!fs.existsSync(targetDir)) {
   fs.mkdirSync(targetDir, { recursive: true });
 }
 
-// Monta o ambiente de produção com as credenciais fornecidas pela plataforma de deploy.
+// Gera a configuração de produção com as variáveis do deploy.
 const envConfigFile = `
 export const environment = {
   production: true,
@@ -23,6 +23,6 @@ export const environment = {
 };
 `;
 
-// Persiste o arquivo antes que o compilador Angular resolva os imports de ambiente.
+// Salva o arquivo antes da compilação do Angular.
 fs.writeFileSync(`${targetDir}/environment.ts`, envConfigFile);
 console.log('Arquivo environment.ts gerado dinamicamente com sucesso.');

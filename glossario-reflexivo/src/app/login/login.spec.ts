@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LoginComponent } from './login';
 
-// Confirma que a tela pública de autenticação pode ser criada.
+// Testa a criação da tela de login.
 describe('Login', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;

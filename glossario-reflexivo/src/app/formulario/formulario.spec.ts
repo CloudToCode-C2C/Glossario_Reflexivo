@@ -3,7 +3,7 @@ import { vi } from 'vitest';
 import { FormularioComponent } from './formulario';
 import { SupabaseService } from '../supabase.service';
 
-// Verifica validação, envio e desaparecimento do feedback de sucesso.
+// Testa a validação, o envio e a confirmação.
 describe('FormularioComponent', () => {
   let component: FormularioComponent;
   let fixture: ComponentFixture<FormularioComponent>;

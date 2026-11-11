@@ -1,4 +1,4 @@
-/* Mantém a navegação fixa e disponível em todas as telas protegidas. */
+/* Barra de navegação fixa */
 :host {
   display: block;
   position: fixed;
@@ -8,7 +8,7 @@
   z-index: 9999;
 }
 
-/* Distribui os quatro destinos principais em uma superfície elevada. */
+/* Links de navegação */
 .nav-container {
   display: flex;
   flex-direction: row;
@@ -19,13 +19,12 @@
   background-color: var(--cor-superficie);
   box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.08);
   
-  // Arredonda apenas a parte superior para separar a barra do conteúdo.
   border-top-left-radius: 24px;
   border-top-right-radius: 24px;
   padding: 0 16px;
 }
 
-/* Garante que cada destino tenha uma área de toque consistente. */
+/* Área clicável de cada link */
 .nav-item {
   display: flex;
   flex-direction: column;
@@ -41,7 +40,7 @@
   max-width: 120px;
 }
 
-/* Mantém ícones e rótulos legíveis na navegação compacta. */
+/* Ícones e rótulos */
 .material-icons {
   font-size: 26px;
 }
@@ -52,7 +51,7 @@
   font-weight: 500;
 }
 
-/* Sinaliza visualmente a rota atualmente ativa. */
+/* Link ativo */
 .nav-item.ativo {
   color: var(--cor-primaria);
   

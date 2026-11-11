@@ -1,13 +1,11 @@
-/* =========================================================
-   ESTILOS DA PÁGINA SOBRE (Tema Creme Rústico & Dinâmico)
-   ========================================================= */
+/* Página sobre */
 
 .pagina-sobre {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   padding: 32px 24px 112px;
-  background-color: #F4EFEA; /* Fundo creme rústico unificado */
+  background-color: #F4EFEA;
   font-family: 'Inter', sans-serif;
 }
 
@@ -49,9 +47,7 @@
   }
 }
 
-/* =========================================================
-   ÁREA DE LEITURA (OS 3 CARDS INICIAIS)
-   ========================================================= */
+/* Cards introdutórios */
 .area-leitura {
   display: flex;
   flex-direction: column;
@@ -64,7 +60,7 @@
 .card-glass {
   background-color: var(--cor-superficie);
   border: 1px solid rgba(0, 0, 0, 0.05);
-  border-radius: 28px; /* Cantos super arredondados estilo App */
+  border-radius: 28px;
   padding: 26px 24px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -105,7 +101,7 @@
   }
 }
 
-/* Ícones coloridos dos cards iniciais */
+/* Ícones dos cards */
 .icone-circulo {
   display: flex;
   width: 44px;
@@ -135,9 +131,7 @@
   }
 }
 
-/* =========================================================
-   ARTIGO DE FUNDAMENTAÇÃO TEÓRICA
-   ========================================================= */
+/* Fundamentação teórica */
 .artigo-fundamentacao {
   display: flex;
   width: min(100%, 760px);
@@ -273,9 +267,7 @@
   }
 }
 
-/* =========================================================
-   REFERÊNCIAS BIBLIOGRÁFICAS
-   ========================================================= */
+/* Referências */
 .referencias-container {
   background-color: var(--cor-superficie);
   border-radius: 28px;

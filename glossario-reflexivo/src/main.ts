@@ -2,6 +2,6 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import { appConfig } from './app/app.config';
 import { App } from './app/app';
 
-// Inicializa a aplicação standalone com a configuração global de provedores.
+// Inicia o app com os provedores globais.
 bootstrapApplication(App, appConfig)
   .catch((err) => console.error(err));

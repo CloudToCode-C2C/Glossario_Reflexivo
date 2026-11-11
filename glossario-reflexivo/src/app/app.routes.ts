@@ -8,23 +8,22 @@ import { AdminComponent } from './admin/admin';
 import { SobreComponent } from './sobre/sobre';
 
 export const routes: Routes = [
-  // 1. ROTA PÚBLICA (Acesso livre)
+  // Rotas públicas
   {
     path: 'login',
     loadComponent: () => import('./login/login').then(m => m.LoginComponent),
   },
   
-  // 2. ÁREA RESTRITA (Exige Login)
+  // Rotas protegidas
   {
     path: '',
     canActivate: [authGuard],
     children: [
-      // 2.1 A nova página inicial é o Glossário
+      // Glossário
       {
         path: '',
         loadComponent: () => import('./glossario/glossario').then(m => m.GlossarioComponent),
       },
-      // Suporte para o filtro de categoria criado pelo Arthur
       {
         path: 'admin',
         canActivate: [adminGuard],
@@ -40,7 +39,7 @@ export const routes: Routes = [
         pathMatch: 'full',
       },
 
-      // 2.2 A aba Fórum/Mural
+      // Fórum de relatos
       {
         path: 'forum',
         loadComponent: () => import('./mural-relatos/mural-relatos').then(m => m.MuralRelatosComponent),
@@ -51,20 +50,18 @@ export const routes: Routes = [
         pathMatch: 'full',
       },
 
-      // 2.3 A aba Sobre 
-      // Se ele já tinha um SobreComponent, vamos usá-lo. 
-      // Se quiser usar a antiga Home como Sobre, é só trocar o component.
+      // Página sobre
       {
         path: 'sobre',
         loadComponent: () => import('./sobre/sobre').then(m => m.SobreComponent), 
       },
-      // Redireciona a antiga rota 'home' para o sobre
+      // Mantém a rota antiga
       {
         path: 'home',
         redirectTo: 'sobre',
       },
 
-      // 2.4 Rotas adicionais do projeto do Arthur
+      // Sala de reflexão
       {
         path: 'reflexao/:id',
         loadComponent: () => import('./reflexao-sala/reflexao-sala').then(m => m.ReflexaoSalaComponent),
@@ -72,7 +69,7 @@ export const routes: Routes = [
     ]
   },
   
-  // Rota de fallback
+  // Rotas desconhecidas voltam ao glossário
   {
     path: '**',
     redirectTo: 'glossario',

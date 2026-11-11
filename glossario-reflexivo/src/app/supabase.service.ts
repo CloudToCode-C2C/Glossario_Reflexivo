@@ -9,7 +9,7 @@ export const ESCOLAS_PADRAO = [
   'Centro Educacional 02 de Taguatinga',
 ];
 
-// Mantém compatibilidade com componentes que ainda usam o nome anterior.
+// Alias mantido para componentes que usam o nome antigo.
 export const ESCOLAS_PERMITIDAS = ESCOLAS_PADRAO;
 
 export const SERIES_PERMITIDAS = ['6º Ano', '7º Ano', '8º Ano', '9º Ano', 'Ensino Médio'];
@@ -52,11 +52,11 @@ export class SupabaseService {
   private escolasPermitidasSubject = new BehaviorSubject<string[]>(ESCOLAS_PADRAO);
   public escolasPermitidas$ = this.escolasPermitidasSubject.asObservable();
 
-  // Estado reativo para avisar o AppComponent quando o Aluno entra ou sai
+  // Sessão atual do aluno.
   private sessaoAlunoSubject = new BehaviorSubject<SessaoAluno | null>(this.obterSessaoAluno());
   public sessaoAluno$ = this.sessaoAlunoSubject.asObservable();
 
-  // Estado reativo do Filtro Global do Professor (reflete em todas as abas)
+  // Filtros aplicados pelo professor.
   private filtroProfessorSubject = new BehaviorSubject<FiltroProfessor>({
     escola: 'TODAS',
     serie: 'TODAS',
@@ -93,7 +93,7 @@ export class SupabaseService {
       const serieValida = SERIES_PERMITIDAS.includes(sessao.serie);
       const turmaValida = TURMAS_PERMITIDAS.includes(sessao.turma);
 
-      // Se o usuário adulterou qualquer valor no DevTools, limpa o LocalStorage e nega acesso
+      // Descarta valores alterados no navegador.
       if (!nomeValido || !escolaValida || !serieValida || !turmaValida) {
         localStorage.removeItem('c2c_sessao_aluno');
         return null;
@@ -175,7 +175,7 @@ export class SupabaseService {
     return data;
   }
 
-  // Agora limpa tanto o LocalStorage do aluno quanto o OAuth do professor
+  // Encerra as sessões de aluno e professor.
   async fazerLogout() {
     localStorage.removeItem('c2c_sessao_aluno');
     this.sessaoAlunoSubject.next(null);
@@ -216,7 +216,7 @@ export class SupabaseService {
     return session?.user ?? null;
   }
 
-  // --- BUSCAS SEGURAS (Respeitando permissões de coluna do Aluno e Filtro do Professor) ---
+  // Consultas com os filtros e permissões de cada perfil.
 
   async buscarVerbetes(): Promise<any[]> {
     const aluno = this.obterSessaoAluno();
@@ -229,7 +229,7 @@ export class SupabaseService {
       .order('created_at', { ascending: false });
 
     if (aluno) {
-      // Seguro pois aluno.escola foi validado contra ESCOLAS_PERMITIDAS
+      // A escola já foi validada contra a lista permitida.
       query = query.or(`escola.eq."${aluno.escola}",escola.is.null`);
     } else if (isProf) {
       query = this.aplicarFiltroQueryProfessor(query);
@@ -415,7 +415,7 @@ export class SupabaseService {
     
     if (!data.user) throw new Error('O Supabase não retornou o usuário criado.');
 
-    // STAND-BY: Descomentar após a banca.
+    // Ativar após a banca.
     // await this.supabase.auth.signOut();
   }
 

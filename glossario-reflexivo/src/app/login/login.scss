@@ -1,4 +1,4 @@
-/* Mantém a tela pública limpa, centralizada e visualmente alinhada ao glossário. */
+/* Tela de login */
 .login-wrapper {
   position: relative;
   isolation: isolate;
@@ -109,7 +109,7 @@
     line-height: 1.6;
   }
 
-  /* --- CHECKBALLS (ALUNO / PROFESSOR) --- */
+  /* Seletor de perfil */
   .perfil-checkballs {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -161,7 +161,7 @@
     }
   }
 
-  /* --- CAMPOS DO ALUNO --- */
+  /* Campos do aluno */
   .campos-aluno {
     display: flex;
     flex-direction: column;
@@ -210,7 +210,7 @@
     }
   }
 
-  /* --- BLOCO DO PROFESSOR --- */
+  /* Campos do professor */
   .bloco-professor {
     display: flex;
     flex-direction: column;
